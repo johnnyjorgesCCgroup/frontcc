@@ -1,0 +1,27 @@
+.boxPrincipal{
+    display: flex;
+}
+
+.dashPrincipal{
+    width: 30%;
+    padding: 2%;
+}
+
+@media only screen and (max-width: 1200px) {
+    .boxPrincipal{
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    .dashPrincipal {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-gap: 10px;
+        width: 100%;
+        padding: 0.2%;
+    }
+    
+    .dashPrincipal div{
+        margin-left: 2%;
+        margin-right: 2%;
+    }
+}
