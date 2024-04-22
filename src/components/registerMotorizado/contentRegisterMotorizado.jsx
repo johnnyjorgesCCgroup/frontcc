@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Modal, Typography, ButtonGroup, Button, Box, Switch, TextField } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faSearch, faDatabase  } from '@fortawesome/free-solid-svg-icons'; // Importa el ícono que desees usar aquí
+import { faPlusCircle, faSearch, faDatabase } from '@fortawesome/free-solid-svg-icons'; // Importa el ícono que desees usar aquí
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
+import './contentRegisterMotorizado.css';
 
 
 function ImageUploader() {
@@ -116,10 +117,10 @@ function ImageUploader() {
 
   return (
     <div className='content-wrapper'>
-      <div className="card" style={{ padding: 20 }}>
+      <div className="card" id="principalCard">
         <div className="card card-outline">
           <div className="card-header border-0">
-            <div className="row mb-2" style={{ alignItems: "center" }}>
+            <div className="row mb-2" id="tituloBotones">
               <div className="col-sm-6">
                 <h3 className="card-title">
                   <b>Registro Motorizados</b>
@@ -142,9 +143,9 @@ function ImageUploader() {
           </div>
         </div>
         <div className="card card-outline">
-          <div style={{ display: "flex", marginTop: "20px", justifyContent: "space-evenly" }}>
-            <div style={{ display: "box", width: "30%" }}>
-              <div className='card-body' style={{ display: 'flex', alignItems: "center" }}>
+          <div className="detallesBusqueda">
+            <div className="boxBusqueda">
+              <div id="card-busqueda" className='card-body'>
                 <TextField
                   label="Número de Orden"
                   variant="outlined"
@@ -191,17 +192,16 @@ function ImageUploader() {
                   <p style={{ textAlign: 'center' }}>Ingrese un número de orden para obtener los detalles.</p>
                 )}
               </div>
-
             </div>
-            <div style={{ display: "box", width: "60%" }}>
-              <div className='card-body'>
+            <div className="boxImagenes">
+              <div className='card-body' id="card-img">
                 <Box sx={{ height: 550, overflowY: 'scroll' }}>
                   {loadingImages ? (
                     <p style={{ textAlign: 'center' }}>
                       Cargando base de datos <i className="fas fa-database fa-spin" style={{ fontSize: '15px', color: '#888' }}></i>
                     </p>
                   ) : (
-                    <ImageList variant="masonry" cols={3} gap={8}>
+                    <ImageList className="customImageList" variant="masonry" cols={3} gap={8}>
                       {images.slice(0, MAX_DISPLAY_IMAGES).map((imageName, index) => (
                         <ImageListItem key={index}>
                           {imageName && imageName.imageArchive && (
@@ -226,12 +226,12 @@ function ImageUploader() {
         </div>
       </div>
       <Modal open={modalOpen} onClose={handleCloseModal}>
-        <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
+        <div className="modalDetalle">
           <h3 className="card-title">
             <b>Subir Imagen de evidencia</b>
           </h3>
           <br />
-          <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
+          <form onSubmit={handleSubmit}>
             <TextField
               label="Número de Orden"
               variant="outlined"
