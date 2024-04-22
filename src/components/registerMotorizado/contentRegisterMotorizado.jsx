@@ -18,6 +18,24 @@ function ImageUploader() {
   const [switchOn, setSwitchOn] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [loadingImages, setLoadingImages] = useState(true);
+  const [cols, setCols] = useState(3);
+
+  useEffect(() => {
+    // Función para actualizar el número de columnas basado en el ancho de la pantalla
+    const updateCols = () => {
+      const screenWidth = window.innerWidth;
+      if (screenWidth <= 600) {
+        setCols(2); // Cambiar a 2 columnas si el ancho de la pantalla es menor o igual a 600px
+      } else {
+        setCols(3); // De lo contrario, mantener 3 columnas
+      }
+    };
+
+    // Llamar a la función de actualización una vez y suscribirse a los cambios de tamaño de la ventana
+    updateCols();
+    window.addEventListener('resize', updateCols);
+    return () => window.removeEventListener('resize', updateCols); // Limpiar el efecto cuando el componente se desmonta
+  }, []);
 
   const MAX_DISPLAY_IMAGES = 200;
 
@@ -201,7 +219,7 @@ function ImageUploader() {
                       Cargando base de datos <i className="fas fa-database fa-spin" style={{ fontSize: '15px', color: '#888' }}></i>
                     </p>
                   ) : (
-                    <ImageList className="customImageList" variant="masonry" cols={3} gap={8}>
+                    <ImageList className="customImageList" variant="masonry" cols={cols} gap={8}>
                       {images.slice(0, MAX_DISPLAY_IMAGES).map((imageName, index) => (
                         <ImageListItem key={index}>
                           {imageName && imageName.imageArchive && (
