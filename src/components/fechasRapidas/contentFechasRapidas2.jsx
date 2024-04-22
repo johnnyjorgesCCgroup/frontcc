@@ -461,7 +461,7 @@ export default function contentInventory() {
                             />
                         </div>
                         <Modal open={modalOpen} onClose={handleCloseModal}>
-                            <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh', width: '70vw' }}>
+                            <div className="modalDetalle">
                                 {selectedIncident && (
                                     <>
                                         <Typography variant="h6" gutterBottom component="div">
