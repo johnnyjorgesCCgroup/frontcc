@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Modal, Typography, Button, Box, Switch, TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faCopy, faEye, faPlus, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faCopy, faEye, faPlus, faRefresh } from '@fortawesome/free-solid-svg-icons';
 import Alert from '@mui/material/Alert';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ContentOutput from './ContentOutput';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import html2canvas from 'html2canvas';
-
+import { width } from '@fortawesome/free-solid-svg-icons/faSearch';
+import './contentFechasRapidas.css';
+import Select from 'react-select';
 
 export default function contentInventory() {
     const [image, setImage] = useState(null);
@@ -19,28 +22,45 @@ export default function contentInventory() {
     const [modalOutputOpen, setModalOutputOpen] = useState(false);
     const [modalUpOpen, setModalUpOpen] = useState(false);
     const [selectedIncident, setSelectedIncident] = useState(null);
-    const [modalImageUploadOpen, setModalImageUploadOpen] = useState(false);
+    const [selectedDocument, setSelectedDocument] = useState(null);
+    const [documentos, setDocumentos] = useState(null);
     const [switchOn, setSwitchOn] = useState(false);
     const [today, setToday] = useState(new Date());
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    const matches = useMediaQuery('(min-width:1200px)');
+    const matches = useMediaQuery('(min-width:600px)');
+    const [filterVisible, setFilterVisible] = useState(false);
 
     const handleOpenImageModal = (imageName) => {
         setSelectedImage(`http://api2.cvimport.com:3000/uploads/images/${imageName}`);
     };
-
-    // Función para cerrar el modal
+    const handleChange = (selectedOption) => {
+        setSelectedDocument(selectedOption);
+    };
     const handleCloseImageModal = () => {
         setSelectedImage(null);
     };
-
+    const handleToggleFilter = () => {
+        setFilterVisible(!filterVisible);
+    };
     const obtenerIncidentes = async () => {
         try {
             const response = await fetch("http://api2.cvimport.com:3000/procesarDatos");
             if (response.ok) {
                 const data = await response.json();
                 setIncidentes(data);
+                const opciones = data.flatMap(incidente => {
+                    return [
+                        { label: incidente.document_number, value: incidente.document_number },
+                        { label: incidente.oc, value: incidente.oc },
+                        { label: incidente.client, value: incidente.client }
+                    ];
+                });
+                const opcionesUnicas = Array.from(new Set(opciones.map(opcion => opcion.label)))
+                    .map(label => opciones.find(opcion => opcion.label === label));
+                const opcionesFiltradas = selectedDocument === '' ? opcionesUnicas.slice(0, 4) : opcionesUnicas;
+                setDocumentos(opcionesFiltradas);
+
             } else {
                 console.error("Error de fetch", response.statusText);
             }
@@ -67,10 +87,30 @@ export default function contentInventory() {
         handleCloseUpModal();
     };
 
+    const handleSubmitSelect = async () => {
+        if (!selectedDocument) {
+            // Si no hay opción seleccionada, obtener todos los incidentes
+            obtenerIncidentes();
+            return;
+        }
+    
+        // Filtrar los incidentes según el valor seleccionado
+        const incidentesFiltrados = incidentes.filter(incidente => {
+            return (
+                incidente.document_number === selectedDocument.label ||
+                incidente.oc === selectedDocument.label ||
+                incidente.client === selectedDocument.label
+            );
+        });
+    
+        // Actualizar el estado de los incidentes con los filtrados
+        setIncidentes(incidentesFiltrados);
+    };
+    
+
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
     };
-
     const label = { inputProps: { 'aria-label': 'Size switch demo' } };
 
     useEffect(() => {
@@ -82,38 +122,30 @@ export default function contentInventory() {
         setSelectedIncident(incident); // Corregir el nombre de la función setSelectedIncident
         setModalOpen(true);
     }
-
     const handleRowClickOutput = (oc) => {
         const incident = incidentes.find(incidente => incidente.oc === oc);
         setSelectedIncident(incident); // Corregir el nombre de la función setSelectedIncident
         setModalOutputOpen(true)
     }
-
     const handleCloseModal = () => {
         setModalOpen(false);
     }
-
     const handleOutputCloseModal = () => {
         setModalOutputOpen(false);
     }
-
     const handleOpenUploadModal = () => {
         setOrderNumber(selectedIncident ? selectedIncident.oc : '');
         setModalUpOpen(true);
     };
-
     const handleCloseUpModal = () => {
-        setModalUpOpen(false); // Corregido el nombre de la función
+        setModalUpOpen(false);
     };
-
     const handleOpenCrearModal = () => {
         setCrearModalOpen(true);
     }
-
     const handleSwitchChange = () => {
         setSwitchOn(!switchOn);
     }
-
     const handleTodayClick = () => {
         const todayIncidents = incidentes.filter(incident => {
             const incidentDate = new Date(incident.date_cut);
@@ -123,7 +155,6 @@ export default function contentInventory() {
         });
         setIncidentes(todayIncidents);
     }
-
     const handleYesterdayClick = () => {
         const yesterdayIncidents = incidentes.filter(incident => {
             const incidentDate = new Date(incident.date_cut);
@@ -133,16 +164,13 @@ export default function contentInventory() {
         });
         setIncidentes(yesterdayIncidents);
     }
-
     const handleAllDatesClick = () => {
-        obtenerIncidentes(); // Recargar todos los incidentes
+        obtenerIncidentes();
     }
-
     const handlePlatformFilter = (platform) => {
         const platformIncidents = incidentes.filter(incident => incident.origin.toLowerCase() === platform.toLowerCase());
         setIncidentes(platformIncidents);
     }
-
     const copyToClipboard = (text) => {
         const textarea = document.createElement('textarea');
         textarea.value = text;
@@ -175,11 +203,9 @@ export default function contentInventory() {
     const confirmDelivery = async () => {
         return confirm('Desea Confirmar la entrega?\nLos campos pueden estar asociados a OC');
     };
-
     const showAlert = (message, type) => {
         alert(message);
     };
-
     const handleCaptureScreenshot = () => {
         const htmlElement = document.querySelector('.content-wrapper');
 
@@ -198,58 +224,17 @@ export default function contentInventory() {
             });
     };
 
-
-
     const buttonBackgroundColor = switchOn ? "#22FF94" : "#9C27B0";
 
     let columns = [
         { field: 'date_cut', headerName: 'Fecha de Corte', flex: 0 },
-        { field: 'date', headerName: 'Fecha de Subida', flex: 0 },
         { field: 'origin', headerName: 'Plataforma', flex: 0 },
         { field: 'oc', headerName: 'Orden', flex: 0 },
         {
-            field: 'move',
-            headerName: 'Estado de Movimiento',
-            flex: 0.8,
-            filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
-            valueGetter: (params) => params.row.whatMove ? "Hay un movimiento" : "No tiene movimiento", // Obtener el valor para el filtro
-            renderCell: (params) => {
-                const hasMove = params.row.whatMove === true ? "Hay un movimiento" : "No tiene movimiento";
-                const moveVariant = params.row.whatMove === true ? "success" : "error";
-
-                return (
-                    <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex" }}>
-                        <Alert variant="outlined" severity={moveVariant}>
-                            {hasMove}
-                        </Alert>
-                    </div>
-                );
-            },
-        },
-        {
-            field: 'incidente',
-            headerName: 'Estado de Incidente',
-            flex: 0.8,
-            filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
-            valueGetter: (params) => params.row.whatIncident ? "Hay una incidencia" : "No tiene incidencia", // Obtener el valor para el filtro
-            renderCell: (params) => {
-                const hasIncident = params.row.whatIncident === true ? "Hay una incidencia" : "No tiene incidencia";
-                const incidentVariant = params.row.whatIncident === true ? "success" : "error";
-
-                return (
-                    <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex" }}>
-                        <Alert variant="outlined" severity={incidentVariant}>
-                            {hasIncident}
-                        </Alert>
-                    </div>
-                );
-            },
-        },
-
-        {
             field: 'action',
             headerName: 'Acción',
-            flex: 1,
+            flex: matches ? 1 : undefined,
+            width: matches ? undefined : 200,
             renderCell: (params) => (
                 <ButtonGroup aria-label="Basic button group" >
                     <Button
@@ -262,7 +247,6 @@ export default function contentInventory() {
                         startIcon={<FontAwesomeIcon icon={faCopy} />}
                     >
                     </Button>
-
                     {matches && (
                         <Button
                             variant="contained"
@@ -306,31 +290,84 @@ export default function contentInventory() {
                         >
                         </Button>
                     )}
-
                 </ButtonGroup>
             ),
         },
     ];
 
     if (matches) {
-        // Find the index of the column with field 'oc'
         const ocIndex = columns.findIndex(column => column.field === 'oc');
-        // Insert the 'product' column after 'oc'
         columns.splice(ocIndex + 1, 0, { field: 'product', headerName: 'Producto', flex: 0.5 });
         columns = [
             { field: 'id', headerName: 'Id', flex: 0 },
+            { field: 'date', headerName: 'Fecha de Subida', flex: 0 },
+            {
+                field: 'move',
+                headerName: 'Estado de Movimiento',
+                flex: 0.8,
+                filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
+                valueGetter: (params) => params.row.whatMove ? "Hay un movimiento" : "No tiene movimiento", // Obtener el valor para el filtro
+                renderCell: (params) => {
+                    const hasMove = params.row.whatMove === true ? "Hay un movimiento" : "No tiene movimiento";
+                    const moveVariant = params.row.whatMove === true ? "success" : "error";
+
+                    return (
+                        <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex" }}>
+                            <Alert variant="outlined" severity={moveVariant}>
+                                {hasMove}
+                            </Alert>
+                        </div>
+                    );
+                },
+            },
+            {
+                field: 'incidente',
+                headerName: 'Estado de Incidente',
+                flex: 0.8,
+                filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
+                valueGetter: (params) => params.row.whatIncident ? "Hay una incidencia" : "No tiene incidencia", // Obtener el valor para el filtro
+                renderCell: (params) => {
+                    const hasIncident = params.row.whatIncident === true ? "Hay una incidencia" : "No tiene incidencia";
+                    const incidentVariant = params.row.whatIncident === true ? "success" : "error";
+
+                    return (
+                        <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex" }}>
+                            <Alert variant="outlined" severity={incidentVariant}>
+                                {hasIncident}
+                            </Alert>
+                        </div>
+                    );
+                },
+            },
             ...columns,
         ];
     }
 
+    if (!matches) { // Utiliza !matches para mostrar estas columnas cuando matches sea false
+        const clientIndex = columns.findIndex(column => column.field === 'client');
+        const documentNumberIndex = columns.findIndex(column => column.field === 'document_number');
+
+        // Insertar las columnas en el índice correspondiente
+        columns.splice(clientIndex + 1, 0, { field: 'client', headerName: 'Cliente', width: 150 });
+        columns.splice(documentNumberIndex + 2, 0, { field: 'document_number', headerName: 'Documento', width: 100 });
+    }
+
+    const noRowsLabel = (
+        <p style={{ textAlign: 'center' }}>
+            Cargando base de datos <i className="fas fa-database fa-spin" style={{ fontSize: '15px', color: '#888' }}></i>
+        </p>
+    );
+
     const options = {
-        filterType: 'checkbox',
         print: false,
         search: true,
         localeText: {
-            noRowsLabel: 'Cargando...',
+            noRowsLabel: noRowsLabel,
         },
     };
+    if (!matches) {
+        options.filterType = 'checkbox';
+    }
 
     return (
         <div className="content-wrapper">
@@ -372,17 +409,34 @@ export default function contentInventory() {
                 </div>
                 <div className="card card-outline">
                     <div className="card-header border-0">
-                        <div className="row mb-2" style={{ display: 'flex', justifyContent: 'center' }}>
-                            <ButtonGroup aria-label="Basic button group" >
-                                <Button onClick={() => handlePlatformFilter('Vtex')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Vtex</Button>
-                                <Button onClick={() => handlePlatformFilter('Saga')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Saga</Button>
-                                <Button onClick={() => handlePlatformFilter('Intercorp')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Intercorp</Button>
-                                <Button onClick={() => handlePlatformFilter('Ripley')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Ripley</Button>
-                                <Button onClick={() => handlePlatformFilter('VENTA')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>RRSS</Button>
-                                <Button onClick={handleTodayClick} variant="contained" style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }}>Hoy</Button>
-                                <Button onClick={handleYesterdayClick} variant="contained" style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }}>Ayer</Button>
-                                <Button onClick={handleAllDatesClick} variant="contained" style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }}>All Fechas</Button>
+                        <a href="#" onClick={() => handleToggleFilter()}><i className="fas fa-filter"></i> Filtrar</a>
+                        <div className="row mb-2" style={{ display: filterVisible ? 'flex' : 'none', justifyContent: 'center', padding: "8px" }}>
+                            <ButtonGroup aria-label="Basic button group" className='botonesFilter'>
+                                <div>
+                                    <Button onClick={() => handlePlatformFilter('Vtex')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Vtex</Button>
+                                    <Button onClick={() => handlePlatformFilter('Saga')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Saga</Button>
+                                    <Button onClick={() => handlePlatformFilter('Intercorp')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Intercorp</Button>
+                                </div>
+                                <div>
+                                    <Button onClick={() => handlePlatformFilter('Ripley')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Ripley</Button>
+                                    <Button onClick={() => handlePlatformFilter('VENTA')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>RRSS</Button>
+                                </div>
+                                <div>
+                                    <Button onClick={handleTodayClick} variant="contained" style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }}>Hoy</Button>
+                                    <Button onClick={handleYesterdayClick} variant="contained" style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }}>Ayer</Button>
+                                    <Button onClick={handleAllDatesClick} variant="contained" style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }} startIcon={<FontAwesomeIcon icon={faRefresh} />}>Refresh</Button>
+                                </div>
                             </ButtonGroup>
+                        </div>
+                        <div style={{ display: filterVisible ? 'flex' : 'none', alignItems: "center", justifyContent: "center", padding: "14px" }}>
+                            <Select
+                                value={selectedDocument}
+                                onChange={handleChange}
+                                options={documentos}
+                                placeholder="Busqueda DNI OC Nombre"
+                                isClearable={true}
+                            /><span />
+                            <Button onClick={handleSubmitSelect}>Buscar</Button>
                         </div>
                     </div>
                 </div>
@@ -402,12 +456,12 @@ export default function contentInventory() {
                                 pageSize={5}
                                 pageSizeOptions={[7, 10, 15]}
                                 autoHeight
-                                checkboxSelection
+                                checkboxSelection={matches}
                                 {...options}
                             />
                         </div>
                         <Modal open={modalOpen} onClose={handleCloseModal}>
-                            <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
+                            <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '90vh' }}>
                                 {selectedIncident && (
                                     <>
                                         <Typography variant="h6" gutterBottom component="div">
@@ -503,7 +557,6 @@ export default function contentInventory() {
                         </Modal>
                         <Modal open={!!selectedImage} onClose={handleCloseImageModal}>
                             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxWidth: '40vw', maxHeight: '100vh', textAlign: 'center' }}>
-                                {/* Imagen */}
                                 {selectedImage && <img
                                     src={selectedImage}
                                     alt="Selected Incident"

@@ -1,0 +1,10 @@
+@media only screen and (max-width: 600px) {
+    .botonesFilter {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    
+    .botonesFilter > div > Button {
+        width: 100%;
+    }
+}
