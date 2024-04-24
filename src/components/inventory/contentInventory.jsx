@@ -14,7 +14,7 @@ export default function contentInventory() {
 
     const obtenerIncidentes = async () => {
         try {
-            const response = await fetch("http://40.71.163.209:3000/inventario");
+            const response = await fetch("http://cc.cvimport.com:3000/inventario");
             if (response.ok) {
                 const data = await response.json();
                 setIncidentes(data);
@@ -62,7 +62,7 @@ export default function contentInventory() {
 
     const handleCrearIncidencia = async () => {
         try {
-            const response = await fetch("http://40.71.163.209:3000/inventario", {
+            const response = await fetch("http://cc.cvimport.com:3000/inventario", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

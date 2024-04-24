@@ -10,7 +10,7 @@ export default function Ticket() {
 
   const handleTicketCreated = () => {
     // Actualizar estado de los tickets después de crear un nuevo ticket
-    fetch("http://40.71.163.209:3000/tickets")
+    fetch("http://cc.cvimport.com:3000/tickets")
       .then((response) => response.json())
       .then((data) => {
         setTickets(data);
@@ -28,7 +28,7 @@ export default function Ticket() {
 
   const handleEliminar = (id) => {
     // Realiza la solicitud de eliminación a la API
-    fetch(`hhttp://40.71.163.209:3000/tickets${id}`, {
+    fetch(`hhttp://cc.cvimport.com:3000/tickets${id}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -41,7 +41,7 @@ export default function Ticket() {
         );
 
         // Realiza una solicitud adicional para obtener la lista actualizada de tickets
-        return fetch("http://40.71.163.209:3000/tickets");
+        return fetch("http://cc.cvimport.com:3000/tickets");
       })
       .then((response) => response.json())
       .then((data) => {
@@ -63,7 +63,7 @@ export default function Ticket() {
     try {
       // Realizar la solicitud PUT a la API para actualizar el ticket
       const response = await fetch(
-        `http://40.71.163.209:3000/tickets${selectedTicket.id}`,
+        `http://cc.cvimport.com:3000/tickets${selectedTicket.id}`,
         {
           method: "PUT",
           headers: {
@@ -90,7 +90,7 @@ export default function Ticket() {
 
   useEffect(() => {
     // Realizar la solicitud a la API aquí
-    fetch("http://40.71.163.209:3000/tickets")
+    fetch("http://cc.cvimport.com:3000/tickets")
       .then((response) => response.json())
       .then((data) => {
         setTickets(data);
@@ -163,7 +163,7 @@ export default function Ticket() {
       if (selectedTicket) {
         // Editar un ticket existente
         response = await fetch(
-          `http://40.71.163.209:3000/tickets${selectedTicket.id}`,
+          `http://cc.cvimport.com:3000/tickets${selectedTicket.id}`,
           {
             method: "PUT",
             headers: {
@@ -178,7 +178,7 @@ export default function Ticket() {
       } else {
         // Crear un nuevo ticket
         response = await fetch(
-          "http://40.71.163.209:3000/tickets",
+          "http://cc.cvimport.com:3000/tickets",
           {
             method: "POST",
             headers: {

@@ -32,7 +32,7 @@ export default function contentInventory() {
     const [filterVisible, setFilterVisible] = useState(false);
 
     const handleOpenImageModal = (imageName) => {
-        setSelectedImage(`http://api2.cvimport.com:3000/uploads/images/${imageName}`);
+        setSelectedImage(`http://cc.cvimport.com:3000/uploads/images/${imageName}`);
     };
     const handleChange = (selectedOption) => {
         setSelectedDocument(selectedOption);
@@ -75,7 +75,7 @@ export default function contentInventory() {
         formData.append('imagenEvidencia', image);
 
         try {
-            const response = await fetch(`http://api2.cvimport.com:3000/uploads/images/single?orderNumber=${orderNumber}`, {
+            const response = await fetch(`http://cc.cvimport.com:3000/uploads/images/single?orderNumber=${orderNumber}`, {
                 method: 'POST',
                 body: formData,
             });
@@ -89,12 +89,9 @@ export default function contentInventory() {
 
     const handleSubmitSelect = async () => {
         if (!selectedDocument) {
-            // Si no hay opción seleccionada, obtener todos los incidentes
             obtenerIncidentes();
             return;
         }
-    
-        // Filtrar los incidentes según el valor seleccionado
         const incidentesFiltrados = incidentes.filter(incidente => {
             return (
                 incidente.document_number === selectedDocument.label ||
@@ -102,12 +99,8 @@ export default function contentInventory() {
                 incidente.client === selectedDocument.label
             );
         });
-    
-        // Actualizar el estado de los incidentes con los filtrados
         setIncidentes(incidentesFiltrados);
     };
-    
-
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
     };
@@ -182,7 +175,6 @@ export default function contentInventory() {
         document.execCommand('copy');
         document.body.removeChild(textarea);
     };
-
     const handleAnullCut = async (id) => {
         const confirmed = await confirmDelivery();
         if (confirmed) {
@@ -199,33 +191,12 @@ export default function contentInventory() {
             }
         }
     };
-
     const confirmDelivery = async () => {
         return confirm('Desea Confirmar la entrega?\nLos campos pueden estar asociados a OC');
     };
     const showAlert = (message, type) => {
         alert(message);
     };
-    const handleCaptureScreenshot = () => {
-        const htmlElement = document.querySelector('.content-wrapper');
-
-        html2canvas(htmlElement)
-            .then(canvas => {
-                const capturaCVcortes = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-                const link = document.createElement('a');
-                link.href = capturaCVcortes;
-                link.download = 'capturaCVcortes.png';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            })
-            .catch(error => {
-                console.error('Error al capturar la pantalla:', error);
-            });
-    };
-
-    const buttonBackgroundColor = switchOn ? "#22FF94" : "#9C27B0";
-
     let columns = [
         { field: 'date_cut', headerName: 'Fecha de Corte', flex: 0 },
         { field: 'origin', headerName: 'Plataforma', flex: 0 },
@@ -502,7 +473,6 @@ export default function contentInventory() {
                                                     {selectedIncident.isdeliveryccg === 0 ? "No motorizado" :
                                                         selectedIncident.isdeliveryccg === 1 ? "Motorizado" : "Estado Desconocido"}</b>
                                             </Button>
-                                            {" "}<a className="registrarCaptura" onClick={handleCaptureScreenshot} style={{ color: "black" }}><i className='fas fa-camera'></i></a>
                                         </Typography>
                                         <Typography>
                                             Plataforma: {selectedIncident.origin} <br />

@@ -54,7 +54,7 @@ function ImageUploader() {
   const fetchImages = async () => {
     setLoadingImages(true);
     try {
-      const response = await fetch(`http://api2.cvimport.com:3000/procesarDatos`);
+      const response = await fetch(`http://cc.cvimport.com:3000/procesarDatos`);
       const data = await response.json();
 
       // Aquí podrías mapear los datos para obtener solo las imágenes si es necesario
@@ -74,7 +74,7 @@ function ImageUploader() {
 
   const fetchOrder = async () => {
     try {
-      const response = await fetch(`http://api2.cvimport.com:3000/procesarDatos`);
+      const response = await fetch(`http://cc.cvimport.com:3000/procesarDatos`);
       const data = await response.json();
 
       // Filtrar la orden correspondiente al número de orden buscado
@@ -121,7 +121,7 @@ function ImageUploader() {
     formData.append('imagenEvidencia', image);
 
     try {
-      const response = await fetch(`http://api2.cvimport.com:3000/uploads/images/single?orderNumber=${orderNumber}`, {
+      const response = await fetch(`http://cc.cvimport.com:3000/uploads/images/single?orderNumber=${orderNumber}`, {
         method: 'POST',
         body: formData,
       });
@@ -227,8 +227,8 @@ function ImageUploader() {
                               onMouseEnter={() => setSelectedImageIndex(index)}
                               onMouseLeave={() => setSelectedImageIndex(null)}
                               style={{ filter: selectedImageIndex === index ? 'none' : 'grayscale(100%)' }}
-                              srcSet={`http://api2.cvimport.com:3000/uploads/images/${imageName.imageArchive}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                              src={`http://api2.cvimport.com:3000/uploads/images/${imageName.imageArchive}?w=248&fit=crop&auto=format`}
+                              srcSet={`http://cc.cvimport.com:3000/uploads/images/${imageName.imageArchive}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                              src={`http://cc.cvimport.com:3000/uploads/images/${imageName.imageArchive}?w=248&fit=crop&auto=format`}
                               alt={`Imagen ${index.id}`}
                               loading="lazy"
                             />
