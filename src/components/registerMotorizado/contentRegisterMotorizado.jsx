@@ -25,7 +25,7 @@ function ImageUploader() {
   const fetchImagesApi = async () => {
     setLoadingImages(true);
     try {
-      const response = await fetch('http://localhost:3000/uploads/images');
+      const response = await fetch('http://cc.cvimport.com:3000/uploads/images');
       const data = await response.json();
       setImagesApi(data);
       setLoadingImages(false);
@@ -59,7 +59,7 @@ function ImageUploader() {
   const fetchFilteredData = async () => {
     try {
       setLoadingOrderDetails(true);
-      const response = await fetch(`http://localhost:3000/procesarDatos/search/${orderNumber}`);
+      const response = await fetch(`http://cc.cvimport.com:3000/procesarDatos/search/${orderNumber}`);
       const data = await response.json();
       setOrderDetails(data);
       setLoadingOrderDetails(false);
@@ -143,7 +143,7 @@ function ImageUploader() {
       const filename = archiveValue.substring(archiveValue.lastIndexOf('/') + 1);
       console.log("Nombre del archivo seleccionado:", filename);
       setModalOpenViewImage(true);
-      setSelectedImageURL(`http://localhost:3000/uploads/images/${filename}`);
+      setSelectedImageURL(`http://cc.cvimport.com:3000/uploads/images/${filename}`);
     }
   }
 

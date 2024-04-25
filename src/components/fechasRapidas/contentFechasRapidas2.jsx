@@ -32,7 +32,7 @@ export default function contentInventory() {
     const [filterVisible, setFilterVisible] = useState(false);
 
     const handleOpenImageModal = (imageName) => {
-        setSelectedImage(`http://localhost:3000/uploads/images/${imageName}`);
+        setSelectedImage(`http://cc.cvimport.com:3000/uploads/images/${imageName}`);
     };
     const handleChange = (selectedOption) => {
         setSelectedDocument(selectedOption);
@@ -45,7 +45,7 @@ export default function contentInventory() {
     };
     const obtenerIncidentes = async () => {
         try {
-            const response = await fetch("http://localhost:3000/procesarDatos");
+            const response = await fetch("http://cc.cvimport.com:3000/procesarDatos");
             if (response.ok) {
                 const data = await response.json();
                 setIncidentes(data);
@@ -83,7 +83,7 @@ export default function contentInventory() {
         console.log("Producto:", product);
         
         try {
-            const response = await fetch(`http://localhost:3000/uploads/images/single?orderNumber=${orderNumber}`, {
+            const response = await fetch(`http://cc.cvimport.com:3000/uploads/images/single?orderNumber=${orderNumber}`, {
                 method: 'POST',
                 body: formData,
             });
