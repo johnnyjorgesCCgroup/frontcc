@@ -3,41 +3,131 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Modal, Typography, ButtonGroup, Button, Box, Switch, TextField } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faSearch, faDatabase } from '@fortawesome/free-solid-svg-icons'; // Importa el ícono que desees usar aquí
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
 import './contentRegisterMotorizado.css';
+import Select from 'react-select';
 
 
 function ImageUploader() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpenViewImage, setModalOpenViewImage] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
+  const [imagesApi, setImagesApi] = useState([]);
   const [orderDetails, setOrderDetails] = useState(null);
   const [image, setImage] = useState(null);
-  const [images, setImages] = useState([]);
   const [switchOn, setSwitchOn] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [loadingImages, setLoadingImages] = useState(true);
-  const [cols, setCols] = useState(3);
+  const [loadingOrderDetails, setLoadingOrderDetails] = useState(false);
+  const [options, setOptions] = useState([]);
+  const [rows, setRows] = useState(null)
+  const [archive, setArchive] = useState(null);
+  const [selectedImageURL, setSelectedImageURL] = useState('');
+
+  const fetchImagesApi = async () => {
+    setLoadingImages(true);
+    try {
+      const response = await fetch('http://localhost:3000/uploads/images');
+      const data = await response.json();
+      setImagesApi(data);
+      setLoadingImages(false);
+
+      // Extraer la columna 'archive' y almacenarla en un estado
+      const archiveData = data.map((item) => item.archive);
+      setArchive(archiveData);
+
+      const uniqueOptions = {};
+      data.forEach((item) => {
+        if (item.oc) uniqueOptions[item.oc] = true;
+        if (item.document) uniqueOptions[item.document] = true;
+        if (item.client) uniqueOptions[item.client] = true;
+      });
+      const optionsArray = Object.keys(uniqueOptions).map((value) => ({ value, label: value }));
+
+      setOptions(optionsArray);
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      setLoadingImages(false);
+    }
+  };
+
+  const handleSearch = () => {
+    if (orderNumber.trim() === '') {
+      setOrderDetails([]);
+      return;
+    }
+  };
+
+  const fetchFilteredData = async () => {
+    try {
+      setLoadingOrderDetails(true);
+      const response = await fetch(`http://localhost:3000/procesarDatos/search/${orderNumber}`);
+      const data = await response.json();
+      setOrderDetails(data);
+      setLoadingOrderDetails(false);
+    } catch (error) {
+      console.error('Error fetching filtered data:', error);
+      setLoadingOrderDetails(false);
+    }
+  };
 
   useEffect(() => {
-    // Función para actualizar el número de columnas basado en el ancho de la pantalla
-    const updateCols = () => {
-      const screenWidth = window.innerWidth;
-      if (screenWidth <= 600) {
-        setCols(2); // Cambiar a 2 columnas si el ancho de la pantalla es menor o igual a 600px
-      } else {
-        setCols(3); // De lo contrario, mantener 3 columnas
-      }
-    };
+    if (orderDetails && orderDetails.length > 0) {
+      const filteredRows = orderDetails.map((details, index) => ({
+        id: index + 1,
+        ...details,
+        date: details.date_cut ?? "Sin datos",
+        client: details.client ?? "Sin datos",
+        document: details.document_number ?? "Sin datos",
+        product: details.product ?? "Sin datos",
+        oc: details.oc ?? "Sin datos",
+        archive: details.imageArchive ?? "Sin datos", // Agrega la propiedad archive aquí
+      }));
+      setRows(filteredRows);
+    } else {
+      const allRows = imagesApi.map((image, index) => ({
+        id: index + 1,
+        ...image,
+        date: image.date ?? "Sin datos",
+        client: image.client ?? "Sin datos",
+        document: image.document ?? "Sin datos",
+        product: image.product ?? "Sin datos",
+        oc: image.oc ?? "Sin datos",
+        archive: image.archive ?? "Sin datos", // Agrega la propiedad archive aquí
+      })).sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+      setRows(allRows);
+    }
+  }, [orderDetails, imagesApi]);
+  
 
-    // Llamar a la función de actualización una vez y suscribirse a los cambios de tamaño de la ventana
-    updateCols();
-    window.addEventListener('resize', updateCols);
-    return () => window.removeEventListener('resize', updateCols); // Limpiar el efecto cuando el componente se desmonta
-  }, []);
+  const columns = [
+    {
+      field: 'view',
+      headerName: 'View',
+      width: 90,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            if (params.row && params.row.archive) {
+              handleOpenModalViewImage(params.row.archive);
+            } else {
+              console.error('El valor de archive en params.row es indefinido.');
+            }
+          }}
+          style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}
+        >
+          Ver
+        </Button>
 
-  const MAX_DISPLAY_IMAGES = 200;
+      )
+    },
+    { field: 'id', headerName: 'ID', width: 20 },
+    { field: 'date', headerName: 'Date', flex: 1 },
+    { field: 'client', headerName: 'Client', flex: 1 },
+    { field: 'document', headerName: 'Document', flex: 1 },
+    { field: 'product', headerName: 'Product', flex: 1 },
+    { field: 'oc', headerName: 'OC', flex: 1 },
+  ];
 
   const handleSwitchChange = () => {
     setSwitchOn(!switchOn);
@@ -47,69 +137,34 @@ function ImageUploader() {
     setModalOpen(true);
   }
 
+  const handleOpenModalViewImage = (archiveValue) => {
+    console.log("handleOpenModalViewImage ejecutada con archiveValue:", archiveValue);
+    if (archiveValue) {
+      const filename = archiveValue.substring(archiveValue.lastIndexOf('/') + 1);
+      console.log("Nombre del archivo seleccionado:", filename);
+      setModalOpenViewImage(true);
+      setSelectedImageURL(`http://localhost:3000/uploads/images/${filename}`);
+    }
+  }
+
   const handleCloseModal = () => {
     setModalOpen(false);
   }
 
-  const fetchImages = async () => {
-    setLoadingImages(true);
-    try {
-      const response = await fetch(`http://cc.cvimport.com:3000/procesarDatos`);
-      const data = await response.json();
-
-      // Aquí podrías mapear los datos para obtener solo las imágenes si es necesario
-      const imagesData = data.map(item => ({
-        oc: item.oc,
-        imageArchive: item.imageArchive
-      }));
-
-      setImages(imagesData);
-      setLoadingImages(false);
-
-    } catch (error) {
-      console.error('Error fetching images:', error);
-      setLoadingImages(false);
-    }
-  };
-
-  const fetchOrder = async () => {
-    try {
-      const response = await fetch(`http://cc.cvimport.com:3000/procesarDatos`);
-      const data = await response.json();
-
-      // Filtrar la orden correspondiente al número de orden buscado
-      const foundOrder = data.find(item => item.oc === orderNumber);
-      if (foundOrder) {
-        setOrderDetails([foundOrder]);
-      } else {
-        setOrderDetails([]);
-      }
-
-    } catch (error) {
-      console.error('Error fetching order details:', error);
-    }
-  };
-
+  const handleCloseModalViewImage = () => {
+    setModalOpenViewImage(false);
+    setSelectedImageURL('');
+  }
 
   useEffect(() => {
-    fetchImages();
+    fetchImagesApi();
   }, []);
 
-  const searchImageByOrderNumber = async () => {
-    if (orderNumber.trim() === '') {
-      setOrderDetails(null);
-      fetchImages();
-    } else {
-      const foundImage = images.find(img => img.oc === orderNumber);
-      if (foundImage) {
-        fetchOrder();
-        setImages([foundImage]);
-      } else {
-        setImages([]);
-        setOrderDetails(null);
-      }
+  useEffect(() => {
+    if (orderNumber.trim() !== '') {
+      fetchFilteredData();
     }
-  };
+  }, [orderNumber]);
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
@@ -164,22 +219,20 @@ function ImageUploader() {
           <div className="detallesBusqueda">
             <div className="boxBusqueda">
               <div id="card-busqueda" className='card-body'>
-                <TextField
-                  label="Número de Orden"
-                  variant="outlined"
-                  value={orderNumber}
-                  onChange={(e) => setOrderNumber(e.target.value)}
-                  style={{ marginRight: '10px' }}
+                <Select
+                  options={options}
+                  onChange={(selectedOption) => setOrderNumber(selectedOption?.value || '')}
+                  placeholder="Busqueda DNI OC Nombre"
+                  isClearable={true}
                 />
                 <Button
                   variant="contained"
-                  onClick={searchImageByOrderNumber}
                   startIcon={<FontAwesomeIcon icon={faSearch} />}
-                  style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}
+                  style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", margin: "6px" }}
+                  onClick={handleSearch}
                 >
                   Buscar
                 </Button>
-
               </div>
               <br />
               <div className='card-detalles'>
@@ -191,12 +244,11 @@ function ImageUploader() {
                         Plataforma: {details.origin} <br />
                         Fecha del corte: {details.date_cut} <br />
                         Cliente: {details.client} <br />
-                        Documento: {details.document} <br />
+                        Documento: {details.document_number} <br />
                         Celular: {details.phone} <br />
                         Dirección: {details.address} <br />
                         Producto: {details.product} <br />
-                        Cantidad y Precio: {details.quantity}<br />
-                        Precio: {details.price} <br />
+                        Cantidad y Precio: {details.quantity} - {details.price} <br />
                         ID de Movimiento: {details.idMove} <br />
                       </p>
                     </div>
@@ -205,11 +257,13 @@ function ImageUploader() {
                   <p style={{ textAlign: 'center' }}>
                     Cargando <i className="fas fa-hourglass-half fa-spin" style={{ fontSize: '15px', color: '#888' }}></i>
                   </p>
-
                 ) : (
-                  <p style={{ textAlign: 'center' }}>Ingrese un número de orden para obtener los detalles.</p>
+                  <p style={{ textAlign: 'center' }}>
+                    {orderNumber.trim() === '' ? 'Ingrese un número de orden para obtener los detalles.' : ''}
+                  </p>
                 )}
               </div>
+
             </div>
             <div className="boxImagenes">
               <div className='card-body' id="card-img">
@@ -219,23 +273,21 @@ function ImageUploader() {
                       Cargando base de datos <i className="fas fa-database fa-spin" style={{ fontSize: '15px', color: '#888' }}></i>
                     </p>
                   ) : (
-                    <ImageList className="customImageList" variant="masonry" cols={cols} gap={8}>
-                      {images.slice(0, MAX_DISPLAY_IMAGES).map((imageName, index) => (
-                        <ImageListItem key={index}>
-                          {imageName && imageName.imageArchive && (
-                            <img
-                              onMouseEnter={() => setSelectedImageIndex(index)}
-                              onMouseLeave={() => setSelectedImageIndex(null)}
-                              style={{ filter: selectedImageIndex === index ? 'none' : 'grayscale(100%)' }}
-                              srcSet={`http://cc.cvimport.com:3000/uploads/images/${imageName.imageArchive}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                              src={`http://cc.cvimport.com:3000/uploads/images/${imageName.imageArchive}?w=248&fit=crop&auto=format`}
-                              alt={`Imagen ${index.id}`}
-                              loading="lazy"
-                            />
-                          )}
-                        </ImageListItem>
-                      ))}
-                    </ImageList>
+                    <DataGrid
+                      rows={rows}
+                      columns={columns}
+                      pageSize={10}
+                      pageSizeOptions={[10, 20, 25]}
+                      loading={loadingOrderDetails}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 10,
+                          },
+                        },
+                      }}
+                      disableSelectionOnClick
+                    />
                   )}
                 </Box>
               </div>
@@ -274,6 +326,11 @@ function ImageUploader() {
               Enviar
             </Button>
           </form>
+        </div>
+      </Modal>
+      <Modal open={modalOpenViewImage} onClose={handleCloseModalViewImage}>
+        <div className="modalDetalle">
+          <img src={selectedImageURL} alt="Vista previa de la imagen" style={{ maxWidth: "100%", maxHeight: "20%", height: "500px" }} />
         </div>
       </Modal>
     </div>

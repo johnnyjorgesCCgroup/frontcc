@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Modal, Typography, Button, Box, Switch, TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faCopy, faEye, faPlus, faRefresh } from '@fortawesome/free-solid-svg-icons';
 import Alert from '@mui/material/Alert';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ContentOutput from './ContentOutput';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import html2canvas from 'html2canvas';
-import { width } from '@fortawesome/free-solid-svg-icons/faSearch';
 import './contentFechasRapidas.css';
 import Select from 'react-select';
 
 export default function contentInventory() {
     const [image, setImage] = useState(null);
-    const [selectedImage, setSelectedImage] = useState(null);
     const [orderNumber, setOrderNumber] = useState('');
     const [incidentes, setIncidentes] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalOutputOpen, setModalOutputOpen] = useState(false);
     const [modalUpOpen, setModalUpOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
     const [selectedIncident, setSelectedIncident] = useState(null);
     const [selectedDocument, setSelectedDocument] = useState(null);
+    const [client, setClient] = useState('');
+    const [documentNumber, setDocumentNumber] = useState('');
+    const [product, setProduct] = useState('');
     const [documentos, setDocumentos] = useState(null);
     const [switchOn, setSwitchOn] = useState(false);
     const [today, setToday] = useState(new Date());
@@ -32,7 +32,7 @@ export default function contentInventory() {
     const [filterVisible, setFilterVisible] = useState(false);
 
     const handleOpenImageModal = (imageName) => {
-        setSelectedImage(`http://cc.cvimport.com:3000/uploads/images/${imageName}`);
+        setSelectedImage(`http://localhost:3000/uploads/images/${imageName}`);
     };
     const handleChange = (selectedOption) => {
         setSelectedDocument(selectedOption);
@@ -45,7 +45,7 @@ export default function contentInventory() {
     };
     const obtenerIncidentes = async () => {
         try {
-            const response = await fetch("http://api2.cvimport.com:3000/procesarDatos");
+            const response = await fetch("http://localhost:3000/procesarDatos");
             if (response.ok) {
                 const data = await response.json();
                 setIncidentes(data);
@@ -73,9 +73,17 @@ export default function contentInventory() {
         e.preventDefault();
         const formData = new FormData();
         formData.append('imagenEvidencia', image);
-
+        formData.append('client', client);
+        formData.append('document_number', documentNumber);
+        formData.append('product', product);
+        
+        console.log("Datos a enviar al servidor:");
+        console.log("Cliente:", client);
+        console.log("Número de documento:", documentNumber);
+        console.log("Producto:", product);
+        
         try {
-            const response = await fetch(`http://cc.cvimport.com:3000/uploads/images/single?orderNumber=${orderNumber}`, {
+            const response = await fetch(`http://localhost:3000/uploads/images/single?orderNumber=${orderNumber}`, {
                 method: 'POST',
                 body: formData,
             });
@@ -86,7 +94,7 @@ export default function contentInventory() {
         }
         handleCloseUpModal();
     };
-
+    
     const handleSubmitSelect = async () => {
         if (!selectedDocument) {
             obtenerIncidentes();
@@ -110,11 +118,18 @@ export default function contentInventory() {
         obtenerIncidentes();
     }, []);
 
+    useEffect(() => {
+    }, [selectedIncident]);
+
     const handleRowClick = (id) => {
         const incident = incidentes.find(incidente => incidente.id === id);
-        setSelectedIncident(incident); // Corregir el nombre de la función setSelectedIncident
+        setSelectedIncident(incident);
+        setClient(incident.client);
+        setDocumentNumber(incident.document_number);
+        setProduct(incident.product);
         setModalOpen(true);
     }
+
     const handleRowClickOutput = (oc) => {
         const incident = incidentes.find(incidente => incidente.oc === oc);
         setSelectedIncident(incident); // Corregir el nombre de la función setSelectedIncident
@@ -516,29 +531,6 @@ export default function contentInventory() {
                                 )}
                             </div>
                         </Modal>
-                        <Modal open={modalOutputOpen} onClose={handleOutputCloseModal}>
-                            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
-                                {selectedIncident && (
-                                    <>
-                                        {selectedIncident && <ContentOutput incident={selectedIncident} />}
-                                    </>
-                                )}
-                            </div>
-                        </Modal>
-                        <Modal open={!!selectedImage} onClose={handleCloseImageModal}>
-                            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxWidth: '40vw', maxHeight: '100vh', textAlign: 'center' }}>
-                                {selectedImage && <img
-                                    src={selectedImage}
-                                    alt="Selected Incident"
-                                    style={{
-                                        maxWidth: '50%',
-                                        maxHeight: '100%',
-                                        width: 'auto',
-                                        height: 'auto'
-                                    }}
-                                />}
-                            </div>
-                        </Modal>
                         <Modal open={modalUpOpen} onClose={handleCloseUpModal}>
                             <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
                                 <h3 className="card-title">
@@ -551,6 +543,30 @@ export default function contentInventory() {
                                         variant="outlined"
                                         value={orderNumber}
                                         onChange={(e) => setOrderNumber(e.target.value)}
+                                        style={{ marginBottom: '10px' }}
+                                    />
+                                    <br />
+                                    <TextField
+                                        label="Cliente"
+                                        variant="outlined"
+                                        value={selectedIncident ? selectedIncident.client : ''}
+                                        disabled
+                                        style={{ marginBottom: '10px' }}
+                                    />
+                                    <br />
+                                    <TextField
+                                        label="Número de Documento"
+                                        variant="outlined"
+                                        value={selectedIncident ? selectedIncident.document_number : ''}
+                                        disabled
+                                        style={{ marginBottom: '10px' }}
+                                    />
+                                    <br />
+                                    <TextField
+                                        label="Producto"
+                                        variant="outlined"
+                                        value={selectedIncident ? selectedIncident.product : ''}
+                                        disabled
                                         style={{ marginBottom: '10px' }}
                                     />
                                     <br />
@@ -570,6 +586,34 @@ export default function contentInventory() {
                                         Enviar
                                     </Button>
                                 </form>
+                            </div>
+                        </Modal>
+                        <Modal open={modalOutputOpen} onClose={handleOutputCloseModal}>
+                            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
+                                {selectedIncident && (
+                                    <>
+                                        {selectedIncident && <ContentOutput incident={selectedIncident} />}
+                                    </>
+                                )}
+                            </div>
+                        </Modal>
+                        <Modal open={!!selectedImage} onClose={handleCloseImageModal}>
+                            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxWidth: '40vw', maxHeight: '100vh', textAlign: 'center' }}>
+                                <>
+                                    <TextField label="client" value={selectedIncident ? selectedIncident.client : ''} size="small" sx={{ '& input': { fontSize: '0.75rem' } }}></TextField>
+                                    <TextField label="document_number" value={selectedIncident ? selectedIncident.document_number : ''} size="small" sx={{ '& input': { fontSize: '0.75rem' } }}></TextField>
+                                    <TextField label="product" value={selectedIncident ? selectedIncident.product : ''} size="small" sx={{ '& input': { fontSize: '0.75rem' } }}></TextField>
+                                </>
+                                {selectedImage && <img
+                                    src={selectedImage}
+                                    alt="Selected Incident"
+                                    style={{
+                                        maxWidth: '50%',
+                                        maxHeight: '100%',
+                                        width: 'auto',
+                                        height: 'auto'
+                                    }}
+                                />}
                             </div>
                         </Modal>
                     </Box>
