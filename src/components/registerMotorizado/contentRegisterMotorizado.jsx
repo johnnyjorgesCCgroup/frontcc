@@ -77,7 +77,7 @@ function ImageUploader() {
 
   const fetchFolderSize = async () => {
     try {
-      const response = await fetch('http://localhost:3000/uploads/folder-size');
+      const response = await fetch('http://cc.cvimport.com:3000/uploads/folder-size');
       const data = await response.json();
       const usedSpaceMB = data.totalSizeMB;
       setUsedSpaceMB(usedSpaceMB);
