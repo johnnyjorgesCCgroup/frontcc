@@ -5,6 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faSearch, faDatabase } from '@fortawesome/free-solid-svg-icons'; // Importa el ícono que desees usar aquí
 import './contentRegisterMotorizado.css';
 import Select from 'react-select';
+import LinearProgress from '@mui/material/LinearProgress';
+import { styled } from '@mui/system';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 function ImageUploader() {
@@ -18,9 +21,12 @@ function ImageUploader() {
   const [loadingImages, setLoadingImages] = useState(true);
   const [loadingOrderDetails, setLoadingOrderDetails] = useState(false);
   const [options, setOptions] = useState([]);
-  const [rows, setRows] = useState(null)
+  const [rows, setRows] = useState(null);
   const [archive, setArchive] = useState(null);
   const [selectedImageURL, setSelectedImageURL] = useState('');
+  const [usedSpaceMB, setUsedSpaceMB] = useState(0);
+  const [totalSpaceMB, setTotalSpaceMB] = useState(10240);
+  const matches = useMediaQuery('(min-width:600px)');
 
   const fetchImagesApi = async () => {
     setLoadingImages(true);
@@ -69,6 +75,27 @@ function ImageUploader() {
     }
   };
 
+  const fetchFolderSize = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/uploads/folder-size');
+      const data = await response.json();
+      const usedSpaceMB = data.totalSizeMB;
+      setUsedSpaceMB(usedSpaceMB);
+    } catch (error) {
+      console.error('Error fetching folder size:', error);
+    }
+  };
+
+  const CustomLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: '8px', // Altura del progreso lineal
+    borderRadius: '4px', // Bordes redondeados
+    '& .MuiLinearProgress-bar': {
+      borderRadius: '4px', // Bordes redondeados para la barra de progreso
+    },
+  }));
+
+  const progress = (usedSpaceMB / totalSpaceMB) * 100;
+
   useEffect(() => {
     if (orderDetails && orderDetails.length > 0) {
       const filteredRows = orderDetails.map((details, index) => ({
@@ -96,7 +123,7 @@ function ImageUploader() {
       setRows(allRows);
     }
   }, [orderDetails, imagesApi]);
-  
+
 
   const columns = [
     {
@@ -122,11 +149,16 @@ function ImageUploader() {
       )
     },
     { field: 'id', headerName: 'ID', width: 20 },
-    { field: 'date', headerName: 'Date', flex: 1 },
-    { field: 'client', headerName: 'Client', flex: 1 },
-    { field: 'document', headerName: 'Document', flex: 1 },
-    { field: 'product', headerName: 'Product', flex: 1 },
-    { field: 'oc', headerName: 'OC', flex: 1 },
+    { field: 'date', headerName: 'Date', flex: matches ? 1 : undefined,
+    width: matches ? undefined : 100},
+    { field: 'client', headerName: 'Client', flex: matches ? 1 : undefined,
+    width: matches ? undefined : 100},
+    { field: 'document', headerName: 'Document', flex: matches ? 1 : undefined,
+    width: matches ? undefined : 100},
+    { field: 'product', headerName: 'Product', flex: matches ? 1 : undefined,
+    width: matches ? undefined : 100},
+    { field: 'oc', headerName: 'OC', flex: matches ? 1 : undefined,
+    width: matches ? undefined : 100},
   ];
 
   const handleSwitchChange = () => {
@@ -157,6 +189,7 @@ function ImageUploader() {
   }
 
   useEffect(() => {
+    fetchFolderSize();
     fetchImagesApi();
   }, []);
 
@@ -266,6 +299,13 @@ function ImageUploader() {
 
             </div>
             <div className="boxImagenes">
+              <div style={{marginTop:"20px", marginLeft:"20px", marginRight:"20px"}}>
+                <CustomLinearProgress variant="determinate" value={(usedSpaceMB / totalSpaceMB) * 100} />
+                <p>
+                  {parseFloat(usedSpaceMB.toFixed(2))} MB utilizados de{' '}
+                  {Math.round((totalSpaceMB / 1024) * 100) / 100} GB
+                </p>
+              </div>
               <div className='card-body' id="card-img">
                 <Box sx={{ height: 550, overflowY: 'scroll' }}>
                   {loadingImages ? (
