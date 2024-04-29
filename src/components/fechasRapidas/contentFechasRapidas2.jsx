@@ -76,12 +76,12 @@ export default function contentInventory() {
         formData.append('client', client);
         formData.append('document_number', documentNumber);
         formData.append('product', product);
-        
+
         console.log("Datos a enviar al servidor:");
         console.log("Cliente:", client);
         console.log("Número de documento:", documentNumber);
         console.log("Producto:", product);
-        
+
         try {
             const response = await fetch(`http://cc.cvimport.com:3000/uploads/images/single?orderNumber=${orderNumber}`, {
                 method: 'POST',
@@ -94,7 +94,7 @@ export default function contentInventory() {
         }
         handleCloseUpModal();
     };
-    
+
     const handleSubmitSelect = async () => {
         if (!selectedDocument) {
             obtenerIncidentes();
@@ -488,6 +488,29 @@ export default function contentInventory() {
                                                     {selectedIncident.isdeliveryccg === 0 ? "No motorizado" :
                                                         selectedIncident.isdeliveryccg === 1 ? "Motorizado" : "Estado Desconocido"}</b>
                                             </Button>
+                                            {" "}<Button
+                                                variant="contained"
+                                                size="small"
+                                                onClick={() => {
+                                                    copyToClipboard(selectedIncident.oc);
+                                                }}
+                                                disabled={true}
+                                                style={{
+                                                    backgroundColor: selectedIncident.origin === "Vtex" || selectedIncident.origin === "Saga" ? "#FFA500" :
+                                                        selectedIncident.origin === "InterCorp" ? "#87CEEB" : selectedIncident.origin === "Ripley" ? "#2D0C9E" :
+                                                            selectedIncident.origin === "VENTA" ? "#8B4513" : "inherit", color : "white"
+                                                }}
+                                            >
+                                                <b>
+                                                    <i className="fa-solid fa-truck-fast"></i>{" "}
+                                                    {selectedIncident.origin === "Vtex" ? "Home Delivery" :
+                                                        selectedIncident.origin === "Ripley" ? "OPL Ripley" :
+                                                            selectedIncident.origin === "InterCorp" ? "OPL Intercorp" :
+                                                                selectedIncident.origin === "Saga" ? "Home Delivery" :
+                                                                    selectedIncident.origin === "VENTA" ? "Propio" : "Estado Desconocido"}
+                                                </b>
+                                            </Button>
+
                                         </Typography>
                                         <Typography>
                                             Plataforma: {selectedIncident.origin} <br />
