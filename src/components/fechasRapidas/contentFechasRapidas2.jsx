@@ -17,6 +17,7 @@ export default function contentInventory() {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalOutputOpen, setModalOutputOpen] = useState(false);
     const [modalUpOpen, setModalUpOpen] = useState(false);
+    const [modalHistoryOpen, setModalHistoryOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedIncident, setSelectedIncident] = useState(null);
     const [selectedDocument, setSelectedDocument] = useState(null);
@@ -150,6 +151,12 @@ export default function contentInventory() {
     };
     const handleOpenCrearModal = () => {
         setCrearModalOpen(true);
+    };
+    const handleOpenHistoryModal = () => {
+        setModalHistoryOpen(true);
+    }
+    const handleCloseHistoryModal = () => {
+        setModalHistoryOpen(false);
     }
     const handleSwitchChange = () => {
         setSwitchOn(!switchOn);
@@ -446,6 +453,44 @@ export default function contentInventory() {
                                 {...options}
                             />
                         </div>
+                        <Modal open={modalHistoryOpen} onClose={handleCloseHistoryModal}>
+                            <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
+                                <h3 className="card-title">
+                                    <b>Historial del corte:</b>
+                                </h3>
+                                <br />
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Usuario</th>
+                                            <th>Fecha</th>
+                                            <th>Movimiento</th>
+                                            <th>Detalle</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Fabian</td>
+                                            <td>2024-04-25</td>
+                                            <td>subida de Corte</td>
+                                            <td>Corte de prueba</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Johnny Jorges</td>
+                                            <td>2024-04-26</td>
+                                            <td>realizo salida</td>
+                                            <td>Detalle de la salida</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Johnny Jorges</td>
+                                            <td>2024-04-27</td>
+                                            <td>confirma entrega</td>
+                                            <td>Detalle de la entrada</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </Modal>
                         <Modal open={modalOpen} onClose={handleCloseModal}>
                             <div className="modalDetalle">
                                 {selectedIncident && (
@@ -498,7 +543,7 @@ export default function contentInventory() {
                                                 style={{
                                                     backgroundColor: selectedIncident.origin === "Vtex" || selectedIncident.origin === "Saga" ? "#FFA500" :
                                                         selectedIncident.origin === "InterCorp" ? "#87CEEB" : selectedIncident.origin === "Ripley" ? "#2D0C9E" :
-                                                            selectedIncident.origin === "VENTA" ? "#8B4513" : "inherit", color : "white"
+                                                            selectedIncident.origin === "VENTA" ? "#8B4513" : "inherit", color: "white"
                                                 }}
                                             >
                                                 <b>
@@ -548,7 +593,17 @@ export default function contentInventory() {
                                                         Confirmar Entrega Motorizado
                                                     </Button>
                                                 </div>
-                                            )}
+                                            )}<br />
+                                            <div>
+                                                <Button
+                                                    variant="contained"
+                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}
+                                                    size="small"
+                                                    onClick={handleOpenHistoryModal}
+                                                >
+                                                    Historial
+                                                </Button>
+                                            </div>
                                         </Typography>
                                     </>
                                 )}
