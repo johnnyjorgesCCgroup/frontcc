@@ -13,6 +13,7 @@ import Select from 'react-select';
 export default function contentInventory() {
     const [image, setImage] = useState(null);
     const [orderNumber, setOrderNumber] = useState('');
+    const [idImg, setIDImg] = useState(''); 
     const [incidentes, setIncidentes] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalOutputOpen, setModalOutputOpen] = useState(false);
@@ -34,7 +35,7 @@ export default function contentInventory() {
     const [loadingOrderDetails, setLoadingOrderDetails] = useState(false);
 
     const handleOpenImageModal = (imageName) => {
-        setSelectedImage(`http://cc.cvimport.com:3000/uploads/images/${imageName}`);
+        setSelectedImage(`https://api.cvimport.com/storage/${imageName}`);
     };
     const handleChange = (selectedOption) => {
         setSelectedDocument(selectedOption);
@@ -72,33 +73,26 @@ export default function contentInventory() {
             console.error("Error de bd", error);
         }
     }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
+    
         const formData = new FormData();
-        formData.append('imagenEvidencia', image);
-        formData.append('client', client);
-        formData.append('document_number', documentNumber);
-        formData.append('product', product);
-
-        console.log("Datos a enviar al servidor:");
-        console.log("Cliente:", client);
-        console.log("Número de documento:", documentNumber);
-        console.log("Producto:", product);
-
+        formData.append('photo', image); // Asegúrate de que 'photo' sea el nombre correcto del campo de imagen en el backend
+        formData.append('id_corte', idImg); // Asumiendo que 'client' es el ID del corte que necesita el backend
+    
         try {
-            const response = await fetch(`http://cc.cvimport.com:3000/uploads/images/single?orderNumber=${orderNumber}`, {
+            const response = await fetch('https://api.cvimport.com/api/updaloadImage', {
                 method: 'POST',
                 body: formData,
             });
             const data = await response.text();
             console.log(data);
         } catch (error) {
-            console.error('Error uploading image:', error);
+            console.error('Error al cargar la imagen:', error);
         }
         handleCloseUpModal();
     };
-
+    
     const handleSubmitSelect = async () => {
         if (!selectedDocument) {
             obtenerIncidentes();
@@ -133,7 +127,6 @@ export default function contentInventory() {
         setProduct(incident.product);
         setModalOpen(true);
     }
-
     const handleRowClickOutput = (oc) => {
         const incident = incidentes.find(incidente => incidente.oc === oc);
         setSelectedIncident(incident); // Corregir el nombre de la función setSelectedIncident
@@ -146,7 +139,7 @@ export default function contentInventory() {
         setModalOutputOpen(false);
     }
     const handleOpenUploadModal = () => {
-        setOrderNumber(selectedIncident ? selectedIncident.oc : '');
+        setIDImg(selectedIncident ? selectedIncident.id : '');
         setModalUpOpen(true);
     };
     const handleCloseUpModal = () => {
@@ -563,15 +556,15 @@ export default function contentInventory() {
                                             Direccion: {selectedIncident.address}, {selectedIncident.distrito}<br />
                                             Producto: {selectedIncident.code} - {selectedIncident.product}<br />
                                             Cantidad y Precio: {selectedIncident.quantity} - {selectedIncident.price}<br />
-                                            {selectedIncident.imageArchive !== null ? (
+                                            {selectedIncident.photo !== null ? (
                                                 <React.Fragment>
-                                                    Imagen: {selectedIncident.imageArchive}
-                                                    <Button onClick={() => handleOpenImageModal(selectedIncident.imageArchive)}>Ver</Button>
+                                                    Imagen: {selectedIncident.photo}
+                                                    <Button onClick={() => handleOpenImageModal(selectedIncident.photo)}>Ver</Button>
                                                 </React.Fragment>
                                             ) : (
                                                 <React.Fragment>
                                                     No hay imagen:
-                                                    <Button onClick={handleOpenUploadModal} >Subir</Button>
+                                                    <Button onClick={handleOpenUploadModal}>Subir</Button>
                                                 </React.Fragment>
                                             )}
                                             <br />
@@ -613,10 +606,18 @@ export default function contentInventory() {
                                 <br />
                                 <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
                                     <TextField
-                                        label="Número de Orden"
+                                        label="ID"
                                         variant="outlined"
-                                        value={orderNumber}
-                                        onChange={(e) => setOrderNumber(e.target.value)}
+                                        value={idImg}
+                                        onChange={(e) => setIdImg(e.target.value)}
+                                        style={{ marginBottom: '10px' }}
+                                    />
+                                    <br />
+                                    <TextField
+                                        label="Orden"
+                                        variant="outlined"
+                                        value={selectedIncident ? selectedIncident.oc : ''}
+                                        disabled
                                         style={{ marginBottom: '10px' }}
                                     />
                                     <br />
