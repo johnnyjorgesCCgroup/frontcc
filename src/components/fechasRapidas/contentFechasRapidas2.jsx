@@ -31,6 +31,7 @@ export default function contentInventory() {
     yesterday.setDate(yesterday.getDate() - 1);
     const matches = useMediaQuery('(min-width:600px)');
     const [filterVisible, setFilterVisible] = useState(false);
+    const [loadingOrderDetails, setLoadingOrderDetails] = useState(false);
 
     const handleOpenImageModal = (imageName) => {
         setSelectedImage(`http://cc.cvimport.com:3000/uploads/images/${imageName}`);
@@ -46,10 +47,12 @@ export default function contentInventory() {
     };
     const obtenerIncidentes = async () => {
         try {
+            setLoadingOrderDetails(true);
             const response = await fetch("http://cc.cvimport.com:3000/procesarDatos");
             if (response.ok) {
                 const data = await response.json();
                 setIncidentes(data);
+                setLoadingOrderDetails(false);
                 const opciones = data.flatMap(incidente => {
                     return [
                         { label: incidente.document_number, value: incidente.document_number },
@@ -345,18 +348,9 @@ export default function contentInventory() {
         columns.splice(documentNumberIndex + 2, 0, { field: 'document_number', headerName: 'Documento', width: 100 });
     }
 
-    const noRowsLabel = (
-        <p style={{ textAlign: 'center' }}>
-            Cargando base de datos <i className="fas fa-database fa-spin" style={{ fontSize: '15px', color: '#888' }}></i>
-        </p>
-    );
-
     const options = {
         print: false,
         search: true,
-        localeText: {
-            noRowsLabel: noRowsLabel,
-        },
     };
     if (!matches) {
         options.filterType = 'checkbox';
@@ -376,15 +370,16 @@ export default function contentInventory() {
                             </div>
                             <div className="col-sm-6">
                                 <div className='justify-content-end float-sm-right'>
-                                    <Button
-                                        href='https://cvimport.com/incident'
-                                        target="_blank"
-                                        variant="contained"
-                                        style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }}
-                                        startIcon={<FontAwesomeIcon icon={faPlusCircle} />}
-                                    >
-                                        Incidencia
-                                    </Button>
+                                        <Button
+                                            href='https://cvimport.com/incident'
+                                            target="_blank"
+                                            variant="contained"
+                                            style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }}
+                                            startIcon={<FontAwesomeIcon icon={faPlusCircle} />}
+                                            
+                                        >
+                                            Incidencia
+                                        </Button>
                                     <Button
                                         href='https://cvimport.com/output'
                                         target="_blank"
@@ -404,9 +399,9 @@ export default function contentInventory() {
                     <div className="card-header border-0">
                         <a href="#" onClick={() => handleToggleFilter()}><i className="fas fa-filter"></i> Filtrar</a>
                         <div className="row mb-2" style={{ display: filterVisible ? 'flex' : 'none', justifyContent: 'center', padding: "8px" }}>
-                            <ButtonGroup aria-label="Basic button group" className='botonesFilter'>
-                                <div>
-                                    <Button onClick={() => handlePlatformFilter('Vtex')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Vtex</Button>
+                            <ButtonGroup aria-label="Basic button group" className='botonesFilter' data-tooltip="Solo seleccionar una opción o refresh para borrar filtro">
+                                <div className="tooltip-container">
+                                    <Button onClick={() => handlePlatformFilter('Vtex')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }} >Vtex</Button>
                                     <Button onClick={() => handlePlatformFilter('Saga')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Saga</Button>
                                     <Button onClick={() => handlePlatformFilter('Intercorp')} variant="contained" style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}>Intercorp</Button>
                                 </div>
@@ -450,6 +445,7 @@ export default function contentInventory() {
                                 pageSizeOptions={[7, 10, 15]}
                                 autoHeight
                                 checkboxSelection={matches}
+                                loading={loadingOrderDetails}
                                 {...options}
                             />
                         </div>
