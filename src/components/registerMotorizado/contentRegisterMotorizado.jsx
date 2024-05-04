@@ -31,30 +31,34 @@ function ImageUploader() {
   const fetchImagesApi = async () => {
     setLoadingImages(true);
     try {
-      const response = await fetch('http://cc.cvimport.com:3000/uploads/images');
+      const response = await fetch('https://api.cvimport.com/api/cut');
       const data = await response.json();
-      setImagesApi(data);
+  
+      // Filtrar los datos para eliminar aquellos con photo igual a null
+      const filteredData = data.data.filter(item => item.photo !== null);
+  
+      setImagesApi(filteredData);
       setLoadingImages(false);
-
+  
       // Extraer la columna 'archive' y almacenarla en un estado
-      const archiveData = data.map((item) => item.archive);
+      const archiveData = filteredData.map((item) => item.photo);
       setArchive(archiveData);
-
+  
       const uniqueOptions = {};
-      data.forEach((item) => {
+      filteredData.forEach((item) => {
         if (item.oc) uniqueOptions[item.oc] = true;
-        if (item.document) uniqueOptions[item.document] = true;
+        if (item.document_number) uniqueOptions[item.document_number] = true;
         if (item.client) uniqueOptions[item.client] = true;
       });
       const optionsArray = Object.keys(uniqueOptions).map((value) => ({ value, label: value }));
-
+  
       setOptions(optionsArray);
     } catch (error) {
       console.error('Error fetching images:', error);
       setLoadingImages(false);
     }
   };
-
+  
   const handleSearch = () => {
     if (orderNumber.trim() === '') {
       setOrderDetails([]);
@@ -106,7 +110,7 @@ function ImageUploader() {
         document: details.document_number ?? "Sin datos",
         product: details.product ?? "Sin datos",
         oc: details.oc ?? "Sin datos",
-        archive: details.imageArchive ?? "Sin datos", // Agrega la propiedad archive aquí
+        archive: details.photo ?? "Sin datos", // Agrega la propiedad archive aquí
       }));
       setRows(filteredRows);
     } else {
@@ -115,10 +119,10 @@ function ImageUploader() {
         ...image,
         date: image.date ?? "Sin datos",
         client: image.client ?? "Sin datos",
-        document: image.document ?? "Sin datos",
+        document: image.document_number ?? "Sin datos",
         product: image.product ?? "Sin datos",
         oc: image.oc ?? "Sin datos",
-        archive: image.archive ?? "Sin datos", // Agrega la propiedad archive aquí
+        archive: image.photo ?? "Sin datos", // Agrega la propiedad archive aquí
       })).sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
       setRows(allRows);
     }
@@ -135,8 +139,8 @@ function ImageUploader() {
           variant="contained"
           color="primary"
           onClick={() => {
-            if (params.row && params.row.archive) {
-              handleOpenModalViewImage(params.row.archive);
+            if (params.row && params.row.photo) {
+              handleOpenModalViewImage(params.row.photo);
             } else {
               console.error('El valor de archive en params.row es indefinido.');
             }
@@ -145,7 +149,6 @@ function ImageUploader() {
         >
           Ver
         </Button>
-
       )
     },
     { field: 'id', headerName: 'ID', width: 20 },
@@ -153,7 +156,7 @@ function ImageUploader() {
     width: matches ? undefined : 100},
     { field: 'client', headerName: 'Client', flex: matches ? 1 : undefined,
     width: matches ? undefined : 100},
-    { field: 'document', headerName: 'Document', flex: matches ? 1 : undefined,
+    { field: 'document_number', headerName: 'Document', flex: matches ? 1 : undefined,
     width: matches ? undefined : 100},
     { field: 'product', headerName: 'Product', flex: matches ? 1 : undefined,
     width: matches ? undefined : 100},
@@ -172,10 +175,8 @@ function ImageUploader() {
   const handleOpenModalViewImage = (archiveValue) => {
     console.log("handleOpenModalViewImage ejecutada con archiveValue:", archiveValue);
     if (archiveValue) {
-      const filename = archiveValue.substring(archiveValue.lastIndexOf('/') + 1);
-      console.log("Nombre del archivo seleccionado:", filename);
       setModalOpenViewImage(true);
-      setSelectedImageURL(`http://cc.cvimport.com:3000/uploads/images/${filename}`);
+      setSelectedImageURL(`https://api.cvimport.com/storage/${archiveValue}`);
     }
   }
 
@@ -189,17 +190,17 @@ function ImageUploader() {
   }
 
   useEffect(() => {
-    fetchFolderSize();
-    fetchImagesApi();
-  }, []);
-
-  useEffect(() => {
     if (orderNumber.trim() !== '') {
       fetchFilteredData();
     }
   }, [orderNumber]);
 
-  const handleImageChange = (e) => {
+  useEffect(() => {
+    fetchFolderSize();
+    fetchImagesApi();
+  }, []);
+
+  /*const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
 
@@ -219,7 +220,7 @@ function ImageUploader() {
       console.error('Error uploading image:', error);
     }
     handleCloseModal();
-  };
+  };*/
 
   return (
     <div className='content-wrapper'>
@@ -237,7 +238,7 @@ function ImageUploader() {
                 <div className='justify-content-end float-sm-right'>
                   <Button
                     variant="contained"
-                    onClick={handleOpenModal}
+                    /*onClick={handleOpenModal}*/
                     style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}
                     startIcon={<FontAwesomeIcon icon={faPlusCircle} />}
                   >
@@ -335,7 +336,7 @@ function ImageUploader() {
           </div>
         </div>
       </div>
-      <Modal open={modalOpen} onClose={handleCloseModal}>
+      {/*<Modal open={modalOpen} onClose={handleCloseModal}>
         <div className="modalDetalle">
           <h3 className="card-title">
             <b>Subir Imagen de evidencia</b>
@@ -367,12 +368,12 @@ function ImageUploader() {
             </Button>
           </form>
         </div>
-      </Modal>
+      </Modal>*/}
       <Modal open={modalOpenViewImage} onClose={handleCloseModalViewImage}>
         <div className="modalDetalle">
           <img src={selectedImageURL} alt="Vista previa de la imagen" style={{ maxWidth: "100%", maxHeight: "20%", height: "500px" }} />
         </div>
-      </Modal>
+                </Modal>
     </div>
   );
 }
