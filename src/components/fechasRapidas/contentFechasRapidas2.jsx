@@ -13,7 +13,7 @@ import Select from 'react-select';
 export default function contentInventory() {
     const [image, setImage] = useState(null);
     const [orderNumber, setOrderNumber] = useState('');
-    const [idImg, setIDImg] = useState(''); 
+    const [idImg, setIDImg] = useState('');
     const [incidentes, setIncidentes] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalOutputOpen, setModalOutputOpen] = useState(false);
@@ -49,7 +49,7 @@ export default function contentInventory() {
     const obtenerIncidentes = async () => {
         try {
             setLoadingOrderDetails(true);
-            const response = await fetch("http://cc.cvimport.com:3000/procesarDatos");
+            const response = await fetch("http://localhost:3000/procesarDatos");
             if (response.ok) {
                 const data = await response.json();
                 setIncidentes(data);
@@ -75,11 +75,11 @@ export default function contentInventory() {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         const formData = new FormData();
         formData.append('photo', image); // Asegúrate de que 'photo' sea el nombre correcto del campo de imagen en el backend
         formData.append('id_corte', idImg); // Asumiendo que 'client' es el ID del corte que necesita el backend
-    
+
         try {
             const response = await fetch('https://api.cvimport.com/api/updaloadImage', {
                 method: 'POST',
@@ -93,7 +93,7 @@ export default function contentInventory() {
         }
         handleCloseUpModal();
     };
-    
+
     const handleSubmitSelect = async () => {
         if (!selectedDocument) {
             obtenerIncidentes();
@@ -293,13 +293,13 @@ export default function contentInventory() {
             { field: 'date', headerName: 'Fecha de Subida', flex: 0 },
             {
                 field: 'move',
-                headerName: 'Estado de Movimiento',
-                flex: 0.8,
+                headerName: 'Movimientos',
+                flex: 0,
                 filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
-                valueGetter: (params) => params.row.whatMove ? "Hay un movimiento" : "No tiene movimiento", // Obtener el valor para el filtro
+                valueGetter: (params) => Math.min(params.row.numMoves || 0, 22),
                 renderCell: (params) => {
-                    const hasMove = params.row.whatMove === true ? "Hay un movimiento" : "No tiene movimiento";
-                    const moveVariant = params.row.whatMove === true ? "success" : "error";
+                    const hasMove = params.row.numMoves > 0 ? params.row.numMoves : 0;
+                    const moveVariant = params.row.numMoves > 0 ? "success" : "error";
 
                     return (
                         <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex" }}>
@@ -312,13 +312,13 @@ export default function contentInventory() {
             },
             {
                 field: 'incidente',
-                headerName: 'Estado de Incidente',
-                flex: 0.8,
+                headerName: 'Incidentes',
+                flex: 0,
                 filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
-                valueGetter: (params) => params.row.whatIncident ? "Hay una incidencia" : "No tiene incidencia", // Obtener el valor para el filtro
+                valueGetter: (params) => Math.min(params.row.numIncidents || 0, 22),
                 renderCell: (params) => {
-                    const hasIncident = params.row.whatIncident === true ? "Hay una incidencia" : "No tiene incidencia";
-                    const incidentVariant = params.row.whatIncident === true ? "success" : "error";
+                    const hasIncident = params.row.numIncidents > 0 ? params.row.numIncidents : 0;
+                    const incidentVariant = params.row.numIncidents > 0 ? "success" : "error";
 
                     return (
                         <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex" }}>
@@ -329,6 +329,40 @@ export default function contentInventory() {
                     );
                 },
             },
+            {
+                field: 'Estado',
+                headerName: 'Estado',
+                flex: 0.8,
+                filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
+                valueGetter: (params) => params.row.status === 0 ? "etiqueta" : params.row.status === 2 ? "en ruta" : params.row.status === 3 ? "entregado" : params.row.status === 4 ? "anulado" : params.row.status === 5 ? "devolucion" || "cambio" : "0", // Obtener el valor para el filtro
+                renderCell: (params) => {
+                    return (
+                        <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex", justifyContent: "center" }}>
+                            <Button
+                                variant="contained"
+                                style={{
+                                    width: "190px",
+                                    height: "25px",
+                                    backgroundColor: switchOn ? "#9C27B0" :
+                                        params.row.status === 1 || params.row.status === 4 || params.row.status === 5 ? "red" :
+                                            params.row.status === 2 ? "#FFD848" : // Color para status === 2
+                                                "#22FF94",
+                                    color: switchOn || params.row.status === 1 || params.row.status === 4 || params.row.status === 5 ? "white" : "black"
+                                }}
+                                disabled={true}
+                            >
+                                {params.row.status === 0 ? "Etiqueta" :
+                                    params.row.status === 1 ? "Pendiente" :
+                                        params.row.status === 2 ? "En Ruta" :
+                                            params.row.status === 3 ? "Entregado" :
+                                                params.row.status === 4 ? "Anulado" :
+                                                    params.row.status === 5 ? "Devolución / Cambio" : "Desconocido"}
+                            </Button>
+                        </div>
+                    );
+                },
+            },
+
             ...columns,
         ];
     }
@@ -364,16 +398,16 @@ export default function contentInventory() {
                             </div>
                             <div className="col-sm-6">
                                 <div className='justify-content-end float-sm-right'>
-                                        <Button
-                                            href='https://cvimport.com/incident'
-                                            target="_blank"
-                                            variant="contained"
-                                            style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }}
-                                            startIcon={<FontAwesomeIcon icon={faPlusCircle} />}
-                                            
-                                        >
-                                            Incidencia
-                                        </Button>
+                                    <Button
+                                        href='https://cvimport.com/incident'
+                                        target="_blank"
+                                        variant="contained"
+                                        style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }}
+                                        startIcon={<FontAwesomeIcon icon={faPlusCircle} />}
+
+                                    >
+                                        Incidencia
+                                    </Button>
                                     <Button
                                         href='https://cvimport.com/output'
                                         target="_blank"

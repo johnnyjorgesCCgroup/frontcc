@@ -200,28 +200,6 @@ function ImageUploader() {
     fetchImagesApi();
   }, []);
 
-  /*const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('imagenEvidencia', image);
-
-    try {
-      const response = await fetch(`http://cc.cvimport.com:3000/uploads/images/single?orderNumber=${orderNumber}`, {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await response.text();
-      console.log(data);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-    handleCloseModal();
-  };*/
-
   return (
     <div className='content-wrapper'>
       <div className="card" id="principalCard">
@@ -233,18 +211,6 @@ function ImageUploader() {
                   <b>Registro Motorizados</b>
                 </h3>
                 <Switch id="switch1" checked={switchOn} onChange={handleSwitchChange} color="secondary" size="small" />
-              </div>
-              <div className="col-sm-6">
-                <div className='justify-content-end float-sm-right'>
-                  <Button
-                    variant="contained"
-                    /*onClick={handleOpenModal}*/
-                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}
-                    startIcon={<FontAwesomeIcon icon={faPlusCircle} />}
-                  >
-                    Subir Imagen
-                  </Button>
-                </div>
               </div>
             </div>
           </div>

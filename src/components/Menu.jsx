@@ -82,7 +82,7 @@ const Menu = () => {
               data-accordion="true"
             >
               <li
-                className={`nav-item ${location.pathname === "/dashboard" ? "menu-open" : ""
+                className={`nav-item ${location.pathname === "/dashboard" || "/dashgeneral" ? "menu-open" : ""
                   }`}
               >
                 <a href="#" className="nav-link">
@@ -93,6 +93,16 @@ const Menu = () => {
                   </p>
                 </a>
                 <ul className="nav nav-treeview">
+                  <li className="nav-item">
+                    <Link
+                      to="/dashgeneral"
+                      className={`nav-link ${location.pathname === "/dashgeneral" ? "active" : ""
+                        }`}
+                    >
+                      <i className="far fa-circle nav-icon" />
+                      <p>General</p>
+                    </Link>
+                  </li>
                   <li className="nav-item">
                     <Link
                       to="/dashboard"
