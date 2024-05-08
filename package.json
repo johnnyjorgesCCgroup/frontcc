@@ -25,7 +25,7 @@
     "admin-lte": "^3.1.0",
     "axios": "^1.6.5",
     "bootstrap": "^4.4.1",
-    "chart.js": "^4.4.1",
+    "chart.js": "^4.4.2",
     "date-fns": "^3.2.0",
     "dayjs": "^1.11.10",
     "dom-to-image": "^2.6.0",
