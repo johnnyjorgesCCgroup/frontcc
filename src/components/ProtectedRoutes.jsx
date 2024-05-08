@@ -36,7 +36,7 @@ const ProtectedRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<IndexTicket />} />
+      <Route path="/" element={<IndexDashGeneral />} />
       <Route path="/ticket" element={<IndexTicket />} />
       <Route path="/hooks" element={<IndexHooks />} />
       <Route path="/inventory" element={<IndexInventory />} />
