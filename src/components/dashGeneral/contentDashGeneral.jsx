@@ -1,12 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 
 export default function contentInventory() {
     const label = { inputProps: { 'aria-label': 'Size switch demo' } };
 
+    const [data, setData] = useState([]);
     const chartAyerRef = useRef(null);
     const chartSemanalRef = useRef(null);
     const chartMensualRef = useRef(null);
+    const [filteredStatus, setFilteredStatus] = useState([]);
 
     const createBarChartAyer = () => {
         let myChart = null;
@@ -110,6 +112,7 @@ export default function contentInventory() {
         return myChart;
     };
 
+    //chart ayer, semanal, mensual
     useEffect(() => {
         let myChart = createBarChartAyer();
         let myChart2 = createBarChartSemanal();
@@ -125,6 +128,43 @@ export default function contentInventory() {
                 myChart3.destroy();
             }
         };
+    }, []);
+
+    const fetchDataFromAPI = () => {
+        fetch('https://api.cvimport.com/api/cut')
+          .then(response => response.json())
+          .then(data => {
+            const responseData = data.data;
+    
+            // Ordenar los datos de forma descendente basándonos en la columna 'id'
+            const sortedData = responseData.sort((a, b) => b.id - a.id);
+    
+            // Filtrar y seleccionar solo las columnas de "oc", "price", y "status"
+            const filteredData = sortedData.map(item => {
+              return {
+                oc: item.oc,
+                price: item.price,
+                status: item.status,
+                date: item.date // Añadir la columna de fecha
+              };
+            });
+    
+            // Guardar los status filtrados en el estado correspondiente
+            const currentDate = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato 'YYYY-MM-DD'
+            const filteredStatusList = filteredData.filter(item => item.date === currentDate).map(item => item.status);
+            setFilteredStatus(filteredStatusList);
+    
+            // Limitar el número de filas a 14
+            const limitedData = filteredData.slice(0, 14);
+    
+            // Actualizar el estado con los datos filtrados
+            setData(limitedData);
+          })
+          .catch(error => console.error('Error al obtener los datos de la API:', error));
+      };
+
+    useEffect(() => {
+        fetchDataFromAPI();
     }, []);
 
     return (
@@ -144,10 +184,14 @@ export default function contentInventory() {
                 <div className="card card-outline">
                     <div className="card-header border-0">
                         <div style={{ alignItems: "center" }}>
-                            <div className="col-sm-6">
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <h3 className="card-title">
                                     <b>Hoy</b>
                                 </h3>
+                                <div>
+                                    <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
+                                    <a href="" style={{ color: "green" }}>0 Ordenes</a>
+                                </div>
                             </div>
                             <div className="row" style={{ width: "100%" }}>
                                 <div className="dashPrincipal" style={{ display: "flex", width: "100%" }}>
@@ -210,53 +254,262 @@ export default function contentInventory() {
                         </div>
                     </div>
                 </div>
-                <div style={{ display: "flex", justifyContent: "center", height: "700px" }}>
-                    <div className="card card-outline" style={{ width: "33.3%" }}>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div className="card card-outline" style={{ width: "27.3%" }}>
                         <div className="card-header border-0">
                             <div>
                                 <div>
-                                    <h3 className="card-title">
-                                        <b>Ayer</b>
-                                    </h3>
-                                    <br></br>
-                                    <br></br>
-                                    <div className='cardAyer'>
-                                        <canvas ref={chartAyerRef}/>
+                                    <div className="card card-outlined" id='cardAyer' style={{ padding: "20px", borderRadius: "10px" }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                            <h3 className="card-title" style={{ color: "black" }}>
+                                                <b>Ayer</b>
+                                            </h3>
+                                            <div>
+                                                <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
+                                                <a href="" style={{ color: "green" }}>S/ 0.00</a>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <canvas ref={chartAyerRef} style={{ height: "200px" }} />
+                                    </div>
+                                    <div id='cardAyerDetalles' style={{ paddingTop: "15px" }}>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-boxes-stacked' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Etiqueta</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-truck-ramp-box' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Pendiente</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-motorcycle' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>En ruta</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-people-carry-box' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Entregado</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-boxes-packing' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Anulado</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-truck-ramp-box' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Devolución / Cambio</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="card card-outline" style={{ width: "33.3%", marginLeft: "1%" }}>
+                    <div className="card card-outline" style={{ width: "27.3%", marginLeft: "1%" }}>
                         <div className="card-header border-0">
                             <div>
                                 <div>
-                                    <h3 className="card-title">
-                                        <b>Semanal</b>
-                                    </h3>
-                                    <br></br>
-                                    <br></br>
-                                    <div className='cardSemanal'>
-                                        <canvas ref={chartSemanalRef}/>
+                                    <div className="card card-outline" id='cardSemanal' style={{ padding: "20px", borderRadius: "10px" }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                            <h3 className="card-title" style={{ color: "black" }}>
+                                                <b>Semanal</b>
+                                            </h3>
+                                            <div>
+                                                <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
+                                                <a href="" style={{ color: "green" }}>S/ 0.00</a>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <canvas ref={chartSemanalRef} style={{ height: "200px" }} />
+                                    </div>
+                                    <div id='cardSemanalDetalles' style={{ paddingTop: "15px" }}>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-boxes-stacked' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Etiqueta</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-truck-ramp-box' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Pendiente</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-motorcycle' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>En ruta</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-people-carry-box' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Entregado</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-boxes-packing' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Anulado</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-truck-ramp-box' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Devolución / Cambio</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="card card-outline" style={{ width: "33.3%", marginLeft: "1%"}}>
+                    <div className="card card-outline" style={{ width: "27.3%", marginLeft: "1%" }}>
                         <div className="card-header border-0">
                             <div>
                                 <div>
-                                    <h3 className="card-title">
-                                        <b>Mensual</b>
-                                    </h3>
-                                    <br></br>
-                                    <br></br>
-                                    <div className='cardSemanal'>
-                                        <canvas ref={chartMensualRef}/>
+                                    <div className="card card-outlined" id='cardMensual' style={{ padding: "20px", borderRadius: "10px" }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                            <h3 className="card-title" style={{ color: "black" }}>
+                                                <b>Mensual</b>
+                                            </h3>
+                                            <div>
+                                                <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
+                                                <a href="" style={{ color: "green" }}>S/ 0.00</a>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <canvas ref={chartMensualRef} style={{ height: "200px" }} />
+                                    </div>
+                                    <div id='cardMensualDetalles' style={{ paddingTop: "15px" }}>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-boxes-stacked' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Etiqueta</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-truck-ramp-box' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Pendiente</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-motorcycle' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>En ruta</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-people-carry-box' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Entregado</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-boxes-packing' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Anulado</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-truck-ramp-box' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Devolución / Cambio</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div className='card card-outline' style={{ width: "18.1%", marginLeft: "1%", paddingTop: "10px", paddingLeft: "10px", paddingRight: "10px" }}>
+                        <div style={{ display: "inline-block", width: "fit-content", backgroundColor: "#E4EEF3", borderRadius: "10px", padding: "10px", margin: "0 auto", textAlign: "center", marginBottom: "5px" }}>
+                            <i className='fas fa-box-open' style={{ color: "#1A5276" }}></i>
+                        </div>
+                        <h3 className="card-title" style={{ color: "black", textAlign: "center", fontSize: "14px", marginBottom: "7px"}}>
+                            <b>Movimientos Hoy</b>
+                        </h3>
+                        <div>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th style={{backgroundColor:"#E4EEF3", fontSize: "14px"}}>Orden</th>
+                                        <th style={{backgroundColor:"#E4EEF3", fontSize: "14px"}}>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {data.map(item => (
+                                        <tr key={item.oc}>
+                                            <td>{item.oc}</td>
+                                            <td>S/{item.price}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
