@@ -536,8 +536,8 @@ export default function contentInventory() {
                                             >
                                                 <b>
                                                     <i className='fas fa-box'></i>{" "}
-                                                    {selectedIncident.status === 0 ? "ETIQUETA" :
-                                                        selectedIncident.status === 1 ? "PENDIENTE" :
+                                                    {selectedIncident.status === 0 ? "PENDIENTE" :
+                                                        selectedIncident.status === 1 ? "ETIQUETA" :
                                                             selectedIncident.status === 2 ? "EN RUTA" :
                                                                 selectedIncident.status === 3 ? "ENTREGADO" :
                                                                     selectedIncident.status === 4 ? "ANULADO" :
