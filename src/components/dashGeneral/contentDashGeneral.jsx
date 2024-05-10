@@ -48,6 +48,9 @@ export default function contentInventory() {
     const [orderCountWeeklyIntercorp, SetorderCountWeeklyIntercorp] = useState(0);
     const [orderCountWeeklyRipley, SetorderCountWeeklyRipley] = useState(0);
     const [orderCountWeeklyVentas, SetorderCountWeeklyVentas] = useState(0);
+    const [totalPriceYesterday, SetTotalPriceYesterday] = useState(0);
+    const [totalPriceWeekly, SetTotalPriceWeekly] = useState(0);
+    const [totalPriceMonth, SetTotalPriceMonth] = useState(0);
 
     const fetchDataFromAPI = () => {
         fetch('https://api.cvimport.com/api/cut')
@@ -61,7 +64,7 @@ export default function contentInventory() {
                         price: item.price,
                         status: item.status,
                         date: item.date,
-                        origin: item.origin
+                        origin: item.origin,
                     };
                 });
 
@@ -215,6 +218,16 @@ export default function contentInventory() {
                 }, 0);
                 SetorderCountYesterdayVentas(orderCountYesterdayVentas);
 
+                //priceAyer
+                const totalPriceYesterday = filteredData.reduce((total, item) => {
+                    if (item.date === formattedYesterday) {
+                        return total + parseFloat(item.price); // Suma el valor numérico del precio
+                    } else {
+                        return total;
+                    }
+                }, 0);
+                SetTotalPriceYesterday(totalPriceYesterday);
+
                 //semanal y mensual
                 const today = new Date();
                 const dayOfWeek = today.getDay();
@@ -225,6 +238,17 @@ export default function contentInventory() {
                 endOfWeek.setDate(startOfWeek.getDate() + 6);
                 const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
                 const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+                //priceSemanal
+                const totalPriceWeekly = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfWeek && itemDate <= endOfWeek) {
+                        return count + parseFloat(item.price);
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetTotalPriceWeekly(totalPriceWeekly);
 
                 //countSemanal
                 const orderCountWeeklyEtiqueta = filteredData.reduce((count, item) => {
@@ -384,7 +408,18 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetorderCountMonthDevolucion(orderCountMonthDevolucion);
-                
+
+                //priceMensual
+                const totalPriceMonth = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth) {
+                        return count + parseFloat(item.price);
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetTotalPriceMonth(totalPriceMonth);
+
                 //countMonthMarkets
                 const orderCountMonthVtex = filteredData.reduce((count, item) => {
                     const itemDate = new Date(item.date);
@@ -469,7 +504,6 @@ export default function contentInventory() {
 
     const createBarChartAyer = (orderCountYesterdayVtex, orderCountYesterdaySaga, orderCountYesterdayIntercorp, orderCountYesterdayRipley, orderCountYesterdayVentas) => {
 
-        console.log("prueba", orderCountMonthVtex )
         let myChart = null;
 
         const ctx = chartAyerRef.current.getContext('2d');
@@ -668,7 +702,7 @@ export default function contentInventory() {
                                             </h3>
                                             <div>
                                                 <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
-                                                <a href="" style={{ color: "green" }}>S/ 0.00</a>
+                                                <a href="" style={{ color: "green" }}>S/ {totalPriceYesterday.toFixed(2)}</a>
                                             </div>
                                         </div>
                                         <br />
@@ -745,7 +779,7 @@ export default function contentInventory() {
                                             </h3>
                                             <div>
                                                 <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
-                                                <a href="" style={{ color: "green" }}>S/ 0.00</a>
+                                                <a href="" style={{ color: "green" }}>S/ {totalPriceWeekly.toFixed(2)}</a>
                                             </div>
                                         </div>
                                         <br />
@@ -822,7 +856,7 @@ export default function contentInventory() {
                                             </h3>
                                             <div>
                                                 <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
-                                                <a href="" style={{ color: "green" }}>S/ 0.00</a>
+                                                <a href="" style={{ color: "green" }}>S/ {totalPriceMonth.toFixed(2)}</a>
                                             </div>
                                         </div>
                                         <br />
