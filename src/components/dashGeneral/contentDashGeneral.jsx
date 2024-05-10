@@ -24,125 +24,30 @@ export default function contentInventory() {
     const [orderCountWeeklyEtiqueta, SetorderCountWeeklyEtiqueta] = useState(0);
     const [orderCountWeeklyPendiente, SetorderCountWeeklyPendiente] = useState(0);
     const [orderCountWeeklyEnRuta, SetorderCountWeeklyEnRuta] = useState(0);
-
-    const createBarChartAyer = () => {
-        let myChart = null;
-
-        const ctx = chartAyerRef.current.getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["Vtex", "Falabella", "Intercorp", "Ripley", "RRSS"],
-                datasets: [{
-                    label: 'Ordenes',
-                    data: [150, 250, 50, 50, 110],
-                    backgroundColor: ['#1A5276'],
-                    hoverBackgroundColor: ['#CED4DA', '#CED4DA', '#CED4DA', '#CED4DA'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom' // Coloca la leyenda en la parte inferior
-                    }
-                }
-            }
-        });
-
-        // Devolvemos el gráfico creado para poder destruirlo más tarde si es necesario
-        return myChart;
-    };
-
-    const createBarChartSemanal = () => {
-        let myChart = null;
-
-        const ctx = chartSemanalRef.current.getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["Vtex", "Falabella", "Intercorp", "Ripley", "RRSS"],
-                datasets: [{
-                    label: 'Ordenes',
-                    data: [150, 250, 50, 50, 10],
-                    backgroundColor: ['#1A5276'],
-                    hoverBackgroundColor: ['#CED4DA', '#CED4DA', '#CED4DA', '#CED4DA'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom' // Coloca la leyenda en la parte inferior
-                    }
-                }
-            }
-        });
-
-        // Devolvemos el gráfico creado para poder destruirlo más tarde si es necesario
-        return myChart;
-    };
-
-    const createBarChartMensual = () => {
-        let myChart = null;
-
-        const ctx = chartMensualRef.current.getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["Vtex", "Falabella", "Intercorp", "Ripley", "RRSS"],
-                datasets: [{
-                    label: 'Ordenes',
-                    data: [150, 250, 200, 50, 90],
-                    backgroundColor: ['#1A5276'],
-                    hoverBackgroundColor: ['#CED4DA', '#CED4DA', '#CED4DA', '#CED4DA'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom' // Coloca la leyenda en la parte inferior
-                    }
-                }
-            }
-        });
-
-        // Devolvemos el gráfico creado para poder destruirlo más tarde si es necesario
-        return myChart;
-    };
-
-    useEffect(() => {
-        let myChart = createBarChartAyer();
-        let myChart2 = createBarChartSemanal();
-        let myChart3 = createBarChartMensual();
-        return () => {
-            if (myChart) {
-                myChart.destroy();
-            }
-            if (myChart2) {
-                myChart2.destroy();
-            }
-            if (myChart3) {
-                myChart3.destroy();
-            }
-        };
-    }, []);
+    const [orderCountWeeklyEntregado, SetorderCountWeeklyEntregado] = useState(0);
+    const [orderCountWeeklyAnulado, SetorderCountWeeklyAnulado] = useState(0);
+    const [orderCountWeeklyDevolucion, SetorderCountWeeklyDevolucion] = useState(0);
+    const [orderCountMonthEtiqueta, SetorderCountMonthEtiqueta] = useState(0);
+    const [orderCountMonthPendiente, SetorderCountMonthPendiente] = useState(0);
+    const [orderCountMonthEnRuta, SetorderCountMonthEnRuta] = useState(0);
+    const [orderCountMonthEntregado, SetorderCountMonthEntregado] = useState(0);
+    const [orderCountMonthAnulado, SetorderCountMonthAnulado] = useState(0);
+    const [orderCountMonthDevolucion, SetorderCountMonthDevolucion] = useState(0);
+    const [orderCountYesterdayVtex, SetorderCountYesterdayVtex] = useState(0);
+    const [orderCountYesterdaySaga, SetorderCountYesterdaySaga] = useState(0);
+    const [orderCountYesterdayIntercorp, SetorderCountYesterdayIntercorp] = useState(0);
+    const [orderCountYesterdayRipley, SetorderCountYesterdayRipley] = useState(0);
+    const [orderCountYesterdayVentas, SetorderCountYesterdayVentas] = useState(0);
+    const [orderCountMonthVtex, SetorderCountMonthVtex] = useState(0);
+    const [orderCountMonthSaga, SetorderCountMonthSaga] = useState(0);
+    const [orderCountMonthIntercorp, SetorderCountMonthIntercorp] = useState(0);
+    const [orderCountMonthRipley, SetorderCountMonthRipley] = useState(0);
+    const [orderCountMonthVentas, SetorderCountMonthVentas] = useState(0);
+    const [orderCountWeeklyVtex, SetorderCountWeeklyVtex] = useState(0);
+    const [orderCountWeeklySaga, SetorderCountWeeklySaga] = useState(0);
+    const [orderCountWeeklyIntercorp, SetorderCountWeeklyIntercorp] = useState(0);
+    const [orderCountWeeklyRipley, SetorderCountWeeklyRipley] = useState(0);
+    const [orderCountWeeklyVentas, SetorderCountWeeklyVentas] = useState(0);
 
     const fetchDataFromAPI = () => {
         fetch('https://api.cvimport.com/api/cut')
@@ -155,13 +60,16 @@ export default function contentInventory() {
                         oc: item.oc,
                         price: item.price,
                         status: item.status,
-                        date: item.date
+                        date: item.date,
+                        origin: item.origin
                     };
                 });
+
                 //countHoy
                 const currentDate = new Date().toISOString().split('T')[0];
                 const filteredStatusList = filteredData.filter(item => item.date === currentDate).map(item => item.status);
                 setFilteredStatus(filteredStatusList);
+
                 const orderCountTodayEtiqueta = filteredData.reduce((count, item) => {
                     if (item.date === currentDate && item.status === 1) {
                         return count + 1;
@@ -265,7 +173,49 @@ export default function contentInventory() {
                 }, 0);
                 SetorderCountYesterdayDevolucion(orderCountYesterdayDevolucion);
 
-                //semanal
+                //countAyerMarkets
+                const orderCountYesterdayVtex = filteredData.reduce((count, item) => {
+                    if (item.date === formattedYesterday && item.origin === "Vtex") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYesterdayVtex(orderCountYesterdayVtex);
+                const orderCountYesterdaySaga = filteredData.reduce((count, item) => {
+                    if (item.date === formattedYesterday && item.origin === "Saga") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYesterdaySaga(orderCountYesterdaySaga);
+                const orderCountYesterdayIntercorp = filteredData.reduce((count, item) => {
+                    if (item.date === formattedYesterday && item.origin === "Intercorp") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYesterdayIntercorp(orderCountYesterdayIntercorp);
+                const orderCountYesterdayRipley = filteredData.reduce((count, item) => {
+                    if (item.date === formattedYesterday && item.origin === "Ripley") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYesterdayRipley(orderCountYesterdayRipley);
+                const orderCountYesterdayVentas = filteredData.reduce((count, item) => {
+                    if (item.date === formattedYesterday && item.origin === "VENTA") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYesterdayVentas(orderCountYesterdayVentas);
+
+                //semanal y mensual
                 const today = new Date();
                 const dayOfWeek = today.getDay();
                 const daysUntilMonday = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
@@ -273,12 +223,10 @@ export default function contentInventory() {
                 startOfWeek.setDate(today.getDate() - daysUntilMonday);
                 const endOfWeek = new Date(startOfWeek);
                 endOfWeek.setDate(startOfWeek.getDate() + 6);
-                const formattedStartOfWeek = startOfWeek.toISOString().split('T')[0];
-                const formattedEndOfWeek = endOfWeek.toISOString().split('T')[0];
+                const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
-                console.log("Fecha de inicio de la semana:", formattedStartOfWeek);
-                console.log("Fecha de fin de la semana:", formattedEndOfWeek);
-
+                //countSemanal
                 const orderCountWeeklyEtiqueta = filteredData.reduce((count, item) => {
                     const itemDate = new Date(item.date);
                     if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.status === 1) {
@@ -288,7 +236,6 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetorderCountWeeklyEtiqueta(orderCountWeeklyEtiqueta);
-
                 const orderCountWeeklyPendiente = filteredData.reduce((count, item) => {
                     const itemDate = new Date(item.date);
                     if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.status === 0) {
@@ -298,7 +245,6 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetorderCountWeeklyPendiente(orderCountWeeklyPendiente);
-
                 const orderCountWeeklyEnRuta = filteredData.reduce((count, item) => {
                     const itemDate = new Date(item.date);
                     if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.status === 2) {
@@ -308,6 +254,187 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetorderCountWeeklyEnRuta(orderCountWeeklyEnRuta);
+                const orderCountWeeklyEntregado = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.status === 3) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountWeeklyEntregado(orderCountWeeklyEntregado);
+                const orderCountWeeklyAnulado = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.status === 4) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountWeeklyAnulado(orderCountWeeklyAnulado);
+                const orderCountWeeklyDevolucion = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.status === 5) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountWeeklyDevolucion(orderCountWeeklyDevolucion);
+
+                //countWeeklyMarkets
+                const orderCountWeeklyVtex = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.origin === "Vtex") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountWeeklyVtex(orderCountWeeklyVtex);
+                const orderCountWeeklySaga = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.origin === "Saga") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountWeeklySaga(orderCountWeeklySaga);
+                const orderCountWeeklyIntercorp = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.origin === "InterCorp") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountWeeklyIntercorp(orderCountWeeklyIntercorp);
+                const orderCountWeeklyRipley = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.origin === "Ripley") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountWeeklyRipley(orderCountWeeklyRipley);
+                const orderCountWeeklyVentas = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.origin === "VENTA") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountWeeklyVentas(orderCountWeeklyVentas);
+
+                //countMensual
+                const orderCountMonthEtiqueta = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.status === 1) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthEtiqueta(orderCountMonthEtiqueta);
+                const orderCountMonthPendiente = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.status === 0) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthPendiente(orderCountMonthPendiente);
+                const orderCountMonthEnRuta = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.status === 2) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthEnRuta(orderCountMonthEnRuta);
+                const orderCountMonthEntregado = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.status === 3) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthEntregado(orderCountMonthEntregado);
+                const orderCountMonthAnulado = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.status === 4) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthAnulado(orderCountMonthAnulado);
+                const orderCountMonthDevolucion = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.status === 5) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthDevolucion(orderCountMonthDevolucion);
+                
+                //countMonthMarkets
+                const orderCountMonthVtex = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.origin === 'Vtex') {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthVtex(orderCountMonthVtex);
+
+                const orderCountMonthSaga = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.origin === 'Saga') {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthSaga(orderCountMonthSaga);
+
+                const orderCountMonthIntercorp = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.origin === 'InterCorp') {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthIntercorp(orderCountMonthIntercorp);
+
+                const orderCountMonthRipley = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.origin === 'Ripley') {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthRipley(orderCountMonthRipley);
+
+                const orderCountMonthVentas = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.origin === 'VENTA') {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthVentas(orderCountMonthVentas);
 
                 const limitedData = filteredData.slice(0, 14);
                 setData(limitedData);
@@ -315,11 +442,132 @@ export default function contentInventory() {
             .catch(error => console.error('Error al obtener los datos de la API:', error));
     };
 
+    //Fetch
     useEffect(() => {
         fetchDataFromAPI();
     }, []);
 
     const allHoy = orderCountTodayEtiqueta + orderCountTodayPendiente + orderCountTodayEnRuta + orderCountTodayEntregado + orderCountTodayAnulado + orderCountTodayDevolucion;
+
+    //BardChart
+    useEffect(() => {
+        let myChart2 = createBarChartSemanal(orderCountWeeklyVtex, orderCountWeeklySaga, orderCountWeeklyIntercorp, orderCountWeeklyRipley, orderCountWeeklyVentas);
+        let myChart3 = createBarChartMensual(orderCountMonthVtex, orderCountMonthSaga, orderCountMonthIntercorp, orderCountMonthRipley, orderCountMonthVentas);
+        let myChart = createBarChartAyer(orderCountYesterdayVtex, orderCountYesterdaySaga, orderCountYesterdayIntercorp, orderCountYesterdayRipley, orderCountYesterdayVentas);
+        return () => {
+            if (myChart) {
+                myChart.destroy();
+            }
+            if (myChart2) {
+                myChart2.destroy();
+            }
+            if (myChart3) {
+                myChart3.destroy();
+            }
+        };
+    }, [orderCountYesterdayVtex, orderCountYesterdaySaga, orderCountYesterdayIntercorp, orderCountYesterdayRipley, orderCountYesterdayVentas, orderCountMonthVtex, orderCountMonthSaga, orderCountMonthIntercorp, orderCountMonthRipley, orderCountMonthVentas, orderCountWeeklyVtex, orderCountWeeklySaga, orderCountWeeklyIntercorp, orderCountWeeklyRipley, orderCountWeeklyVentas]);
+
+    const createBarChartAyer = (orderCountYesterdayVtex, orderCountYesterdaySaga, orderCountYesterdayIntercorp, orderCountYesterdayRipley, orderCountYesterdayVentas) => {
+
+        console.log("prueba", orderCountMonthVtex )
+        let myChart = null;
+
+        const ctx = chartAyerRef.current.getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Vtex", "Falabella", "Intercorp", "Ripley", "RRSS"],
+                datasets: [{
+                    label: 'Ordenes',
+                    data: [orderCountYesterdayVtex, orderCountYesterdaySaga, orderCountYesterdayIntercorp, orderCountYesterdayRipley, orderCountYesterdayVentas],
+                    backgroundColor: ['#1A5276'],
+                    hoverBackgroundColor: ['#CED4DA', '#CED4DA', '#CED4DA', '#CED4DA'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom' // Coloca la leyenda en la parte inferior
+                    }
+                }
+            }
+        });
+
+        // Devolvemos el gráfico creado para poder destruirlo más tarde si es necesario
+        return myChart;
+    };
+
+    const createBarChartSemanal = (orderCountWeeklyVtex, orderCountWeeklySaga, orderCountWeeklyIntercorp, orderCountWeeklyRipley, orderCountWeeklyVentas) => {
+        let myChart = null;
+
+        const ctx = chartSemanalRef.current.getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Vtex", "Falabella", "Intercorp", "Ripley", "RRSS"],
+                datasets: [{
+                    label: 'Ordenes',
+                    data: [orderCountWeeklyVtex, orderCountWeeklySaga, orderCountWeeklyIntercorp, orderCountWeeklyRipley, orderCountWeeklyVentas],
+                    backgroundColor: ['#1A5276'],
+                    hoverBackgroundColor: ['#CED4DA', '#CED4DA', '#CED4DA', '#CED4DA'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom' // Coloca la leyenda en la parte inferior
+                    }
+                }
+            }
+        });
+
+        // Devolvemos el gráfico creado para poder destruirlo más tarde si es necesario
+        return myChart;
+    };
+
+    const createBarChartMensual = (orderCountMonthVtex, orderCountMonthSaga, orderCountMonthIntercorp, orderCountMonthRipley, orderCountMonthVentas) => {
+        let myChart = null;
+
+        const ctx = chartMensualRef.current.getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Vtex", "Falabella", "Intercorp", "Ripley", "RRSS"],
+                datasets: [{
+                    label: 'Ordenes',
+                    data: [orderCountMonthVtex, orderCountMonthSaga, orderCountMonthIntercorp, orderCountMonthRipley, orderCountMonthVentas],
+                    backgroundColor: ['#1A5276'],
+                    hoverBackgroundColor: ['#CED4DA', '#CED4DA', '#CED4DA', '#CED4DA'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom' // Coloca la leyenda en la parte inferior
+                    }
+                }
+            }
+        });
+        return myChart;
+    };
 
     return (
         <div className="content-wrapper">
@@ -537,7 +785,7 @@ export default function contentInventory() {
                                             </span>
                                             <div className='info-box-content'>
                                                 <span className='info-box-text'>Entregado</span>
-                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountWeeklyEntregado}</span>
                                             </div>
                                         </div>
                                         <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -546,7 +794,7 @@ export default function contentInventory() {
                                             </span>
                                             <div className='info-box-content'>
                                                 <span className='info-box-text'>Anulado</span>
-                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountWeeklyAnulado}</span>
                                             </div>
                                         </div>
                                         <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -555,7 +803,7 @@ export default function contentInventory() {
                                             </span>
                                             <div className='info-box-content'>
                                                 <span className='info-box-text'>Devolución / Cambio</span>
-                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountWeeklyDevolucion}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -587,7 +835,7 @@ export default function contentInventory() {
                                             </span>
                                             <div className='info-box-content'>
                                                 <span className='info-box-text'>Etiqueta</span>
-                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountMonthEtiqueta}</span>
                                             </div>
                                         </div>
                                         <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -596,7 +844,7 @@ export default function contentInventory() {
                                             </span>
                                             <div className='info-box-content'>
                                                 <span className='info-box-text'>Pendiente</span>
-                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountMonthPendiente}</span>
                                             </div>
                                         </div>
                                         <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -605,7 +853,7 @@ export default function contentInventory() {
                                             </span>
                                             <div className='info-box-content'>
                                                 <span className='info-box-text'>En ruta</span>
-                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountMonthEnRuta}</span>
                                             </div>
                                         </div>
                                         <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -614,7 +862,7 @@ export default function contentInventory() {
                                             </span>
                                             <div className='info-box-content'>
                                                 <span className='info-box-text'>Entregado</span>
-                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountMonthEntregado}</span>
                                             </div>
                                         </div>
                                         <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -623,7 +871,7 @@ export default function contentInventory() {
                                             </span>
                                             <div className='info-box-content'>
                                                 <span className='info-box-text'>Anulado</span>
-                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountMonthAnulado}</span>
                                             </div>
                                         </div>
                                         <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -632,7 +880,7 @@ export default function contentInventory() {
                                             </span>
                                             <div className='info-box-content'>
                                                 <span className='info-box-text'>Devolución / Cambio</span>
-                                                <span className='info-box-number' style={{ fontSize: "20px" }}>0</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountMonthDevolucion}</span>
                                             </div>
                                         </div>
                                     </div>

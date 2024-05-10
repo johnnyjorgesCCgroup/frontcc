@@ -344,15 +344,15 @@ export default function contentInventory() {
                                     width: "190px",
                                     height: "25px",
                                     backgroundColor: switchOn ? "#9C27B0" :
-                                        params.row.status === 1 || params.row.status === 4 || params.row.status === 5 ? "red" :
+                                        params.row.status === 0 || params.row.status === 4 || params.row.status === 5 ? "red" :
                                             params.row.status === 2 ? "#FFD848" : // Color para status === 2
                                                 "#22FF94",
-                                    color: switchOn || params.row.status === 1 || params.row.status === 4 || params.row.status === 5 ? "white" : "black"
+                                    color: switchOn || params.row.status === 0 || params.row.status === 4 || params.row.status === 5 ? "white" : "black"
                                 }}
                                 disabled={true}
                             >
-                                {params.row.status === 0 ? "Etiqueta" :
-                                    params.row.status === 1 ? "Pendiente" :
+                                {params.row.status === 1 ? "Etiqueta" :
+                                    params.row.status === 0 ? "Pendiente" :
                                         params.row.status === 2 ? "En Ruta" :
                                             params.row.status === 3 ? "Entregado" :
                                                 params.row.status === 4 ? "Anulado" :
