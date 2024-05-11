@@ -608,6 +608,14 @@ export default function contentInventory() {
                 plugins: {
                     legend: {
                         position: 'bottom' // Coloca la leyenda en la parte inferior
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                // Muestra el valor en el tooltip junto con su porcentaje
+                                return context.dataset.label + ': ' + context.parsed.y + ' (' + ((context.parsed.y / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
+                            }
+                        }
                     }
                 }
             }
@@ -642,6 +650,14 @@ export default function contentInventory() {
                 plugins: {
                     legend: {
                         position: 'bottom' // Coloca la leyenda en la parte inferior
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                // Muestra el valor en el tooltip junto con su porcentaje
+                                return context.dataset.label + ': ' + context.parsed.y + ' (' + ((context.parsed.y / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
+                            }
+                        }
                     }
                 }
             }
@@ -676,6 +692,14 @@ export default function contentInventory() {
                 plugins: {
                     legend: {
                         position: 'bottom' // Coloca la leyenda en la parte inferior
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                // Muestra el valor en el tooltip junto con su porcentaje
+                                return context.dataset.label + ': ' + context.parsed.y + ' (' + ((context.parsed.y / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
+                            }
+                        }
                     }
                 }
             }
@@ -863,7 +887,7 @@ export default function contentInventory() {
                                             <div>
                                             <Switch id="switch2" {...label} checked={priceSemanalOn} onChange={handlePriceSemanalChange} color="primary" size="small" />
                                                 <i className='fas fa-caret-up' style={{ color: "green", marginRight:"5px"}}></i>
-                                                <a href="" style={{ color: "green" }}>{priceSemanalOn ? "" : "S/"} {priceSemanalOn ? allSemanal : totalPriceWeekly.toFixed(2)}</a>
+                                                <a style={{ color: "green" }}>{priceSemanalOn ? "" : "S/"} {priceSemanalOn ? allSemanal : totalPriceWeekly.toFixed(2)}</a>
                                             </div>
                                         </div>
                                         <br />
@@ -941,7 +965,7 @@ export default function contentInventory() {
                                             <div>
                                             <Switch id="switch2" {...label} checked={priceMensualOn} onChange={handlePriceMensualChange} color="primary" size="small" />
                                                 <i className='fas fa-caret-up' style={{ color: "green", marginRight:"5px" }}></i>{" "}
-                                                <a href="" style={{ color: "green" }}>{priceMensualOn ? "" : "S/"} {priceMensualOn ? allMensual : totalPriceMonth.toFixed(2)}</a>
+                                                <a style={{ color: "green" }}>{priceMensualOn ? "" : "S/"} {priceMensualOn ? allMensual : totalPriceMonth.toFixed(2)}</a>
                                             </div>
                                         </div>
                                         <br />
