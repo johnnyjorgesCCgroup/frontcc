@@ -1,10 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Modal, Typography, Button, Box, Switch, TextField } from '@mui/material';
 import Chart from 'chart.js/auto';
 
 export default function contentInventory() {
     const label = { inputProps: { 'aria-label': 'Size switch demo' } };
 
     const [data, setData] = useState([]);
+    const [allEtiqueta, SetAllEtiqueta] = useState(0);
+    const [allPendiente, SetAllPendiente] = useState(0);
+    const [allEnRuta, SetAllEnRuta] = useState(0);
+    const [allEntregado, SetAllEntregado] = useState(0);
+    const [allAnulado, SetAllAnulado] = useState(0);
+    const [allDevolucion, SetAllDevolucion] = useState(0);
+    const [switchOn, setSwitchOn] = useState(false);
+    const [priceAyerOn, setPriceAyerOn] = useState(false);
+    const [priceSemanalOn, setPriceSemanalOn] = useState(false);
+    const [priceMensualOn, setPriceMensualOn] = useState(false);
     const chartAyerRef = useRef(null);
     const chartSemanalRef = useRef(null);
     const chartMensualRef = useRef(null);
@@ -52,6 +63,22 @@ export default function contentInventory() {
     const [totalPriceWeekly, SetTotalPriceWeekly] = useState(0);
     const [totalPriceMonth, SetTotalPriceMonth] = useState(0);
 
+    const handleSwitchChange = () => {
+        setSwitchOn(!switchOn);
+    }
+
+    const handlePriceAyerChange = () => {
+        setPriceAyerOn(!priceAyerOn);
+    }
+
+    const handlePriceSemanalChange = () => {
+        setPriceSemanalOn(!priceSemanalOn);
+    }
+
+    const handlePriceMensualChange = () => {
+        setPriceMensualOn(!priceMensualOn);
+    }
+
     const fetchDataFromAPI = () => {
         fetch('https://api.cvimport.com/api/cut')
             .then(response => response.json())
@@ -67,6 +94,56 @@ export default function contentInventory() {
                         origin: item.origin,
                     };
                 });
+
+                //allData
+                const allEtiqueta = filteredData.reduce((count, item) => {
+                    if (item.status === 1) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllEtiqueta(allEtiqueta);
+                const allPendiente = filteredData.reduce((count, item) => {
+                    if (item.status === 0) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllPendiente(allPendiente);
+                const allEnRuta = filteredData.reduce((count, item) => {
+                    if (item.status === 2) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllEnRuta(allEnRuta);
+                const allEntregado = filteredData.reduce((count, item) => {
+                    if (item.status === 3) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllEntregado(allEntregado);
+                const allAnulado = filteredData.reduce((count, item) => {
+                    if (item.status === 4) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllAnulado(allAnulado);
+                const allDevolucion = filteredData.reduce((count, item) => {
+                    if (item.status === 5) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllDevolucion(allDevolucion);
 
                 //countHoy
                 const currentDate = new Date().toISOString().split('T')[0];
@@ -483,6 +560,9 @@ export default function contentInventory() {
     }, []);
 
     const allHoy = orderCountTodayEtiqueta + orderCountTodayPendiente + orderCountTodayEnRuta + orderCountTodayEntregado + orderCountTodayAnulado + orderCountTodayDevolucion;
+    const allAyer = orderCountYesterdayEtiqueta + orderCountYesterdayPendiente + orderCountYesterdayEnRuta + orderCountYesterdayEntregado + orderCountYesterdayAnulado + orderCountYesterdayDevolucion;
+    const allSemanal = orderCountWeeklyEtiqueta + orderCountWeeklyPendiente + orderCountWeeklyEnRuta + orderCountWeeklyEntregado + orderCountWeeklyAnulado + orderCountWeeklyDevolucion;
+    const allMensual = orderCountMonthEtiqueta + orderCountMonthPendiente + orderCountMonthEnRuta + orderCountMonthEntregado + orderCountMonthAnulado + orderCountMonthDevolucion;
 
     //BardChart
     useEffect(() => {
@@ -622,11 +702,13 @@ export default function contentInventory() {
                         <div style={{ alignItems: "center" }}>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <h3 className="card-title">
-                                    <b>Hoy</b>
+                                    <b style={{ color: switchOn ? "#E3E3E3" : "black", marginRight: "10px" }}>Hoy</b>
+                                    <Switch id="switch1" {...label} checked={switchOn} onChange={handleSwitchChange} color="primary" size="small" />
+                                    <b style={{ color: switchOn ? "black" : "#E3E3E3", marginLeft: "10px" }}>Todas</b>
                                 </h3>
                                 <div>
-                                    <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
-                                    <a href="" style={{ color: "green" }}>{allHoy} Ordenes</a>
+                                    <i className='fas fa-caret-up' style={{ color: "green", display: switchOn ? "none" : "inline-flex" }}></i>{" "}
+                                    <a href="" style={{ color: "green", display: switchOn ? "none" : "inline-flex" }}>{allHoy} Ordenes</a>
                                 </div>
                             </div>
                             <div className="row" style={{ width: "100%" }}>
@@ -637,7 +719,7 @@ export default function contentInventory() {
                                         </span>
                                         <div className='info-box-content'>
                                             <span className='info-box-text'>Etiqueta</span>
-                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountTodayEtiqueta}</span>
+                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiqueta : orderCountTodayEtiqueta}</span>
                                         </div>
                                     </div>
                                     <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -646,7 +728,7 @@ export default function contentInventory() {
                                         </span>
                                         <div className='info-box-content'>
                                             <span className='info-box-text'>Pendiente</span>
-                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountTodayPendiente}</span>
+                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allPendiente : orderCountTodayPendiente}</span>
                                         </div>
                                     </div>
                                     <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -655,7 +737,7 @@ export default function contentInventory() {
                                         </span>
                                         <div className='info-box-content'>
                                             <span className='info-box-text'>En ruta</span>
-                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountTodayEnRuta}</span>
+                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEnRuta : orderCountTodayEnRuta}</span>
                                         </div>
                                     </div>
                                     <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -664,7 +746,7 @@ export default function contentInventory() {
                                         </span>
                                         <div className='info-box-content'>
                                             <span className='info-box-text'>Entregado</span>
-                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountTodayEntregado}</span>
+                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEntregado : orderCountTodayEntregado}</span>
                                         </div>
                                     </div>
                                     <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -673,7 +755,7 @@ export default function contentInventory() {
                                         </span>
                                         <div className='info-box-content'>
                                             <span className='info-box-text'>Anulado</span>
-                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountTodayAnulado}</span>
+                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allAnulado : orderCountTodayAnulado}</span>
                                         </div>
                                     </div>
                                     <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -682,7 +764,7 @@ export default function contentInventory() {
                                         </span>
                                         <div className='info-box-content'>
                                             <span className='info-box-text'>Devolución / Cambio</span>
-                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountTodayDevolucion}</span>
+                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allDevolucion : orderCountTodayDevolucion}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -701,8 +783,9 @@ export default function contentInventory() {
                                                 <b>Ayer</b>
                                             </h3>
                                             <div>
-                                                <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
-                                                <a href="" style={{ color: "green" }}>S/ {totalPriceYesterday.toFixed(2)}</a>
+                                                <Switch id="switch1" {...label} checked={priceAyerOn} onChange={handlePriceAyerChange} color="primary" size="small" />
+                                                <i className='fas fa-caret-up' style={{ color: "green", marginRight:"5px"}}></i>
+                                                <a style={{ color: "green"}}>{priceAyerOn ? "" : "S/"} {priceAyerOn ? allAyer : totalPriceYesterday.toFixed(2)}</a>
                                             </div>
                                         </div>
                                         <br />
@@ -778,8 +861,9 @@ export default function contentInventory() {
                                                 <b>Semanal</b>
                                             </h3>
                                             <div>
-                                                <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
-                                                <a href="" style={{ color: "green" }}>S/ {totalPriceWeekly.toFixed(2)}</a>
+                                            <Switch id="switch2" {...label} checked={priceSemanalOn} onChange={handlePriceSemanalChange} color="primary" size="small" />
+                                                <i className='fas fa-caret-up' style={{ color: "green", marginRight:"5px"}}></i>
+                                                <a href="" style={{ color: "green" }}>{priceSemanalOn ? "" : "S/"} {priceSemanalOn ? allSemanal : totalPriceWeekly.toFixed(2)}</a>
                                             </div>
                                         </div>
                                         <br />
@@ -855,8 +939,9 @@ export default function contentInventory() {
                                                 <b>Mensual</b>
                                             </h3>
                                             <div>
-                                                <i className='fas fa-caret-up' style={{ color: "green" }}></i>{" "}
-                                                <a href="" style={{ color: "green" }}>S/ {totalPriceMonth.toFixed(2)}</a>
+                                            <Switch id="switch2" {...label} checked={priceMensualOn} onChange={handlePriceMensualChange} color="primary" size="small" />
+                                                <i className='fas fa-caret-up' style={{ color: "green", marginRight:"5px" }}></i>{" "}
+                                                <a href="" style={{ color: "green" }}>{priceMensualOn ? "" : "S/"} {priceMensualOn ? allMensual : totalPriceMonth.toFixed(2)}</a>
                                             </div>
                                         </div>
                                         <br />
