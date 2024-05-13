@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal, Typography, Button, Box, Switch, TextField } from '@mui/material';
 import Chart from 'chart.js/auto';
+import './contentDashGeneral.css';
 
 export default function contentInventory() {
     const label = { inputProps: { 'aria-label': 'Size switch demo' } };
@@ -16,9 +17,11 @@ export default function contentInventory() {
     const [priceAyerOn, setPriceAyerOn] = useState(false);
     const [priceSemanalOn, setPriceSemanalOn] = useState(false);
     const [priceMensualOn, setPriceMensualOn] = useState(false);
+    const chartAllRef = useRef(null);
     const chartAyerRef = useRef(null);
     const chartSemanalRef = useRef(null);
     const chartMensualRef = useRef(null);
+    const chartLineMonthRef = useRef(null);
     const [filteredStatus, setFilteredStatus] = useState([]);
     const [orderCountTodayEtiqueta, SetorderCountTodayEtiqueta] = useState(0);
     const [orderCountTodayPendiente, SetorderCountTodayPendiente] = useState(0);
@@ -59,7 +62,24 @@ export default function contentInventory() {
     const [orderCountWeeklyIntercorp, SetorderCountWeeklyIntercorp] = useState(0);
     const [orderCountWeeklyRipley, SetorderCountWeeklyRipley] = useState(0);
     const [orderCountWeeklyVentas, SetorderCountWeeklyVentas] = useState(0);
+    const [orderCountYearVtex, SetorderCountYearVtex] = useState(0);
+    const [orderCountYearSaga, SetorderCountYearSaga] = useState(0);
+    const [orderCountYearIntercorp, SetorderCountYearIntercorp] = useState(0);
+    const [orderCountYearRipley, SetorderCountYearRipley] = useState(0);
+    const [orderCountYearVentas, SetorderCountYearVentas] = useState(0);
     const [totalPriceYesterday, SetTotalPriceYesterday] = useState(0);
+    const [orderCountEnero, setorderCountEnero] = useState(0);
+    const [orderCountFebrero, setorderCountFebrero] = useState(0);
+    const [orderCountMarzo, setorderCountMarzo] = useState(0);
+    const [orderCountAbril, setorderCountAbril] = useState(0);
+    const [orderCountMayo, setorderCountMayo] = useState(0);
+    const [orderCountJunio, setorderCountJunio] = useState(0);
+    const [orderCountJulio, setorderCountJulio] = useState(0);
+    const [orderCountAgosto, setorderCountAgosto] = useState(0);
+    const [orderCountSeptiembre, setorderCountSeptiembre] = useState(0);
+    const [orderCountOctubre, setorderCountOctubre] = useState(0);
+    const [orderCountNoviembre, setorderCountNoviembre] = useState(0);
+    const [orderCountDiciembre, setorderCountDiciembre] = useState(0);
     const [totalPriceWeekly, SetTotalPriceWeekly] = useState(0);
     const [totalPriceMonth, SetTotalPriceMonth] = useState(0);
 
@@ -92,6 +112,7 @@ export default function contentInventory() {
                         status: item.status,
                         date: item.date,
                         origin: item.origin,
+                        client: item.client,
                     };
                 });
 
@@ -307,6 +328,7 @@ export default function contentInventory() {
 
                 //semanal y mensual
                 const today = new Date();
+                const year = today.getFullYear();
                 const dayOfWeek = today.getDay();
                 const daysUntilMonday = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
                 const startOfWeek = new Date(today);
@@ -315,6 +337,180 @@ export default function contentInventory() {
                 endOfWeek.setDate(startOfWeek.getDate() + 6);
                 const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
                 const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                const startOfYear = new Date(today.getFullYear(), 0, 1);
+                const endOfYear = new Date(today.getFullYear(), 11, 31);
+
+                //countAnualMensualEnero
+                const startOfMonthEnero = new Date(year, 0, 1);
+                const endOfMonthEnero = new Date(year, 0, 31);
+
+                const orderCountEnero = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthEnero && itemDate <= endOfMonthEnero) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountEnero(orderCountEnero);
+
+                //countAnualMensualFebrero
+                const isLeapYear = (year) => {
+                    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+                };
+
+                const startOfMonthFebrero = new Date(year, 1, 1);
+                const endOfMonthFebrero = new Date(year, 1, isLeapYear(year) ? 29 : 28);
+
+                const orderCountFebrero = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthFebrero && itemDate <= endOfMonthFebrero) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountFebrero(orderCountFebrero);
+
+                //countAnualMensualMarzo
+                const startOfMonthMarzo = new Date(year, 2, 1);
+                const endOfMonthMarzo = new Date(year, 2, 31);
+
+                const orderCountMarzo = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthMarzo && itemDate <= endOfMonthMarzo) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountMarzo(orderCountMarzo);
+
+                //countAnualMensualAbril
+                const startOfMonthAbril = new Date(year, 3, 1);
+                const endOfMonthAbril = new Date(year, 3, 30); // 30 días en abril
+
+                const orderCountAbril = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthAbril && itemDate <= endOfMonthAbril) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountAbril(orderCountAbril);
+
+                //countAnualMensualMayo
+                const startOfMonthMayo = new Date(year, 4, 1);
+                const endOfMonthMayo = new Date(year, 4, 31); // Mayo tiene 31 días
+
+                const orderCountMayo = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthMayo && itemDate <= endOfMonthMayo) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountMayo(orderCountMayo);
+
+                //countAnualMensualJunio
+                const startOfMonthJunio = new Date(year, 5, 1);
+                const endOfMonthJunio = new Date(year, 5, 30); // Junio tiene 30 días
+
+                const orderCountJunio = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthJunio && itemDate <= endOfMonthJunio) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountJunio(orderCountJunio);
+
+                //countAnualMensualJulio
+                const startOfMonthJulio = new Date(year, 6, 1);
+                const endOfMonthJulio = new Date(year, 6, 31); // Julio tiene 31 días
+
+                const orderCountJulio = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthJulio && itemDate <= endOfMonthJulio) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountJulio(orderCountJulio);
+
+                //countAnualMensualAgosto
+                const startOfMonthAgosto = new Date(year, 7, 1);
+                const endOfMonthAgosto = new Date(year, 7, 31); // Agosto tiene 31 días
+
+                const orderCountAgosto = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthAgosto && itemDate <= endOfMonthAgosto) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountAgosto(orderCountAgosto);
+
+                //countAnualMensualSeptiembre
+                const startOfMonthSeptiembre = new Date(year, 8, 1);
+                const endOfMonthSeptiembre = new Date(year, 8, 30); // Septiembre tiene 30 días
+
+                const orderCountSeptiembre = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthSeptiembre && itemDate <= endOfMonthSeptiembre) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountSeptiembre(orderCountSeptiembre);
+
+                //countAnualMensualOctubre
+                const startOfMonthOctubre = new Date(year, 9, 1);
+                const endOfMonthOctubre = new Date(year, 9, 31); // Octubre tiene 31 días
+
+                const orderCountOctubre = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthOctubre && itemDate <= endOfMonthOctubre) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountOctubre(orderCountOctubre);
+
+                //countAnualMensualNoviembre
+                const startOfMonthNoviembre = new Date(year, 10, 1);
+                const endOfMonthNoviembre = new Date(year, 10, 30); // Noviembre tiene 30 días
+
+                const orderCountNoviembre = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthNoviembre && itemDate <= endOfMonthNoviembre) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountNoviembre(orderCountNoviembre);
+
+                //countAnualMensualDiciembre
+                const startOfMonthDiciembre = new Date(year, 11, 1);
+                const endOfMonthDiciembre = new Date(year, 11, 31); // Diciembre tiene 31 días
+
+                const orderCountDiciembre = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthDiciembre && itemDate <= endOfMonthDiciembre) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountDiciembre(orderCountDiciembre);
 
                 //priceSemanal
                 const totalPriceWeekly = filteredData.reduce((count, item) => {
@@ -550,6 +746,53 @@ export default function contentInventory() {
 
                 const limitedData = filteredData.slice(0, 14);
                 setData(limitedData);
+
+                //countYearMarkets
+                const orderCountYearVtex = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfYear && itemDate <= endOfYear && item.origin === "Vtex") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYearVtex(orderCountYearVtex);
+                const orderCountYearSaga = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfYear && itemDate <= endOfYear && item.origin === "Saga") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYearSaga(orderCountYearSaga);
+                const orderCountYearIntercorp = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfYear && itemDate <= endOfYear && item.origin === "InterCorp") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYearIntercorp(orderCountYearIntercorp);
+                const orderCountYearRipley = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfYear && itemDate <= endOfYear && item.origin === "Ripley") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYearRipley(orderCountYearRipley);
+                const orderCountYearVentas = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfYear && itemDate <= endOfYear && item.origin === "Ripley") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYearVentas(orderCountYearVentas);
             })
             .catch(error => console.error('Error al obtener los datos de la API:', error));
     };
@@ -559,6 +802,8 @@ export default function contentInventory() {
         fetchDataFromAPI();
     }, []);
 
+
+    const allTodo = allPendiente + allEtiqueta + allEnRuta + allEntregado + allAnulado + allDevolucion;
     const allHoy = orderCountTodayEtiqueta + orderCountTodayPendiente + orderCountTodayEnRuta + orderCountTodayEntregado + orderCountTodayAnulado + orderCountTodayDevolucion;
     const allAyer = orderCountYesterdayEtiqueta + orderCountYesterdayPendiente + orderCountYesterdayEnRuta + orderCountYesterdayEntregado + orderCountYesterdayAnulado + orderCountYesterdayDevolucion;
     const allSemanal = orderCountWeeklyEtiqueta + orderCountWeeklyPendiente + orderCountWeeklyEnRuta + orderCountWeeklyEntregado + orderCountWeeklyAnulado + orderCountWeeklyDevolucion;
@@ -569,6 +814,8 @@ export default function contentInventory() {
         let myChart2 = createBarChartSemanal(orderCountWeeklyVtex, orderCountWeeklySaga, orderCountWeeklyIntercorp, orderCountWeeklyRipley, orderCountWeeklyVentas);
         let myChart3 = createBarChartMensual(orderCountMonthVtex, orderCountMonthSaga, orderCountMonthIntercorp, orderCountMonthRipley, orderCountMonthVentas);
         let myChart = createBarChartAyer(orderCountYesterdayVtex, orderCountYesterdaySaga, orderCountYesterdayIntercorp, orderCountYesterdayRipley, orderCountYesterdayVentas);
+        let myChart1 = createBarChartYear(orderCountYearVtex, orderCountYearSaga, orderCountYearIntercorp, orderCountYearRipley, orderCountYearVentas);
+        let myChart4 = createLineChartMonth(orderCountEnero, orderCountFebrero, orderCountMarzo, orderCountAbril, orderCountMayo, orderCountJunio, orderCountJulio, orderCountAgosto, orderCountSeptiembre, orderCountOctubre, orderCountNoviembre, orderCountDiciembre);
         return () => {
             if (myChart) {
                 myChart.destroy();
@@ -579,8 +826,14 @@ export default function contentInventory() {
             if (myChart3) {
                 myChart3.destroy();
             }
+            if (myChart1) {
+                myChart1.destroy();
+            }
+            if (myChart4) {
+                myChart4.destroy();
+            }
         };
-    }, [orderCountYesterdayVtex, orderCountYesterdaySaga, orderCountYesterdayIntercorp, orderCountYesterdayRipley, orderCountYesterdayVentas, orderCountMonthVtex, orderCountMonthSaga, orderCountMonthIntercorp, orderCountMonthRipley, orderCountMonthVentas, orderCountWeeklyVtex, orderCountWeeklySaga, orderCountWeeklyIntercorp, orderCountWeeklyRipley, orderCountWeeklyVentas]);
+    }, [orderCountYesterdayVtex, orderCountYesterdaySaga, orderCountYesterdayIntercorp, orderCountYesterdayRipley, orderCountYesterdayVentas, orderCountMonthVtex, orderCountMonthSaga, orderCountMonthIntercorp, orderCountMonthRipley, orderCountMonthVentas, orderCountWeeklyVtex, orderCountWeeklySaga, orderCountWeeklyIntercorp, orderCountWeeklyRipley, orderCountWeeklyVentas, orderCountYearVtex, orderCountYearSaga, orderCountYearIntercorp, orderCountYearRipley, orderCountYearVentas, orderCountEnero, orderCountFebrero, orderCountMarzo, orderCountAbril, orderCountMayo, orderCountJunio, orderCountJulio, orderCountAgosto, orderCountSeptiembre, orderCountOctubre, orderCountNoviembre, orderCountDiciembre]);
 
     const createBarChartAyer = (orderCountYesterdayVtex, orderCountYesterdaySaga, orderCountYesterdayIntercorp, orderCountYesterdayRipley, orderCountYesterdayVentas) => {
 
@@ -611,7 +864,7 @@ export default function contentInventory() {
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 // Muestra el valor en el tooltip junto con su porcentaje
                                 return context.dataset.label + ': ' + context.parsed.y + ' (' + ((context.parsed.y / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
                             }
@@ -653,7 +906,7 @@ export default function contentInventory() {
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 // Muestra el valor en el tooltip junto con su porcentaje
                                 return context.dataset.label + ': ' + context.parsed.y + ' (' + ((context.parsed.y / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
                             }
@@ -695,7 +948,7 @@ export default function contentInventory() {
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 // Muestra el valor en el tooltip junto con su porcentaje
                                 return context.dataset.label + ': ' + context.parsed.y + ' (' + ((context.parsed.y / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
                             }
@@ -705,6 +958,109 @@ export default function contentInventory() {
             }
         });
         return myChart;
+    };
+
+    const createBarChartYear = (orderCountYearVtex, orderCountYearSaga, orderCountYearIntercorp, orderCountYearRipley, orderCountYearVentas) => {
+        try {
+            let myChart = null;
+    
+            const ctx = chartAllRef.current.getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["Vtex", "Falabella", "Intercorp", "Ripley", "RRSS"],
+                    datasets: [{
+                        label: 'Ordenes',
+                        data: [orderCountYearVtex, orderCountYearSaga, orderCountYearIntercorp, orderCountYearRipley, orderCountYearVentas],
+                        backgroundColor: '#1A5276',
+                        hoverBackgroundColor: ['#CED4DA', '#CED4DA', '#CED4DA', '#CED4DA'],
+                        borderWidth: 0.2
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom' // Coloca la leyenda en la parte inferior
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    // Muestra el valor en el tooltip junto con su porcentaje
+                                    return context.dataset.label + ': ' + context.parsed.y + ' (' + ((context.parsed.y / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
+                                }
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 15,
+                            right: 15,
+                            top: 15,
+                            bottom: 15
+                        }
+                    },
+                    barThickness: 17
+                }
+            });
+            return myChart;
+    
+        } catch (error) {
+            console.error("Error al crear el gráfico:", error);
+            return null;
+        }
+    };
+    
+
+    const createLineChartMonth = (orderCountEnero, orderCountFebrero, orderCountMarzo, orderCountAbril, orderCountMayo, orderCountJunio, orderCountJulio, orderCountAgosto, orderCountSeptiembre, orderCountOctubre, orderCountNoviembre, orderCountDiciembre) => {
+        try {
+            let myChart = null;
+
+            const ctx = chartLineMonthRef.current.getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                    datasets: [{
+                        label: 'Ordenes',
+                        data: [orderCountEnero, orderCountFebrero, orderCountMarzo, orderCountAbril, orderCountMayo, orderCountJunio, orderCountJulio, orderCountAgosto, orderCountSeptiembre, orderCountOctubre, orderCountNoviembre, orderCountDiciembre],
+                        backgroundColor: ['#1A5276'],
+                        hoverBackgroundColor: ['#CED4DA', '#CED4DA', '#CED4DA', '#CED4DA'],
+                        borderWidth: 5
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom' // Coloca la leyenda en la parte inferior
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    // Muestra el valor en el tooltip junto con su porcentaje
+                                    return context.dataset.label + ': ' + context.parsed.y + ' (' + ((context.parsed.y / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            return myChart;
+
+        } catch (error) {
+            console.error("Error al crear el gráfico:", error);
+            return null;
+        }
+
     };
 
     return (
@@ -730,9 +1086,9 @@ export default function contentInventory() {
                                     <Switch id="switch1" {...label} checked={switchOn} onChange={handleSwitchChange} color="primary" size="small" />
                                     <b style={{ color: switchOn ? "black" : "#E3E3E3", marginLeft: "10px" }}>Todas</b>
                                 </h3>
-                                <div>
-                                    <i className='fas fa-caret-up' style={{ color: "green", display: switchOn ? "none" : "inline-flex" }}></i>{" "}
-                                    <a href="" style={{ color: "green", display: switchOn ? "none" : "inline-flex" }}>{allHoy} Ordenes</a>
+                                <div style={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
+                                    <i className='fas fa-caret-up' style={{ color: "green", marginRight: "5px" }}></i>
+                                    <a style={{ color: "green" }}>{switchOn ? allTodo : allHoy} Ordenes</a>
                                 </div>
                             </div>
                             <div className="row" style={{ width: "100%" }}>
@@ -808,8 +1164,8 @@ export default function contentInventory() {
                                             </h3>
                                             <div>
                                                 <Switch id="switch1" {...label} checked={priceAyerOn} onChange={handlePriceAyerChange} color="primary" size="small" />
-                                                <i className='fas fa-caret-up' style={{ color: "green", marginRight:"5px"}}></i>
-                                                <a style={{ color: "green"}}>{priceAyerOn ? "" : "S/"} {priceAyerOn ? allAyer : totalPriceYesterday.toFixed(2)}</a>
+                                                <i className='fas fa-caret-up' style={{ color: "green", marginRight: "5px" }}></i>
+                                                <a style={{ color: "green" }}>{priceAyerOn ? "" : "S/"} {priceAyerOn ? allAyer : totalPriceYesterday.toFixed(2)}</a>
                                             </div>
                                         </div>
                                         <br />
@@ -885,8 +1241,8 @@ export default function contentInventory() {
                                                 <b>Semanal</b>
                                             </h3>
                                             <div>
-                                            <Switch id="switch2" {...label} checked={priceSemanalOn} onChange={handlePriceSemanalChange} color="primary" size="small" />
-                                                <i className='fas fa-caret-up' style={{ color: "green", marginRight:"5px"}}></i>
+                                                <Switch id="switch2" {...label} checked={priceSemanalOn} onChange={handlePriceSemanalChange} color="primary" size="small" />
+                                                <i className='fas fa-caret-up' style={{ color: "green", marginRight: "5px" }}></i>
                                                 <a style={{ color: "green" }}>{priceSemanalOn ? "" : "S/"} {priceSemanalOn ? allSemanal : totalPriceWeekly.toFixed(2)}</a>
                                             </div>
                                         </div>
@@ -963,8 +1319,8 @@ export default function contentInventory() {
                                                 <b>Mensual</b>
                                             </h3>
                                             <div>
-                                            <Switch id="switch2" {...label} checked={priceMensualOn} onChange={handlePriceMensualChange} color="primary" size="small" />
-                                                <i className='fas fa-caret-up' style={{ color: "green", marginRight:"5px" }}></i>{" "}
+                                                <Switch id="switch2" {...label} checked={priceMensualOn} onChange={handlePriceMensualChange} color="primary" size="small" />
+                                                <i className='fas fa-caret-up' style={{ color: "green", marginRight: "5px" }}></i>{" "}
                                                 <a style={{ color: "green" }}>{priceMensualOn ? "" : "S/"} {priceMensualOn ? allMensual : totalPriceMonth.toFixed(2)}</a>
                                             </div>
                                         </div>
@@ -1048,13 +1404,34 @@ export default function contentInventory() {
                                 </thead>
                                 <tbody>
                                     {data.map(item => (
-                                        <tr key={item.oc}>
+                                        <tr key={item.oc} id="tooltip">
                                             <td>{item.oc}</td>
-                                            <td>S/{item.price}</td>
+                                            <td>S/{item.price}
+                                                <span className="tooltiptext">Fecha: <span style={{ fontSize: "12px" }}>{item.date}</span><br />Origen: <span style={{ fontSize: "12px" }}>{item.origin}</span><br />Cliente: <span style={{ fontSize: "12px" }}>{item.client}</span><br />Estado: <span style={{ fontSize: "12px" }}>{item.status === 0 ? "Pendiente" : item.status === 1 ? "ETIQUETA" : item.status === 2 ? "EN RUTA" : item.status === 3 ? "ENTREGADO" : item.status === 4 ? "ANULADO" : item.status === 5 ? "DEVOLUCION" : "OTROS"}</span></span></td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+                <div className="card card-outline" style={{ paddingBottom: "30px"}}>
+                    <div className="card-header border-0">
+                        <div className="row mb-2" style={{ alignItems: "center" }}>
+                            <div className="col-sm-6">
+                                <h3 className="card-title">
+                                    <b>Anual</b>
+                                    <span style={{ marginLeft: '10px', fontSize: '18px', color:"green" }}>{new Date().getFullYear()}</span>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{ width: "100%", display: "flex", height: "330px" }}>
+                        <div className='card card-outline' style={{ width: "100%", marginLeft: "3%", padding: "15px" }}>
+                            <canvas ref={chartAllRef} />
+                        </div>
+                        <div className='card card-outline' style={{ width: "100%", marginLeft: "3%", padding: "15px" }}>
+                            <canvas ref={chartLineMonthRef} />
                         </div>
                     </div>
                 </div>
