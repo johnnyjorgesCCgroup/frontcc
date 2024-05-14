@@ -1015,7 +1015,6 @@ export default function contentInventory() {
         }
     };
     
-
     const createLineChartMonth = (orderCountEnero, orderCountFebrero, orderCountMarzo, orderCountAbril, orderCountMayo, orderCountJunio, orderCountJulio, orderCountAgosto, orderCountSeptiembre, orderCountOctubre, orderCountNoviembre, orderCountDiciembre) => {
         try {
             let myChart = null;
@@ -1426,12 +1425,12 @@ export default function contentInventory() {
                             </div>
                         </div>
                     </div>
-                    <div style={{ width: "100%", display: "flex", height: "330px" }}>
-                        <div className='card card-outline' style={{ width: "100%", marginLeft: "3%", padding: "15px" }}>
-                            <canvas ref={chartAllRef} />
+                    <div style={{display: "flex", height: "430px" }}>
+                        <div className='card card-outline' style={{ width: "50%", marginLeft: "3%", padding: "15px" }}>
+                            <canvas ref={chartAllRef} style={{width:"100%"}}/>
                         </div>
-                        <div className='card card-outline' style={{ width: "100%", marginLeft: "3%", padding: "15px" }}>
-                            <canvas ref={chartLineMonthRef} />
+                        <div className='card card-outline' style={{ width: "50%", marginLeft: "3%", padding: "15px" }}>
+                            <canvas ref={chartLineMonthRef} style={{width:"100%"}}/>
                         </div>
                     </div>
                 </div>
