@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faCopy, faEye, faPlus, faRefresh } from '@fortawesome/free-solid-svg-icons';
 import Alert from '@mui/material/Alert';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import ContentOutput from './ContentOutput';
+import ContentOutput from './ContentOutput2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import './contentFechasRapidas.css';
 import Select from 'react-select';
