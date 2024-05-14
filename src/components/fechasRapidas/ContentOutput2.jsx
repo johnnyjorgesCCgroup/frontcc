@@ -522,7 +522,7 @@ const ContentOutput = () => {
           </Grid>
         </Grid>
         <Grid container spacing={3} alignItems="center">
-          <Grid item xs={3} md={2.5}>
+          <Grid item xs={3} md={2.8}>
             <Autocomplete
               value={selMarket || []}
               id="combo-box-demo"
@@ -533,7 +533,7 @@ const ContentOutput = () => {
               onChange={handleInputChangeOutput}
             />
           </Grid>
-          <Grid item xs={4} md={2.5}>
+          <Grid item xs={4} md={2.8}>
             <Autocomplete
               value={selAlm || []}
               id="combo-box-demo"
@@ -543,7 +543,7 @@ const ContentOutput = () => {
               onChange={handleInputChangeAlmacen}
             />
           </Grid>
-          <Grid item xs={2} md={2.5}>
+          <Grid item xs={2} md={2.8}>
             <Autocomplete
               value={selWorker || []}
               id="combo-box-demo"
