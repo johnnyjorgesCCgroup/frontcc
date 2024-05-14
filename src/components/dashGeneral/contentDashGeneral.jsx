@@ -329,11 +329,11 @@ export default function contentInventory() {
                 //semanal y mensual
                 const today = new Date();
                 const year = today.getFullYear();
-                const dayOfWeek = today.getDay();
-                const daysUntilMonday = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
-                const startOfWeek = new Date(today);
-                startOfWeek.setDate(today.getDate() - daysUntilMonday);
+                const dayOfWeek = today.getDay(); //dia de la semana
+                const daysUntilMonday = (dayOfWeek === 0) ? 6 : dayOfWeek - 1; //descuenta 1 al día de la semana
+                const startOfWeek = new Date(today); //fecha de hoy
                 const endOfWeek = new Date(startOfWeek);
+                startOfWeek.setDate(today.getDate() - daysUntilMonday -1);
                 endOfWeek.setDate(startOfWeek.getDate() + 6);
                 const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
                 const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
