@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../components/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import './login.css';
 
 const Login = () => {
   const { login } = useAuth();
@@ -62,144 +63,24 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
-  const styles = {
-    mainLogin: {
-      width: '100vw',
-      height: '100vh',
-      background: '#201b2c',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    leftLogin: {
-      width: '50vw',
-      height: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'column',
-    },
-    leftLoginH1: {
-      fontSize: '3vw',
-      color: '#77ffc0',
-    },
-    leftLoginImage: {
-      width: '35vw',
-    },
-    rightLogin: {
-      width: '50vw',
-      height: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    cardLogin: {
-      width: '60%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'column',
-      padding: '30px 35px',
-      background: '#2f2841',
-      borderRadius: '20px',
-      boxShadow: '0px 10px 40px #00000056',
-    },
-    cardLoginH1: {
-      color: '#0f8',
-      fontWeight: 800,
-      margin: 0,
-    },
-    textField: {
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      margin: '10px 0px',
-    },
-    textFieldInput: {
-      width: '100%',
-      border: 'none',
-      borderRadius: '10px',
-      padding: '25px',
-      background: '#514869',
-      color: '#f0ffffde',
-      fontSize: '12pt',
-      boxShadow: '0px 10px 40px #00000056',
-      outline: 'none',
-      boxSizing: 'border-box',
-    },
-    textFieldLabel: {
-      color: '#f0ffffde',
-      marginBottom: '10px',
-    },
-    textFieldPlaceholder: {
-      color: '#f0ffff94',
-    },
-    btnLogin: {
-      width: '100%',
-      padding: '16px 0px',
-      margin: '25px',
-      border: 'none',
-      borderRadius: '8px',
-      outline: 'none',
-      textTransform: 'uppercase',
-      fontWeight: 800,
-      letterSpacing: '3px',
-      color: '#2b134b',
-      background: '#0f8',
-      cursor: 'pointer',
-      boxShadow: '0px 10px 40px -12px #00ff8052',
-    },
-    btnViewContrasena: {
-      width: '20%',
-      padding: '16px 0px',
-      margin: '0 0 0 20px',
-      border: 'none',
-      borderRadius: '8px',
-      outline: 'none',
-      textTransform: 'uppercase',
-      fontWeight: 800,
-      letterSpacing: '3px',
-      color: '#2b134b',
-      background: '#0f8',
-      cursor: 'pointer',
-      boxShadow: '0px 10px 40px -12px #00ff8052',
-    },
-    btnCadastrarSe: {
-      fontFamily: 'Noto Sans, sans-serif',
-      textTransform: 'uppercase',
-      textDecoration: 'none',
-      letterSpacing: '2px',
-      color: 'white',
-    },
-    spanCadastrarSe: {
-      color: '#0f8',
-    },
-    btnPlus: {
-      width: '100%',
-    },
-  };
-
   return (
-    <div style={styles.mainLogin}>
-      <div style={styles.leftLogin}>
-        <h1 style={styles.leftLoginH1}>
+    <div className= "mainLogin">
+      <div className="leftLogin">
+        <h1 className='leftLoginH1'>
           Bienvenidos
           <br />CC GROUP SYSTEM
-          <br />
-          <br />
         </h1>
         <img
           src="/logoblanco.png"
-          style={styles.leftLoginImage}
+          className='leftLoginImage'
           alt="Imagem animada"
         />
       </div>
-      <div style={styles.rightLogin}>
-        <div style={styles.cardLogin}>
-          <h1 style={styles.cardLoginH1}>LOGIN</h1>
-          <div style={styles.textField}>
-            <label htmlFor="usuario" style={styles.textFieldLabel}>
+      <div className='rightLogin'>
+        <div className='cardLogin'>
+          <h1 className='cardLoginH1'>LOGIN</h1>
+          <div className='textField'>
+            <label htmlFor="usuario" className='textFieldLabel'>
               Usuario
             </label>
             <input
@@ -207,11 +88,11 @@ const Login = () => {
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              style={styles.textFieldInput}
+              className='textFieldInput'
             />
           </div>
-          <div style={styles.textField}>
-            <label htmlFor="senha" style={styles.textFieldLabel}>
+          <div className='textField'>
+            <label htmlFor="senha" className='textFieldLabel'>
               Contraseña
             </label>
             <div style={{ display: 'flex' }}>
@@ -220,17 +101,17 @@ const Login = () => {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={styles.textFieldInput}
+                className='textFieldInput'
               />
-              <button type='submit' onClick={passwordVisibleUpdate} style={styles.btnViewContrasena}><i className='fas fa-eye'></i></button>
+              <button type='submit' onClick={passwordVisibleUpdate} id='btnViewContrasena'><i className='fas fa-eye'></i></button>
             </div>
           </div>
-          <button onClick={handleLogin} style={styles.btnLogin}>
+          <button onClick={handleLogin} className='btnLogin'>
             ENTRAR
           </button>
-          <div style={styles.btnPlus}>
-            <Link to="/create" style={styles.btnCadastrarSe}>
-              No tienes una cuenta? <span style={styles.spanCadastrarSe}>Regístrate</span>
+          <div className='btnPlus'>
+            <Link to="/create" className='btnCadastrarSe'>
+              No tienes una cuenta? <span className='spanCadastrarSe'>Regístrate</span>
             </Link>
           </div>
           <br></br>

@@ -1429,7 +1429,7 @@ export default function contentInventory() {
                         <div className='card card-outline' style={{ width: "50%", marginLeft: "3%", padding: "15px" }}>
                             <canvas ref={chartAllRef} style={{width:"100%"}}/>
                         </div>
-                        <div className='card card-outline' style={{ width: "50%", marginLeft: "3%", padding: "15px" }}>
+                        <div className='card card-outline' style={{ width: "50%", marginLeft: "3%", marginRight: "3%", padding: "15px" }}>
                             <canvas ref={chartLineMonthRef} style={{width:"100%"}}/>
                         </div>
                     </div>
