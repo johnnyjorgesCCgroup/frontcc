@@ -279,13 +279,7 @@ const ContentOutput = () => {
     setSelAlm([]);
     setSelWorker([]);
     newProducto.oc = '';
-    Swal.fire({
-      icon: 'success',
-      title: 'Nuevo Moviemiento de Mercaderia Creado!',
-      showConfirmButton: false,
-      timer: 1500,
-    });
-
+    alert("Salida Gestionada")
   };
 
   const handleInputChange = (event) => {

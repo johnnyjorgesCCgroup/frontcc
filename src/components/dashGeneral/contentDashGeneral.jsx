@@ -1404,8 +1404,8 @@ export default function contentInventory() {
                                 <tbody>
                                     {data.map(item => (
                                         <tr key={item.oc} id="tooltip">
-                                            <td>{item.oc}</td>
-                                            <td>S/{item.price}
+                                            <td style={{fontSize:"12px"}}><b>{item.oc}</b></td>
+                                            <td style={{fontSize:"12px"}}><b>S/{item.price}</b>
                                                 <span className="tooltiptext">Fecha: <span style={{ fontSize: "12px" }}>{item.date}</span><br />Origen: <span style={{ fontSize: "12px" }}>{item.origin}</span><br />Cliente: <span style={{ fontSize: "12px" }}>{item.client}</span><br />Estado: <span style={{ fontSize: "12px" }}>{item.status === 0 ? "Pendiente" : item.status === 1 ? "ETIQUETA" : item.status === 2 ? "EN RUTA" : item.status === 3 ? "ENTREGADO" : item.status === 4 ? "ANULADO" : item.status === 5 ? "DEVOLUCION" : "OTROS"}</span></span></td>
                                         </tr>
                                     ))}
