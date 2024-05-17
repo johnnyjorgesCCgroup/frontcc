@@ -113,6 +113,16 @@ const Menu = () => {
                       <p>Estados</p>
                     </Link>
                   </li>
+                  <li className="nav-item">
+                    <Link
+                      to="/dashventasincidencias"
+                      className={`nav-link ${location.pathname === "/dashventasincidencias" ? "active" : ""
+                        }`}
+                    >
+                      <i className="far fa-circle nav-icon" />
+                      <p>Ventas & Incidencias</p>
+                    </Link>
+                  </li>
                 </ul>
               </li>
               <li
@@ -183,7 +193,6 @@ const Menu = () => {
                   </li>
                 </ul>
               </li>
-
               <li
                 className="nav-link"
               >

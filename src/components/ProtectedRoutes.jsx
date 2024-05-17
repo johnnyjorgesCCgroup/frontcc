@@ -8,6 +8,7 @@ import IndexDashboard from '../views/Dashboard/index';
 import IndexFechasRapidas from '../views/FechasRapidas/index2';
 import IndexRegisterMotorizado from '../views/RegisterMotorizado/index';
 import IndexDashGeneral from '../views/DashGeneral/index';
+import IndexDashVentasIncidencias from '../views/DashVentasIncidencias/index';
 import './ProtectedRoutes.css'
 
 
@@ -44,6 +45,7 @@ const ProtectedRoutes = () => {
       <Route path="/fechasrapidas" element={<IndexFechasRapidas />} />
       <Route path="/registroMoto" element={<IndexRegisterMotorizado />} />
       <Route path="/dashgeneral" element={<IndexDashGeneral />} />
+      <Route path="/dashventasincidencias" element={<IndexDashVentasIncidencias />} />
     </Routes>
   );
 };
