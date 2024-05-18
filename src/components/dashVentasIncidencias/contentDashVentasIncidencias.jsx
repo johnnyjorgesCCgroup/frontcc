@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Modal, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem, Switch } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faDownload } from '@fortawesome/free-solid-svg-icons';
+import Chart from 'chart.js/auto';
 
 export default function contentInventory() {
     const [incidentes, setIncidentes] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedIncident, setSelectedIncident] = useState(null);
     const [switchOn, setSwitchOn] = useState(false);
-    const [nuevaIncidencia, setNuevaIncidencia] = useState({});
-    const [crearModalOpen, setCrearModalOpen] = useState(false);
+    const [orderCountMonthVendedor1, SetorderCountMonthVendedor1] = useState(0);
+    const [orderCountMonthVendedor2, SetorderCountMonthVendedor2] = useState(0);
+    const [orderPriceMonthVendedor1, SetorderPriceMonthVendedor1] = useState(0);
+    const [orderPriceMonthVendedor2, SetorderPriceMonthVendedor2] = useState(0);
+    const chartLineMonthRef = useRef(null);
 
     const obtenerIncidentes = async () => {
         try {
@@ -19,6 +21,53 @@ export default function contentInventory() {
                 const data = await response.json();
                 const incidentesFiltrados = data.data.filter(incidente => incidente.origin === "VENTA");
                 setIncidentes(incidentesFiltrados);
+
+                //semanal y mensual
+                const today = new Date();
+                const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                
+                //countMensualVendedor
+                const orderCountMonthVendedor1 = incidentesFiltrados.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 20) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthVendedor1(orderCountMonthVendedor1);
+
+                const orderPriceMonthVendedor1 = incidentesFiltrados.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 20) {
+                        return count + parseFloat(item.price);
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderPriceMonthVendedor1(orderPriceMonthVendedor1);
+
+                const orderCountMonthVendedor2 = incidentesFiltrados.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 15) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthVendedor2(orderCountMonthVendedor2);
+
+                const orderPriceMonthVendedor2 = incidentesFiltrados.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 15) {
+                        return count + parseFloat(item.price);
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderPriceMonthVendedor2(orderPriceMonthVendedor2);
+
             } else {
                 console.error("Error de fetch", response.statusText);
             }
@@ -35,7 +84,7 @@ export default function contentInventory() {
 
     const handleRowClick = (id) => {
         const incident = incidentes.find(incidente => incidente.id === id);
-        setSelectedIncident(incident); // Corregir el nombre de la función setSelectedIncident
+        setSelectedIncident(incident);
         setModalOpen(true);
     }
 
@@ -43,25 +92,9 @@ export default function contentInventory() {
         setModalOpen(false);
     }
 
-    const handleOpenCrearModal = () => {
-        setCrearModalOpen(true);
-    }
-
     const handleSwitchChange = () => {
         setSwitchOn(!switchOn);
     }
-
-    const handleNuevaIncidenciaChange = (e) => {
-        const { name, value } = e.target;
-        setNuevaIncidencia({ ...nuevaIncidencia, [name]: value });
-    }
-
-    const handleEstadoChange = (e) => {
-        const { value } = e.target;
-        setNuevaIncidencia({ ...nuevaIncidencia, estado: value });
-    }
-
-    const buttonBackgroundColor = switchOn ? "#22FF94" : "#9C27B0";
 
     const columns = [
         { field: 'id', headerName: 'ID', flex: 0 },
@@ -69,14 +102,16 @@ export default function contentInventory() {
         { field: 'date', headerName: 'Fecha', flex: 0 },
         {
             field: 'user_id', headerName: 'Asesor', flex: 1, renderCell: (params) => (
-                <>{params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte": "Usuario No registrado"}</>
-        ),
+                <>{params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : "Usuario No registrado"}</>
+            ),
         },
         { field: 'price', headerName: 'Precio', flex: 0 },
-        { field: 'status', headerName: 'Estado', flex: 0, renderCell: (params) => (
-            <>{params.row.status === 0 ? "Etiqueta" : params.row.status === 1 ? "Etiqueta" : params.row.status === 2 ? "En Ruta" : params.row.status === 3 ? "Entregado" : params.row.status === 4 ? "Anulado" : params.row.status === 5 ? "Devolución" : "N/A"}
-            </>
-        )},
+        {
+            field: 'status', headerName: 'Estado', flex: 0, renderCell: (params) => (
+                <>{params.row.status === 0 ? "Etiqueta" : params.row.status === 1 ? "Etiqueta" : params.row.status === 2 ? "En Ruta" : params.row.status === 3 ? "Entregado" : params.row.status === 4 ? "Anulado" : params.row.status === 5 ? "Devolución" : "N/A"}
+                </>
+            )
+        },
         { field: 'client', headerName: 'Cliente', flex: 1 },
         { field: 'product', headerName: 'Producto', flex: 1 },
         {
@@ -86,7 +121,7 @@ export default function contentInventory() {
             renderCell: (params) => (
                 <Button
                     variant="contained"
-                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}
+                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#1A5276", color: switchOn ? "white" : "white" }}
                     size="small"
                     onClick={() => handleRowClick(params.row.id)}
                 >
@@ -101,6 +136,78 @@ export default function contentInventory() {
         print: false,
         search: true,
     };
+
+    //BardChart
+    useEffect(() => {
+        let myChart = createLineChartMonth();
+        return () => {
+            if (myChart) {
+                myChart.destroy();
+            }
+        };
+    }, []);
+
+    const createLineChartMonth = () => {
+        try {
+            let myChart = null;
+    
+            const ctx = chartLineMonthRef.current.getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                    datasets: [
+                        {
+                            label: 'Sheyla',
+                            data: [0, 0, 0, 0, 40, 50, 0, 0, 0, 0, 0, 0],
+                            backgroundColor: '#1A5276',
+                            borderColor: '#1A5276',
+                            hoverBackgroundColor: '#CED4DA',
+                            borderWidth: 2,
+                            fill: false // Para que no se rellene el área debajo de la línea
+                        },
+                        {
+                            label: 'Daniel',
+                            data: [0, 0, 0, 35, 45, 0, 0, 0, 0, 0, 0, 0, 0],
+                            backgroundColor: '#A93226',
+                            borderColor: '#A93226',
+                            hoverBackgroundColor: '#F5B7B1',
+                            borderWidth: 2,
+                            fill: false // Para que no se rellene el área debajo de la línea
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top' // Coloca la leyenda en la parte superior
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    // Muestra el valor en el tooltip junto con su porcentaje
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed.y / total) * 100).toFixed(2);
+                                    return context.dataset.label + ': ' + context.parsed.y + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            return myChart;
+    
+        } catch (error) {
+            console.error("Error al crear el gráfico:", error);
+            return null;
+        }
+    };
+    
 
     return (
         <div className="content-wrapper">
@@ -118,25 +225,25 @@ export default function contentInventory() {
                     </div>
                 </div>
                 <div style={{ display: "flex" }}>
-                    <div style={{ width: "15%", justifyContent: "center", textAlign: "center" }}>
+                    <div style={{ width: "22%", justifyContent: "center", textAlign: "center" }}>
                         <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
                             <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
-                            <span className='info-box-text' style={{ margin: "5px" }}>Sheyla</span>
+                            <span className='info-box-text' style={{ margin: "5px" }}>Sheyla {orderCountMonthVendedor1}</span>
+                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}> S/{orderPriceMonthVendedor1.toFixed(1)}{" "}{orderPriceMonthVendedor1 > orderPriceMonthVendedor2 ? "😁" : "😢"}</span></b>
+                        </div>
+                        <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
+                            <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
+                            <span className='info-box-text' style={{ margin: "5px" }}>Daniel {orderCountMonthVendedor2}</span>
+                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}>S/{orderPriceMonthVendedor2.toFixed(1)}{" "}{orderPriceMonthVendedor2 > orderPriceMonthVendedor1 ? "😁" : "😢"}</span></b>
+                        </div>
+                        <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
+                            <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
+                            <span className='info-box-text' style={{ margin: "5px" }}>Francis  0</span>
                             <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}>S/0</span></b>
                         </div>
                         <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
                             <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
-                            <span className='info-box-text' style={{ margin: "5px" }}>Daniel</span>
-                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}>S/0</span></b>
-                        </div>
-                        <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
-                            <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
-                            <span className='info-box-text' style={{ margin: "5px" }}>Francis</span>
-                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}>S/0</span></b>
-                        </div>
-                        <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
-                            <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
-                            <span className='info-box-text' style={{ margin: "5px" }}>Rodrigo</span>
+                            <span className='info-box-text' style={{ margin: "5px" }}>Rodrigo  0</span>
                             <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}>S/0</span></b>
                         </div>
                     </div>
@@ -144,10 +251,10 @@ export default function contentInventory() {
                         <div style={{ height: "15%", display: "inline-block", width: "fit-content", backgroundColor: "#1A5276", borderRadius: "10px", padding: "10px", margin: "0 auto", textAlign: "center", marginBottom: "5px", color: "white" }}>
                             <p>
                                 <i className='fas fa-bullseye'></i>{" "}Objetivo del mes</p></div>
-                        <div style={{ height: "65%", display: "flex", fontSize: "30px", alignItems: "center", justifyContent: "center" }}><b>S/0.00</b></div>
+                        <div style={{ height: "65%", display: "flex", fontSize: "30px", alignItems: "center", justifyContent: "center" }}><b>S/5000.00</b></div>
                     </div>
-                    <div className='card card-outline' style={{ width: "70%", marginLeft: "10px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <o style={{ fontSize: "50px" }}>Aca va la linea de tendencia</o>
+                    <div className='card card-outline' style={{ width: "63%", marginLeft: "10px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <canvas ref={chartLineMonthRef} style={{width:"100%", height:"20%", padding:"10px"}}/>
                     </div>
                 </div>
                 <div className="card-body table-responsive p-0 table-bordered table-hover">
@@ -175,12 +282,81 @@ export default function contentInventory() {
                                 {selectedIncident && (
                                     <>
                                         <Typography variant="h6" gutterBottom component="div">
-                                            {selectedIncident.nombre}
+                                            {selectedIncident.oc} {" "}<Button
+                                                variant="contained"
+                                                style={{
+                                                    backgroundColor: switchOn ? "#9C27B0" :
+                                                        (selectedIncident.status === 1 || selectedIncident.status === 4 || selectedIncident.status === 5) ? "red" :
+                                                            "#22FF94",
+                                                    color: switchOn || selectedIncident.status === 1 || selectedIncident.status === 4 || selectedIncident.status === 5 ? "white" : "black"
+                                                }}
+                                                size="small"
+                                                disabled={true}
+                                            >
+                                                <b>
+                                                    <i className='fas fa-box'></i>{" "}
+                                                    {selectedIncident.status === 0 ? "PENDIENTE" :
+                                                        selectedIncident.status === 1 ? "ETIQUETA" :
+                                                            selectedIncident.status === 2 ? "EN RUTA" :
+                                                                selectedIncident.status === 3 ? "ENTREGADO" :
+                                                                    selectedIncident.status === 4 ? "ANULADO" :
+                                                                        selectedIncident.status === 5 ? "DEVOLUCION / CAMBIO" : "Estado Desconocido"}
+                                                </b>
+                                            </Button>
+                                            {" "}<Button
+                                                variant="contained"
+                                                style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}
+                                                size="small"
+                                                disabled={true}
+                                            ><b>
+                                                    <i className='fas fa-motorcycle'></i>{" "}
+                                                    {selectedIncident.isdeliveryccg === 0 ? "No motorizado" :
+                                                        selectedIncident.isdeliveryccg === 1 ? "Motorizado" : "Estado Desconocido"}</b>
+                                            </Button>
+                                            {" "}<Button
+                                                variant="contained"
+                                                size="small"
+                                                onClick={() => {
+                                                    copyToClipboard(selectedIncident.oc);
+                                                }}
+                                                disabled={true}
+                                                style={{
+                                                    backgroundColor: selectedIncident.origin === "Vtex" || selectedIncident.origin === "Saga" ? "#FFA500" :
+                                                        selectedIncident.origin === "InterCorp" ? "#87CEEB" : selectedIncident.origin === "Ripley" ? "#2D0C9E" :
+                                                            selectedIncident.origin === "VENTA" ? "#8B4513" : "inherit", color: "white"
+                                                }}
+                                            >
+                                                <b>
+                                                    <i className="fa-solid fa-truck-fast"></i>{" "}
+                                                    {selectedIncident.origin === "Vtex" ? "Home Delivery" :
+                                                        selectedIncident.origin === "Ripley" ? "OPL Ripley" :
+                                                            selectedIncident.origin === "InterCorp" ? "OPL Intercorp" :
+                                                                selectedIncident.origin === "Saga" ? "Home Delivery" :
+                                                                    selectedIncident.origin === "VENTA" ? "Propio" : "Estado Desconocido"}
+                                                </b>
+                                            </Button>
                                         </Typography>
                                         <Typography>
-                                            Empleado: {selectedIncident.empleado}<br />
-                                            Area: {selectedIncident.area}<br />
-                                            Observaciones: {selectedIncident.detalles}<br />
+                                            Plataforma: {selectedIncident.origin} <br />
+                                            Fecha de ingreso: {selectedIncident.date}<br />
+                                            Fecha del corte: {selectedIncident.date_cut}<br />
+                                            Cliente: {selectedIncident.client}<br />
+                                            Documento: {selectedIncident.document_type}, {selectedIncident.document_number}<br />
+                                            Celular: {selectedIncident.phone}<br />
+                                            Direccion: {selectedIncident.address}, {selectedIncident.distrito}<br />
+                                            Producto: {selectedIncident.code} - {selectedIncident.product}<br />
+                                            Cantidad y Precio: {selectedIncident.quantity} - {selectedIncident.price}<br />
+                                            {selectedIncident.photo !== null ? (
+                                                <React.Fragment>
+                                                    Imagen: {selectedIncident.photo}
+                                                    <Button /*onClick={() => handleOpenImageModal(selectedIncident.photo)}*/>Ver</Button>
+                                                </React.Fragment>
+                                            ) : (
+                                                <React.Fragment>
+                                                    No hay imagen 🥹
+                                                </React.Fragment>
+                                            )}
+                                            <br />
                                         </Typography>
                                     </>
                                 )}
