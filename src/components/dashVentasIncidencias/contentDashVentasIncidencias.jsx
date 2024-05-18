@@ -12,7 +12,7 @@ export default function contentInventory() {
     const [orderCountMonthVendedor2, SetorderCountMonthVendedor2] = useState(0);
     const [orderPriceMonthVendedor1, SetorderPriceMonthVendedor1] = useState(0);
     const [orderPriceMonthVendedor2, SetorderPriceMonthVendedor2] = useState(0);
-    const chartLineMonthRef = useRef(null);
+    const [chartLineMonth, setChartLineMonth] = useState(null);
 
     const obtenerIncidentes = async () => {
         try {
@@ -139,27 +139,31 @@ export default function contentInventory() {
 
     //BardChart
     useEffect(() => {
-        let myChart = createLineChartMonth();
+        if (chartLineMonth) {
+            chartLineMonth.destroy();
+        }
+        const ctx = document.getElementById('chartLineMonthVentas').getContext('2d');
+        const newChart = createLineChartMonthVentas(ctx);
+        setChartLineMonth(newChart);
+
         return () => {
-            if (myChart) {
-                myChart.destroy();
+            if (chartLineMonth) {
+                chartLineMonth.destroy();
             }
         };
     }, []);
 
-    const createLineChartMonth = () => {
+
+    const createLineChartMonthVentas = (ctx) => {
         try {
-            let myChart = null;
-    
-            const ctx = chartLineMonthRef.current.getContext('2d');
-            myChart = new Chart(ctx, {
+            const myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                     datasets: [
                         {
                             label: 'Sheyla',
-                            data: [0, 0, 0, 0, 40, 50, 0, 0, 0, 0, 0, 0],
+                            data: [0, 0, 0, 40, 45, 0, 0, 0, 0, 0, 0, 0],
                             backgroundColor: '#1A5276',
                             borderColor: '#1A5276',
                             hoverBackgroundColor: '#CED4DA',
@@ -201,14 +205,12 @@ export default function contentInventory() {
                 }
             });
             return myChart;
-    
         } catch (error) {
-            console.error("Error al crear el gráfico:", error);
+            console.error('Error creating chart:', error);
             return null;
         }
     };
     
-
     return (
         <div className="content-wrapper">
             <div className="card" style={{ padding: 20 }}>
@@ -254,7 +256,7 @@ export default function contentInventory() {
                         <div style={{ height: "65%", display: "flex", fontSize: "30px", alignItems: "center", justifyContent: "center" }}><b>S/5000.00</b></div>
                     </div>
                     <div className='card card-outline' style={{ width: "63%", marginLeft: "10px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <canvas ref={chartLineMonthRef} style={{width:"100%", height:"20%", padding:"10px"}}/>
+                    <canvas id="chartLineMonthVentas" width="100%" height="30%" style={{padding:"20px"}}></canvas>
                     </div>
                 </div>
                 <div className="card-body table-responsive p-0 table-bordered table-hover">
