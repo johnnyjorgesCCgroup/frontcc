@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Modal, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem, Switch } from '@mui/material';
-import Chart from 'chart.js/auto';
+import { Chart } from 'react-google-charts';
 
 export default function contentInventory() {
     const [incidentes, setIncidentes] = useState([]);
@@ -12,7 +12,6 @@ export default function contentInventory() {
     const [orderCountMonthVendedor2, SetorderCountMonthVendedor2] = useState(0);
     const [orderPriceMonthVendedor1, SetorderPriceMonthVendedor1] = useState(0);
     const [orderPriceMonthVendedor2, SetorderPriceMonthVendedor2] = useState(0);
-    const [chartLineMonth, setChartLineMonth] = useState(null);
 
     const obtenerIncidentes = async () => {
         try {
@@ -26,7 +25,7 @@ export default function contentInventory() {
                 const today = new Date();
                 const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
                 const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                
+
                 //countMensualVendedor
                 const orderCountMonthVendedor1 = incidentesFiltrados.reduce((count, item) => {
                     const itemDate = new Date(item.date);
@@ -137,80 +136,6 @@ export default function contentInventory() {
         search: true,
     };
 
-    //BardChart
-    useEffect(() => {
-        if (chartLineMonth) {
-            chartLineMonth.destroy();
-        }
-        const ctx = document.getElementById('chartLineMonthVentas').getContext('2d');
-        const newChart = createLineChartMonthVentas(ctx);
-        setChartLineMonth(newChart);
-
-        return () => {
-            if (chartLineMonth) {
-                chartLineMonth.destroy();
-            }
-        };
-    }, []);
-
-
-    const createLineChartMonthVentas = (ctx) => {
-        try {
-            const myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                    datasets: [
-                        {
-                            label: 'Sheyla',
-                            data: [0, 0, 0, 40, 45, 0, 0, 0, 0, 0, 0, 0],
-                            backgroundColor: '#1A5276',
-                            borderColor: '#1A5276',
-                            hoverBackgroundColor: '#CED4DA',
-                            borderWidth: 2,
-                            fill: false // Para que no se rellene el área debajo de la línea
-                        },
-                        {
-                            label: 'Daniel',
-                            data: [0, 0, 0, 35, 45, 0, 0, 0, 0, 0, 0, 0, 0],
-                            backgroundColor: '#A93226',
-                            borderColor: '#A93226',
-                            hoverBackgroundColor: '#F5B7B1',
-                            borderWidth: 2,
-                            fill: false // Para que no se rellene el área debajo de la línea
-                        }
-                    ]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top' // Coloca la leyenda en la parte superior
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    // Muestra el valor en el tooltip junto con su porcentaje
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((context.parsed.y / total) * 100).toFixed(2);
-                                    return context.dataset.label + ': ' + context.parsed.y + ' (' + percentage + '%)';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            return myChart;
-        } catch (error) {
-            console.error('Error creating chart:', error);
-            return null;
-        }
-    };
-    
     return (
         <div className="content-wrapper">
             <div className="card" style={{ padding: 20 }}>
@@ -256,7 +181,35 @@ export default function contentInventory() {
                         <div style={{ height: "65%", display: "flex", fontSize: "30px", alignItems: "center", justifyContent: "center" }}><b>S/5000.00</b></div>
                     </div>
                     <div className='card card-outline' style={{ width: "63%", marginLeft: "10px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <canvas id="chartLineMonthVentas" width="100%" height="30%" style={{padding:"20px"}}></canvas>
+                        <Chart
+                            width={'100%'}
+                            height={'300px'}
+                            chartType="LineChart"
+                            loader={<div>Loading Chart</div>}
+                            data={[
+                                ['Month', 'Sheyla', 'Daniel'],
+                                ['Enero', 0, 0],
+                                ['Febrero', 0, 0],
+                                ['Marzo', 0, 0],
+                                ['Abril', 40, 35],
+                                ['Mayo', 46, 46],
+                                ['Junio', 0, 0],
+                                ['Julio', 0, 0],
+                                ['Agosto', 0, 0],
+                                ['Septiembre', 0, 0],
+                                ['Octubre', 0, 0],
+                                ['Noviembre', 0, 0],
+                                ['Diciembre', 0, 0],
+                            ]}
+                            options={{
+                                title: 'Ventas Mensuales',
+                                curveType: 'function',
+                                legend: { position: 'top' },
+                                hAxis: { title: 'Month', titleTextStyle: { color: '#333' } },
+                                vAxis: { minValue: 0 },
+                            }}
+                            rootProps={{ 'data-testid': '1' }}
+                        />
                     </div>
                 </div>
                 <div className="card-body table-responsive p-0 table-bordered table-hover">
