@@ -345,9 +345,9 @@ export default function contentInventory() {
                                     height: "25px",
                                     backgroundColor: switchOn ? "#9C27B0" :
                                         params.row.status === 0 || params.row.status === 4 || params.row.status === 5 ? "red" :
-                                            params.row.status === 2 ? "#FFD848" : // Color para status === 2
+                                            params.row.status === 2 ? "#FFD848" : params.row.status === 1 ? "#0083CA" : 
                                                 "#22FF94",
-                                    color: switchOn || params.row.status === 0 || params.row.status === 4 || params.row.status === 5 ? "white" : "black"
+                                    color: switchOn || params.row.status === 0 || params.row.status === 4 || params.row.status === 5 || params.row.status === 1 ? "white" : "black"
                                 }}
                                 disabled={true}
                             >
