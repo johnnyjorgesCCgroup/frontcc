@@ -2,12 +2,15 @@ import React, { useEffect, useState, useRef } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Modal, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem, Switch } from '@mui/material';
 import { Chart } from 'react-google-charts';
+import productsData from './products.json';
 
 export default function contentInventory() {
     const [incidentes, setIncidentes] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedIncident, setSelectedIncident] = useState(null);
     const [switchOn, setSwitchOn] = useState(false);
+    const [productMap, setProductMap] = useState({});
+    const [productMapSku, setProductMapSku] = useState({});
     const [orderCountMonthVendedor1, SetorderCountMonthVendedor1] = useState(0);
     const [orderCountMonthVendedor2, SetorderCountMonthVendedor2] = useState(0);
     const [orderPriceMonthVendedor1, SetorderPriceMonthVendedor1] = useState(0);
@@ -39,24 +42,42 @@ export default function contentInventory() {
 
     const obtenerIncidentes = async () => {
         try {
-            const response = await fetch("https://api.cvimport.com/api/cut");
+            const response = await fetch("https://api.cvimport.com/api/social");
             if (response.ok) {
                 const data = await response.json();
-                const incidentesFiltrados = data.data.filter(incidente => incidente.origin === "VENTA");
-                setIncidentes(incidentesFiltrados);
 
                 const responseData = data.data;
-                const sortedData = responseData.sort((a, b) => b.id - a.id);
-                const filteredData = sortedData.map(item => {
+                const filteredData = responseData.map(item => {
+
+                    const primerProductoRRSS = item.social_line[0];
+
                     return {
-                        oc: item.oc,
-                        price: item.price,
+                        id: item.id,
+                        serie: item.serie,
+                        platform: item.platform,
+                        total: item.total,
                         status: item.status,
                         date: item.date,
                         origin: item.origin,
-                        client: item.client,
+                        client: item.person.name,
+                        user_id: item.user_id,
+                        document_number: item.document_number,
+                        document_type: item.document_type,
+                        phone: item.person.phone_number,
+                        productosRRSS: item.social_line,
+                        client_type: item.client_type,
+                        address: item.person.address,
+                        reference: item.person.reference,
+                        departament: item.person.departament,
+                        province: item.person.province,
+                        district: item.person.district,
+                        status_text: item.status_text,
+                        obs: item.obs,
+                        product_id: primerProductoRRSS ? primerProductoRRSS.product_id : null,
                     };
                 });
+
+                setIncidentes(filteredData)
 
                 //semanal y mensual
                 const today = new Date();
@@ -65,7 +86,7 @@ export default function contentInventory() {
                 const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
                 //countMensualVendedor
-                const orderCountMonthVendedor1 = incidentesFiltrados.reduce((count, item) => {
+                const orderCountMonthVendedor1 = filteredData.reduce((count, item) => {
                     const itemDate = new Date(item.date);
                     if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 20) {
                         return count + 1;
@@ -75,17 +96,17 @@ export default function contentInventory() {
                 }, 0);
                 SetorderCountMonthVendedor1(orderCountMonthVendedor1);
 
-                const orderPriceMonthVendedor1 = incidentesFiltrados.reduce((count, item) => {
+                const orderPriceMonthVendedor1 = filteredData.reduce((count, item) => {
                     const itemDate = new Date(item.date);
                     if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 20) {
-                        return count + parseFloat(item.price);
+                        return count + parseFloat(item.total);
                     } else {
                         return count;
                     }
                 }, 0);
                 SetorderPriceMonthVendedor1(orderPriceMonthVendedor1);
 
-                const orderCountMonthVendedor2 = incidentesFiltrados.reduce((count, item) => {
+                const orderCountMonthVendedor2 = filteredData.reduce((count, item) => {
                     const itemDate = new Date(item.date);
                     if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 15) {
                         return count + 1;
@@ -95,10 +116,10 @@ export default function contentInventory() {
                 }, 0);
                 SetorderCountMonthVendedor2(orderCountMonthVendedor2);
 
-                const orderPriceMonthVendedor2 = incidentesFiltrados.reduce((count, item) => {
+                const orderPriceMonthVendedor2 = filteredData.reduce((count, item) => {
                     const itemDate = new Date(item.date);
                     if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 15) {
-                        return count + parseFloat(item.price);
+                        return count + parseFloat(item.total);
                     } else {
                         return count;
                     }
@@ -355,7 +376,7 @@ export default function contentInventory() {
 
                 const orderCountNoviembreVendedor1 = filteredData.reduce((count, item) => {
                     const itemDate = new Date(item.date);
-                    if (itemDate >= startOfMonthNoviembre && itemDate <= endOfMonthNoviembre&& item.user_id === 20) {
+                    if (itemDate >= startOfMonthNoviembre && itemDate <= endOfMonthNoviembre && item.user_id === 20) {
                         return count + 1;
                     } else {
                         return count;
@@ -403,12 +424,26 @@ export default function contentInventory() {
         } catch (error) {
             console.error("Error de bd", error);
         }
-    }
+    }    
 
     const label = { inputProps: { 'aria-label': 'Size switch demo' } };
 
     useEffect(() => {
         obtenerIncidentes();
+    }, []);
+
+    useEffect(() => {
+        // Crear un objeto que mapea product_id a name
+        const map = {};
+        productsData.data.forEach(product => {
+            map[product.id] = product.name;
+        });
+        setProductMap(map);
+        const mapSku = {};
+        productsData.data.forEach(product => {
+            mapSku[product.id] = product.sku;
+        });
+        setProductMapSku(mapSku);
     }, []);
 
     const handleRowClick = (id) => {
@@ -427,22 +462,21 @@ export default function contentInventory() {
 
     const columns = [
         { field: 'id', headerName: 'ID', flex: 0 },
-        { field: 'oc', headerName: 'Orden', flex: 0 },
+        { field: 'serie', headerName: 'Orden', flex: 0 },
         { field: 'date', headerName: 'Fecha', flex: 0 },
         {
             field: 'user_id', headerName: 'Asesor', flex: 1, renderCell: (params) => (
                 <>{params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : "Usuario No registrado"}</>
             ),
         },
-        { field: 'price', headerName: 'Precio', flex: 0 },
-        {
-            field: 'status', headerName: 'Estado', flex: 0, renderCell: (params) => (
-                <>{params.row.status === 0 ? "Etiqueta" : params.row.status === 1 ? "Etiqueta" : params.row.status === 2 ? "En Ruta" : params.row.status === 3 ? "Entregado" : params.row.status === 4 ? "Anulado" : params.row.status === 5 ? "Devolución" : "N/A"}
-                </>
-            )
-        },
+        { field: 'total', headerName: 'Precio', flex: 0 },
+        { field: 'status_text', headerName: 'Estado', flex: 0 },
         { field: 'client', headerName: 'Cliente', flex: 1 },
-        { field: 'product', headerName: 'Producto', flex: 1 },
+        { field: 'product_id', headerName: 'Producto', flex: 1, renderCell: (params) => (
+            <>
+                {productMap[params.row.product_id]}
+            </>
+        ) },
         {
             field: 'action',
             headerName: 'Acción',
@@ -486,12 +520,12 @@ export default function contentInventory() {
                         <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
                             <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
                             <span className='info-box-text' style={{ margin: "5px" }}>Sheyla {orderCountMonthVendedor1}</span>
-                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}> S/{orderPriceMonthVendedor1.toFixed(1)}{" "}{orderPriceMonthVendedor1 > orderPriceMonthVendedor2 ? "😁" : "😢"}</span></b>
+                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}> S/{orderPriceMonthVendedor1.toFixed(0)}{" "}{orderPriceMonthVendedor1 > orderPriceMonthVendedor2 ? "😁" : "😢"}</span></b>
                         </div>
                         <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
                             <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
                             <span className='info-box-text' style={{ margin: "5px" }}>Daniel {orderCountMonthVendedor2}</span>
-                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}>S/{orderPriceMonthVendedor2.toFixed(1)}{" "}{orderPriceMonthVendedor2 > orderPriceMonthVendedor1 ? "😁" : "😢"}</span></b>
+                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}>S/{orderPriceMonthVendedor2.toFixed(0)}{" "}{orderPriceMonthVendedor2 > orderPriceMonthVendedor1 ? "😁" : "😢"}</span></b>
                         </div>
                         <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
                             <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
@@ -518,18 +552,18 @@ export default function contentInventory() {
                             loader={<div>Loading Chart</div>}
                             data={[
                                 ['Month', 'Sheyla', 'Daniel'],
-                                ['Enero', {orderCountEneroVendedor1}, {orderCountEneroVendedor2}],
-                                ['Febrero', {orderCountFebreroVendedor1}, {orderCountFebreroVendedor2}],
-                                ['Marzo', {orderCountMarzoVendedor1}, {orderCountMarzoVendedor2}],
-                                ['Abril', {orderCountAbrilVendedor1}, {orderCountAbrilVendedor2}],
-                                ['Mayo', {orderCountMayoVendedor1}, {orderCountMayoVendedor2}],
-                                ['Junio', {orderCountJunioVendedor1}, {orderCountJunioVendedor2}],
-                                ['Julio', {orderCountJulioVendedor1}, {orderCountJulioVendedor2}],
-                                ['Agosto', {orderCountAgostoVendedor1}, {orderCountAgostoVendedor2}],
-                                ['Septiembre', {orderCountSeptiembreVendedor1}, {orderCountSeptiembreVendedor2}],
-                                ['Octubre', {orderCountOctubreVendedor1}, {orderCountOctubreVendedor2}],
-                                ['Noviembre', {orderCountNoviembreVendedor1}, {orderCountNoviembreVendedor2}],
-                                ['Diciembre', {orderCountDiciembreVendedor1}, {orderCountDiciembreVendedor2}],
+                                ['Enero', orderCountEneroVendedor1, orderCountEneroVendedor2],
+                                ['Febrero', orderCountFebreroVendedor1, orderCountFebreroVendedor2],
+                                ['Marzo', orderCountMarzoVendedor1, orderCountMarzoVendedor2],
+                                ['Abril', orderCountAbrilVendedor1, orderCountAbrilVendedor2],
+                                ['Mayo', orderCountMayoVendedor1, orderCountMayoVendedor2],
+                                ['Junio', orderCountJunioVendedor1, orderCountJunioVendedor2],
+                                ['Julio', orderCountJulioVendedor1, orderCountJulioVendedor2],
+                                ['Agosto', orderCountAgostoVendedor1, orderCountAgostoVendedor2],
+                                ['Septiembre', orderCountSeptiembreVendedor1, orderCountSeptiembreVendedor2],
+                                ['Octubre', orderCountOctubreVendedor1, orderCountOctubreVendedor2],
+                                ['Noviembre', orderCountNoviembreVendedor1, orderCountNoviembreVendedor2],
+                                ['Diciembre', orderCountDiciembreVendedor1, orderCountDiciembreVendedor2],
                             ]}
                             options={{
                                 title: 'Ventas Mensuales',
@@ -567,25 +601,17 @@ export default function contentInventory() {
                                 {selectedIncident && (
                                     <>
                                         <Typography variant="h6" gutterBottom component="div">
-                                            {selectedIncident.oc} {" "}<Button
+                                            {selectedIncident.serie} {" "}<Button
                                                 variant="contained"
                                                 style={{
-                                                    backgroundColor: switchOn ? "#9C27B0" :
-                                                        (selectedIncident.status === 1 || selectedIncident.status === 4 || selectedIncident.status === 5) ? "red" :
-                                                            "#22FF94",
-                                                    color: switchOn || selectedIncident.status === 1 || selectedIncident.status === 4 || selectedIncident.status === 5 ? "white" : "black"
+                                                    backgroundColor: selectedIncident.status_text === "ACEPTADO" ? "#22FF94" : "red", color: selectedIncident.status_text === "ACEPTADO" ? "black" : "white"
                                                 }}
                                                 size="small"
                                                 disabled={true}
                                             >
                                                 <b>
                                                     <i className='fas fa-box'></i>{" "}
-                                                    {selectedIncident.status === 0 ? "PENDIENTE" :
-                                                        selectedIncident.status === 1 ? "ETIQUETA" :
-                                                            selectedIncident.status === 2 ? "EN RUTA" :
-                                                                selectedIncident.status === 3 ? "ENTREGADO" :
-                                                                    selectedIncident.status === 4 ? "ANULADO" :
-                                                                        selectedIncident.status === 5 ? "DEVOLUCION / CAMBIO" : "Estado Desconocido"}
+                                                    {selectedIncident.status_text}
                                                 </b>
                                             </Button>
                                             {" "}<Button
@@ -594,54 +620,43 @@ export default function contentInventory() {
                                                 size="small"
                                                 disabled={true}
                                             ><b>
-                                                    <i className='fas fa-motorcycle'></i>{" "}
-                                                    {selectedIncident.isdeliveryccg === 0 ? "No motorizado" :
-                                                        selectedIncident.isdeliveryccg === 1 ? "Motorizado" : "Estado Desconocido"}</b>
+                                                    <i className='fas fa-motorcycle'></i>{" "}Motorizado</b>
                                             </Button>
-                                            {" "}<Button
-                                                variant="contained"
-                                                size="small"
-                                                onClick={() => {
-                                                    copyToClipboard(selectedIncident.oc);
-                                                }}
-                                                disabled={true}
-                                                style={{
-                                                    backgroundColor: selectedIncident.origin === "Vtex" || selectedIncident.origin === "Saga" ? "#FFA500" :
-                                                        selectedIncident.origin === "InterCorp" ? "#87CEEB" : selectedIncident.origin === "Ripley" ? "#2D0C9E" :
-                                                            selectedIncident.origin === "VENTA" ? "#8B4513" : "inherit", color: "white"
-                                                }}
-                                            >
-                                                <b>
-                                                    <i className="fa-solid fa-truck-fast"></i>{" "}
-                                                    {selectedIncident.origin === "Vtex" ? "Home Delivery" :
-                                                        selectedIncident.origin === "Ripley" ? "OPL Ripley" :
-                                                            selectedIncident.origin === "InterCorp" ? "OPL Intercorp" :
-                                                                selectedIncident.origin === "Saga" ? "Home Delivery" :
-                                                                    selectedIncident.origin === "VENTA" ? "Propio" : "Estado Desconocido"}
-                                                </b>
-                                            </Button>
+                                            {" "}
                                         </Typography>
                                         <Typography>
-                                            Plataforma: {selectedIncident.origin} <br />
+                                            Asesor: {selectedIncident.user_id === 20 ? "Sheyla Ramirez Cruz" : selectedIncident.user_id === 15 ? "Daniel Lama" : "No es vendedor"} <br />
+                                            Venta por: {selectedIncident.client_type} <br />
+                                            Plataforma: {selectedIncident.platform} <br />
                                             Fecha de ingreso: {selectedIncident.date}<br />
-                                            Fecha del corte: {selectedIncident.date_cut}<br />
                                             Cliente: {selectedIncident.client}<br />
                                             Documento: {selectedIncident.document_type}, {selectedIncident.document_number}<br />
-                                            Celular: {selectedIncident.phone}<br />
-                                            Direccion: {selectedIncident.address}, {selectedIncident.distrito}<br />
-                                            Producto: {selectedIncident.code} - {selectedIncident.product}<br />
-                                            Cantidad y Precio: {selectedIncident.quantity} - {selectedIncident.price}<br />
-                                            {selectedIncident.photo !== null ? (
-                                                <React.Fragment>
-                                                    Imagen: {selectedIncident.photo}
-                                                    <Button /*onClick={() => handleOpenImageModal(selectedIncident.photo)}*/>Ver</Button>
-                                                </React.Fragment>
-                                            ) : (
-                                                <React.Fragment>
-                                                    No hay imagen 🥹
-                                                </React.Fragment>
-                                            )}
+                                            Celular: {selectedIncident.phone ? selectedIncident.phone : "No hay numero registrado"}<br />
+                                            Direccion: {selectedIncident.address}, {selectedIncident.reference}<br />
+                                            Departament, Provincia y distrito: {selectedIncident.departament}, {selectedIncident.province}, {selectedIncident.district}<br />
+                                            Observación: {selectedIncident.obs ? selectedIncident.obs : "No hay observación"}
                                             <br />
+                                            <br />
+                                            <table style={{width:"100%"}}>
+                                                <thead>
+                                                    <tr>
+                                                        <th>SKU</th>
+                                                        <th>Producto</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Precio</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {selectedIncident.productosRRSS.map((producto, index) => (
+                                                        <tr key={index}>
+                                                            <td>{productMapSku[producto.product_id] || 'Unknown Product'}</td>
+                                                            <td>{productMap[producto.product_id] || 'Unknown Product'}</td>
+                                                            <td>{producto.quantity}</td>
+                                                            <td>{producto.price}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
                                         </Typography>
                                     </>
                                 )}
