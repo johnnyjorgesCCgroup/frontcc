@@ -3,6 +3,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Modal, Typography, Button, Box, TextField, FormControl, InputLabel, Select, MenuItem, Switch } from '@mui/material';
 import { Chart } from 'react-google-charts';
 import productsData from './products.json';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle, faCopy, faEye, faPlus, faRefresh } from '@fortawesome/free-solid-svg-icons';
+import ContentSocial from './ContentSocial.jsx';
 
 export default function contentInventory() {
     const [incidentes, setIncidentes] = useState([]);
@@ -11,6 +14,7 @@ export default function contentInventory() {
     const [switchOn, setSwitchOn] = useState(false);
     const [productMap, setProductMap] = useState({});
     const [productMapSku, setProductMapSku] = useState({});
+    const [modalHistoryOpen, setModalHistoryOpen] = useState(false);
     const [orderCountMonthVendedor1, SetorderCountMonthVendedor1] = useState(0);
     const [orderCountMonthVendedor2, SetorderCountMonthVendedor2] = useState(0);
     const [orderPriceMonthVendedor1, SetorderPriceMonthVendedor1] = useState(0);
@@ -424,7 +428,7 @@ export default function contentInventory() {
         } catch (error) {
             console.error("Error de bd", error);
         }
-    }    
+    }
 
     const label = { inputProps: { 'aria-label': 'Size switch demo' } };
 
@@ -460,6 +464,13 @@ export default function contentInventory() {
         setSwitchOn(!switchOn);
     }
 
+    const handleOpenHistoryModal = () => {
+        setModalHistoryOpen(true);
+    }
+    const handleCloseHistoryModal = () => {
+        setModalHistoryOpen(false);
+    }
+
     const columns = [
         { field: 'id', headerName: 'ID', flex: 0 },
         { field: 'serie', headerName: 'Orden', flex: 0 },
@@ -472,11 +483,13 @@ export default function contentInventory() {
         { field: 'total', headerName: 'Precio', flex: 0 },
         { field: 'status_text', headerName: 'Estado', flex: 0 },
         { field: 'client', headerName: 'Cliente', flex: 1 },
-        { field: 'product_id', headerName: 'Producto', flex: 1, renderCell: (params) => (
-            <>
-                {productMap[params.row.product_id]}
-            </>
-        ) },
+        {
+            field: 'product_id', headerName: 'Producto', flex: 1, renderCell: (params) => (
+                <>
+                    {productMap[params.row.product_id]}
+                </>
+            )
+        },
         {
             field: 'action',
             headerName: 'Acción',
@@ -511,6 +524,19 @@ export default function contentInventory() {
                                     <b>Dashboard Ventas y Incidencias</b>
                                 </h3>
                                 <Switch id="switch1" {...label} checked={switchOn} onChange={handleSwitchChange} color="secondary" size="small" />
+                            </div>
+                            <div className="col-sm-6">
+                                <div className='justify-content-end float-sm-right'>
+                                    <Button
+                                        target="_blank"
+                                        variant="contained"
+                                        style={{ backgroundColor: switchOn ? "#9C27B0" : "#1A5276", color: switchOn ? "white" : "white" }}
+                                        startIcon={<FontAwesomeIcon icon={faPlusCircle} />}
+                                        onClick={handleOpenHistoryModal}
+                                    >
+                                        Nuevo
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -637,7 +663,7 @@ export default function contentInventory() {
                                             Observación: {selectedIncident.obs ? selectedIncident.obs : "No hay observación"}
                                             <br />
                                             <br />
-                                            <table style={{width:"100%"}}>
+                                            <table style={{ width: "100%" }}>
                                                 <thead>
                                                     <tr>
                                                         <th>SKU</th>
@@ -664,6 +690,11 @@ export default function contentInventory() {
                         </Modal>
                     </Box>
                 </div>
+                <Modal open={modalHistoryOpen} onClose={handleCloseHistoryModal}>
+                    <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
+                        <ContentSocial />
+                    </div>
+                </Modal>
             </div>
         </div>
     );
