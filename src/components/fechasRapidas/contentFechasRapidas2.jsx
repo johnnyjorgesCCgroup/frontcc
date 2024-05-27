@@ -289,8 +289,9 @@ export default function contentInventory() {
         const ocIndex = columns.findIndex(column => column.field === 'oc');
         columns.splice(ocIndex + 1, 0, { field: 'product', headerName: 'Producto', flex: 0.5 });
         columns = [
-            { field: 'id', headerName: 'Id', flex: 0 },
+            { field: 'id', headerName: 'Id', width: 30},
             { field: 'date', headerName: 'Fecha de Subida', flex: 0 },
+            { field: 'client', headerName: 'Cliente', flex: 0.5 },
             {
                 field: 'move',
                 headerName: 'Movimientos',
