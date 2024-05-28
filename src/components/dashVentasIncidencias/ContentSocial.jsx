@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import './contentDashVentasIncidencias.css';
 
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -31,9 +32,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const ContentSocial = () => {
 
+  const matches = useMediaQuery('(min-width:1000px)');
   const [socialNext, setSocialNext] = useState(null);
   const [send, setSennd] = useState('');
   const [userId, setUserId] = useState('');
@@ -886,10 +889,6 @@ const ContentSocial = () => {
       }
 
     }
-
-
-
-
   };
 
 
@@ -942,460 +941,462 @@ const ContentSocial = () => {
     <Modal open={openModalClient}
       onClose={handleCloseModalClient}
     >
-      <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
-         <h2 style={{ textAlign: 'center', marginBottom: '20px' }}
-          >Crear Nuevo Cliente</h2>
+      <div className="modalDetalle">
+        <h2 style={{ textAlign: 'center', marginBottom: '20px' }}
+        >Crear Nuevo Cliente</h2>
 
-          <Grid container rowSpacing={2} spacing={1} alignItems="center">
-            <Grid item xs={12} md={12}>
+        <Grid container rowSpacing={2} spacing={1} alignItems="center">
+          <Grid item xs={12} md={12}>
 
-              <TextField
-                label="Nombre"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="name"
-                value={newPerson.name}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container rowSpacing={4} spacing={4} alignItems="center">
-
-            <Grid item xs={12} md={2}>
-              <InputLabel id="demo-select-small-label">Tipo de Documento</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select-autowidth"
-                name="document_type"
-                fullWidth
-                sx={{ color: 'black' }}
-                value={newPerson.document_type}
-                label="Tipo de Documento"
-                onChange={handleInputChangePerson}
-              >
-                <MenuItem value={"RUC"}>RUC</MenuItem>
-                <MenuItem value={"DNI"}>DNI</MenuItem>
-                <MenuItem value={"CE"}>CE</MenuItem>
-                <MenuItem value={"PASAPORTE"}>PASAPORTE</MenuItem>
-              </Select>
-
-            </Grid>
-
-            <Grid item xs={12} md={3}>
-              <TextField
-                label="Numero de Documento"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="document_number"
-                value={newPerson.document_number}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={1}>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ width: 15 }}
-                startIcon={<FontAwesomeIcon icon={faSearch} />}
-                onClick={() => {
-                  setOpenModalClient(true);
-                  setApiDNI();
-                }}
-
-              >
-
-              </Button>
-
-            </Grid>
-
-            <Grid item xs={12} md={3}>
-              <TextField
-                label="Email"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="email"
-                value={newPerson.email}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={2}>
-              <TextField
-                label="Telefono"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="phone_number"
-                value={newPerson.phone_number}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-
-          </Grid>
-
-          <Grid container rowSpacing={2} spacing={2} alignItems="center">
             <TextField
-              label="id"
+              label="Nombre"
               variant="outlined"
               fullWidth
               margin="normal"
-              name="id"
-              value={newPerson.id}
-              style={{ display: 'none' }}
+              name="name"
+              value={newPerson.name}
+              onChange={handleInputChangePerson}
             />
+          </Grid>
+        </Grid>
+
+        <Grid container rowSpacing={4} spacing={4} alignItems="center">
+
+          <Grid item xs={12} md={matches ? 2 : 12}>
+            <InputLabel id="demo-select-small-label">Tipo de Documento</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select-autowidth"
+              name="document_type"
+              fullWidth
+              sx={{ color: 'black' }}
+              value={newPerson.document_type}
+              label="Tipo de Documento"
+              onChange={handleInputChangePerson}
+            >
+              <MenuItem value={"RUC"}>RUC</MenuItem>
+              <MenuItem value={"DNI"}>DNI</MenuItem>
+              <MenuItem value={"CE"}>CE</MenuItem>
+              <MenuItem value={"PASAPORTE"}>PASAPORTE</MenuItem>
+            </Select>
 
           </Grid>
 
-          <Typography variant="h6" component="h6">
-            Direccion
-          </Typography>
-
-          <Grid container rowSpacing={2} spacing={2} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Direccion"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="address"
-                value={newPerson.address}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Referencia"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="reference"
-                value={newPerson.reference}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-
+          <Grid item xs={12} md={matches ? 3 : 8}>
+            <TextField
+            style={{ marginTop: matches ? "0px" : "-10px" }}
+              label="Numero de Documento"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="document_number"
+              value={newPerson.document_number}
+              onChange={handleInputChangePerson}
+            />
           </Grid>
 
-          <Grid container rowSpacing={3} spacing={3} alignItems="center">
-
-            <Grid item xs={12} md={4}>
-              <InputLabel id="demo-select-small-label">Departamento</InputLabel>
-              <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small-label"
-                name="departament"
-                fullWidth
-                value={newPerson.departament}
-                onChange={handleProvince}
-                label="Departamento"
-                sx={{ color: 'black' }}
-              >
-                {Array.isArray(select) && select.length > 0 ? (
-                  select.map((item) => (
-                    <MenuItem value={item.key}>
-                      {item.value}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value="" disabled>
-                    No hay Departamentos disponibles
-                  </MenuItem>
-                )}
-
-
-
-              </Select>
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <InputLabel id="demo-select-small-label">Provincia</InputLabel>
-              <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small-label"
-                name="province"
-                fullWidth
-                value={newPerson.province}
-                label="Tipo de Proveedor"
-                sx={{ color: 'black' }}
-                onChange={handleDistrict}
-              >
-                {Array.isArray(selectProvince) && selectProvince.length > 0 ? (
-                  selectProvince.map((item) => (
-                    <MenuItem value={item.key}>
-                      {item.value}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value="" disabled>
-                    No hay Provincias disponibles
-                  </MenuItem>
-                )}
-
-              </Select>
-            </Grid>
-
-
-            <Grid item xs={12} md={4}>
-              <InputLabel id="demo-select-small-label">Distrito</InputLabel>
-              <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small-label"
-                name="district"
-                fullWidth
-                value={newPerson.district}
-                label="Distrito"
-                sx={{ color: 'black' }}
-              >
-                {Array.isArray(selectDistrict) && selectDistrict.length > 0 ? (
-                  selectDistrict.map((item) => (
-                    <MenuItem value={item.key}>
-                      {item.value}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value="" disabled>
-                    No hay Distritos disponibles
-                  </MenuItem>
-                )}
-
-              </Select>
-            </Grid>
-
-          </Grid>
-
-          <Typography variant="h6" component="h6">
-            Persona de Referencia de Envio
-          </Typography>
-
-
-          <Grid container rowSpacing={3} spacing={1} alignItems="center">
-            <Grid item xs={12} md={3}>
-
-              <TextField
-                label="Nombre"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="name_ref"
-                value={newPerson.name_ref}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-
-            <Grid item xs={12} md={3}>
-              <InputLabel id="demo-select-small-label">Tipo de Documento</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select-autowidth"
-                name="document_type_ref"
-                fullWidth
-                sx={{ color: 'black' }}
-                value={newPerson.document_type_ref}
-                label="Tipo de Documento"
-                onChange={handleInputChangePerson}
-              >
-                <MenuItem value={"RUC"}>RUC</MenuItem>
-                <MenuItem value={"DNI"}>DNI</MenuItem>
-                <MenuItem value={"PASAPORTE"}>PASAPORTE</MenuItem>
-              </Select>
-
-            </Grid>
-
-            <Grid item xs={12} md={2}>
-              <TextField
-                label="Numero de Documento"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="number_doc_ref"
-                value={newPerson.number_doc_ref}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={2}>
-              <TextField
-                label="Agencia"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="agency_ref"
-                value={newPerson.agency_ref}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={2}>
-              <TextField
-                label="Telefono"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="phone_ref"
-                value={newPerson.phone_ref}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-
-          </Grid>
-
-          <Typography variant="h6" component="h6">
-            Direccion de Envio
-          </Typography>
-
-
-          <Grid container rowSpacing={2} spacing={2} alignItems="center">
-            <Grid item xs={12} md={3}>
-              <TextField
-                label="Direccion de Envio"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="delivery_address"
-                value={newPerson.delivery_address}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={3}>
-              <TextField
-                label="referencia de Envio"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                name="reference_delivery_address"
-                value={newPerson.reference_delivery_address}
-                onChange={handleInputChangePerson}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={2}>
-              <InputLabel id="demo-select-small-label">Departamento</InputLabel>
-              <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small-label"
-                name="departament_delivery_address"
-                fullWidth
-                value={newPerson.departament_delivery_address}
-                onChange={handleProvinceDelivery}
-                label="Departamento"
-                sx={{ color: 'black' }}
-              >
-                {Array.isArray(selectDelivery) && selectDelivery.length > 0 ? (
-                  selectDelivery.map((item) => (
-                    <MenuItem value={item.key}>
-                      {item.value}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value="" disabled>
-                    No hay Departamentos disponibles
-                  </MenuItem>
-                )}
-              </Select>
-            </Grid>
-
-            <Grid item xs={12} md={2}>
-              <InputLabel id="demo-simple-select-label">Provincia</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                name="province_delivery_address"
-                fullWidth
-                value={newPerson.province_delivery_address}
-                label="Provincia"
-                onChange={handleDistrictDelivery}
-              >
-                {Array.isArray(selectProvinceDelivery) && selectProvinceDelivery.length > 0 ? (
-                  selectProvinceDelivery.map((item) => (
-                    <MenuItem value={item.key}>
-                      {item.value}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value="" disabled>
-                    No hay Provincias disponibles
-                  </MenuItem>
-                )}
-              </Select>
-            </Grid>
-
-            <Grid item xs={12} md={2}>
-              <InputLabel id="demo-select-small-label">Distrito</InputLabel>
-              <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small-label"
-                name="district_delivery_address"
-                fullWidth
-                value={newPerson.district_delivery_address}
-                label="Distrito"
-                sx={{ color: 'black' }}
-              >
-                {Array.isArray(selectDistrictDelivery) && selectDistrictDelivery.length > 0 ? (
-                  selectDistrictDelivery.map((item) => (
-                    <MenuItem value={item.key}>
-                      {item.value}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value="" disabled>
-                    No hay Provincias disponibles
-                  </MenuItem>
-                )}
-
-              </Select>
-            </Grid>
-
-          </Grid>
-
-          <div style={style.buttonContainer}>
-
+          <Grid item xs={12} md={matches ? 1 : 2}>
             <Button
+              style={{ marginTop: matches ? "0px" : "-18px" }}
               variant="contained"
               color="primary"
-              style={style.createButton}
-              onClick={() => handleCreatePerson()}
-            >
-              Crear
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              style={style.cancelButton}
+              sx={{ width: 15 }}
+              startIcon={<FontAwesomeIcon icon={faSearch} />}
               onClick={() => {
-                setOpenModalClient(false);
-                setNewPerson({
-                  id: '',
-                  name: '',
-                  document_type: '',
-                  document_number: '',
-                  phone_number: '',
-                  email: '',
-                  address: '',
-                  reference: '',
-                  departament: '',
-                  province: '',
-                  district: '',
-                  delivery_address: '',
-                  reference_delivery_address: '',
-                  departament_delivery_address: '',
-                  province_delivery_address: '',
-                  district_delivery_address: '',
-                });
-              }}                      >
-              Cancelar
+                setOpenModalClient(true);
+                setApiDNI();
+              }}
+
+            >
+
             </Button>
-          </div>
+
+          </Grid>
+
+          <Grid item xs={12} md={matches ? 3 : 6}>
+            <TextField
+              style={{ marginTop: matches ? "0px" : "-20px" }}
+              label="Email"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="email"
+              value={newPerson.email}
+              onChange={handleInputChangePerson}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={matches ? 3 : 6}>
+            <TextField
+              style={{ marginTop: matches ? "0px" : "-20px" }}
+              label="Telefono"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="phone_number"
+              value={newPerson.phone_number}
+              onChange={handleInputChangePerson}
+            />
+          </Grid>
+
+
+        </Grid>
+
+        <Grid container rowSpacing={2} spacing={2} alignItems="center">
+          <TextField
+            label="id"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            name="id"
+            value={newPerson.id}
+            style={{ display: 'none' }}
+          />
+
+        </Grid>
+
+        <InputLabel id="demo-select-small-label" style={{ marginTop: matches ? "0px" : "20px" }}>Dirección</InputLabel>
+
+        <Grid container rowSpacing={2} spacing={2} alignItems="center">
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Direccion"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="address"
+              value={newPerson.address}
+              onChange={handleInputChangePerson}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Referencia"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="reference"
+              value={newPerson.reference}
+              onChange={handleInputChangePerson}
+            />
+          </Grid>
+
+
+        </Grid>
+
+        <Grid container rowSpacing={3} spacing={3} alignItems="center">
+
+          <Grid item xs={12} md={4}>
+            <InputLabel id="demo-select-small-label">Departamento</InputLabel>
+            <Select
+              labelId="demo-select-small-label"
+              id="demo-select-small-label"
+              name="departament"
+              fullWidth
+              value={newPerson.departament}
+              onChange={handleProvince}
+              label="Departamento"
+              sx={{ color: 'black' }}
+            >
+              {Array.isArray(select) && select.length > 0 ? (
+                select.map((item) => (
+                  <MenuItem value={item.key}>
+                    {item.value}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="" disabled>
+                  No hay Departamentos disponibles
+                </MenuItem>
+              )}
+
+
+
+            </Select>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <InputLabel id="demo-select-small-label">Provincia</InputLabel>
+            <Select
+              labelId="demo-select-small-label"
+              id="demo-select-small-label"
+              name="province"
+              fullWidth
+              value={newPerson.province}
+              label="Tipo de Proveedor"
+              sx={{ color: 'black' }}
+              onChange={handleDistrict}
+            >
+              {Array.isArray(selectProvince) && selectProvince.length > 0 ? (
+                selectProvince.map((item) => (
+                  <MenuItem value={item.key}>
+                    {item.value}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="" disabled>
+                  No hay Provincias disponibles
+                </MenuItem>
+              )}
+
+            </Select>
+          </Grid>
+
+
+          <Grid item xs={12} md={4}>
+            <InputLabel id="demo-select-small-label">Distrito</InputLabel>
+            <Select
+              labelId="demo-select-small-label"
+              id="demo-select-small-label"
+              name="district"
+              fullWidth
+              value={newPerson.district}
+              label="Distrito"
+              sx={{ color: 'black' }}
+            >
+              {Array.isArray(selectDistrict) && selectDistrict.length > 0 ? (
+                selectDistrict.map((item) => (
+                  <MenuItem value={item.key}>
+                    {item.value}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="" disabled>
+                  No hay Distritos disponibles
+                </MenuItem>
+              )}
+
+            </Select>
+          </Grid>
+
+        </Grid>
+
+        <Typography variant="h6" component="h6">
+          Persona de Referencia de Envio
+        </Typography>
+
+
+        <Grid container rowSpacing={3} spacing={1} alignItems="center">
+          <Grid item xs={12} md={3}>
+
+            <TextField
+              label="Nombre"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="name_ref"
+              value={newPerson.name_ref}
+              onChange={handleInputChangePerson}
+            />
+          </Grid>
+
+
+          <Grid item xs={12} md={3}>
+            <InputLabel id="demo-select-small-label">Tipo de Documento</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select-autowidth"
+              name="document_type_ref"
+              fullWidth
+              sx={{ color: 'black' }}
+              value={newPerson.document_type_ref}
+              label="Tipo de Documento"
+              onChange={handleInputChangePerson}
+            >
+              <MenuItem value={"RUC"}>RUC</MenuItem>
+              <MenuItem value={"DNI"}>DNI</MenuItem>
+              <MenuItem value={"PASAPORTE"}>PASAPORTE</MenuItem>
+            </Select>
+
+          </Grid>
+
+          <Grid item xs={12} md={2}>
+            <TextField
+              label="Numero de Documento"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="number_doc_ref"
+              value={newPerson.number_doc_ref}
+              onChange={handleInputChangePerson}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={2}>
+            <TextField
+              label="Agencia"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="agency_ref"
+              value={newPerson.agency_ref}
+              onChange={handleInputChangePerson}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={2}>
+            <TextField
+              label="Telefono"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="phone_ref"
+              value={newPerson.phone_ref}
+              onChange={handleInputChangePerson}
+            />
+          </Grid>
+
+
+        </Grid>
+
+        <Typography variant="h6" component="h6">
+          Direccion de Envio
+        </Typography>
+
+
+        <Grid container rowSpacing={2} spacing={2} alignItems="center">
+          <Grid item xs={12} md={3}>
+            <TextField
+              label="Direccion de Envio"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="delivery_address"
+              value={newPerson.delivery_address}
+              onChange={handleInputChangePerson}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={3}>
+            <TextField
+              label="referencia de Envio"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              name="reference_delivery_address"
+              value={newPerson.reference_delivery_address}
+              onChange={handleInputChangePerson}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={2}>
+            <InputLabel id="demo-select-small-label">Departamento</InputLabel>
+            <Select
+              labelId="demo-select-small-label"
+              id="demo-select-small-label"
+              name="departament_delivery_address"
+              fullWidth
+              value={newPerson.departament_delivery_address}
+              onChange={handleProvinceDelivery}
+              label="Departamento"
+              sx={{ color: 'black' }}
+            >
+              {Array.isArray(selectDelivery) && selectDelivery.length > 0 ? (
+                selectDelivery.map((item) => (
+                  <MenuItem value={item.key}>
+                    {item.value}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="" disabled>
+                  No hay Departamentos disponibles
+                </MenuItem>
+              )}
+            </Select>
+          </Grid>
+
+          <Grid item xs={12} md={2}>
+            <InputLabel id="demo-simple-select-label">Provincia</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              name="province_delivery_address"
+              fullWidth
+              value={newPerson.province_delivery_address}
+              label="Provincia"
+              onChange={handleDistrictDelivery}
+            >
+              {Array.isArray(selectProvinceDelivery) && selectProvinceDelivery.length > 0 ? (
+                selectProvinceDelivery.map((item) => (
+                  <MenuItem value={item.key}>
+                    {item.value}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="" disabled>
+                  No hay Provincias disponibles
+                </MenuItem>
+              )}
+            </Select>
+          </Grid>
+
+          <Grid item xs={12} md={2}>
+            <InputLabel id="demo-select-small-label">Distrito</InputLabel>
+            <Select
+              labelId="demo-select-small-label"
+              id="demo-select-small-label"
+              name="district_delivery_address"
+              fullWidth
+              value={newPerson.district_delivery_address}
+              label="Distrito"
+              sx={{ color: 'black' }}
+            >
+              {Array.isArray(selectDistrictDelivery) && selectDistrictDelivery.length > 0 ? (
+                selectDistrictDelivery.map((item) => (
+                  <MenuItem value={item.key}>
+                    {item.value}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="" disabled>
+                  No hay Provincias disponibles
+                </MenuItem>
+              )}
+
+            </Select>
+          </Grid>
+
+        </Grid>
+
+        <div style={style.buttonContainer}>
+
+          <Button
+            variant="contained"
+            color="primary"
+            style={style.createButton}
+            onClick={() => handleCreatePerson()}
+          >
+            Crear
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            style={style.cancelButton}
+            onClick={() => {
+              setOpenModalClient(false);
+              setNewPerson({
+                id: '',
+                name: '',
+                document_type: '',
+                document_number: '',
+                phone_number: '',
+                email: '',
+                address: '',
+                reference: '',
+                departament: '',
+                province: '',
+                district: '',
+                delivery_address: '',
+                reference_delivery_address: '',
+                departament_delivery_address: '',
+                province_delivery_address: '',
+                district_delivery_address: '',
+              });
+            }}                      >
+            Cancelar
+          </Button>
+        </div>
       </div>
     </Modal>
   );
