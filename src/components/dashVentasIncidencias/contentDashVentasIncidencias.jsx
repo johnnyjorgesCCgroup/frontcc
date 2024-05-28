@@ -6,6 +6,9 @@ import productsData from './products.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faCopy, faEye, faPlus, faRefresh } from '@fortawesome/free-solid-svg-icons';
 import ContentSocial from './ContentSocial.jsx';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import './contentDashVentasIncidencias.css';
+
 
 export default function contentInventory() {
     const [incidentes, setIncidentes] = useState([]);
@@ -15,6 +18,7 @@ export default function contentInventory() {
     const [productMap, setProductMap] = useState({});
     const [productMapSku, setProductMapSku] = useState({});
     const [modalHistoryOpen, setModalHistoryOpen] = useState(false);
+    const matches = useMediaQuery('(min-width:1000px)');
     const [orderCountMonthVendedor1, SetorderCountMonthVendedor1] = useState(0);
     const [orderCountMonthVendedor2, SetorderCountMonthVendedor2] = useState(0);
     const [orderPriceMonthVendedor1, SetorderPriceMonthVendedor1] = useState(0);
@@ -500,8 +504,9 @@ export default function contentInventory() {
                     style={{ backgroundColor: switchOn ? "#9C27B0" : "#1A5276", color: switchOn ? "white" : "white" }}
                     size="small"
                     onClick={() => handleRowClick(params.row.id)}
+                    startIcon={<FontAwesomeIcon icon={faEye} />}
                 >
-                    Ver Detalles
+                    {matches ? "Ver Detalles" : ""}
                 </Button>
             ),
         },
@@ -515,7 +520,7 @@ export default function contentInventory() {
 
     return (
         <div className="content-wrapper">
-            <div className="card" style={{ padding: 20 }}>
+            <div className="card" id="cardGeneral">
                 <div className="card card-outline">
                     <div className="card-header border-0">
                         <div className="row mb-2" style={{ alignItems: "center" }}>
@@ -541,36 +546,38 @@ export default function contentInventory() {
                         </div>
                     </div>
                 </div>
-                <div style={{ display: "flex" }}>
-                    <div style={{ width: "22%", justifyContent: "center", textAlign: "center" }}>
-                        <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
-                            <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
-                            <span className='info-box-text' style={{ margin: "5px" }}>Sheyla {orderCountMonthVendedor1}</span>
-                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}> S/{orderPriceMonthVendedor1.toFixed(0)}{" "}{orderPriceMonthVendedor1 > orderPriceMonthVendedor2 ? "😁" : "😢"}</span></b>
+                <div className="principalCard">
+                    <div className="vendedoresCard">
+                        <div id="vendedorCard" className="card card-outline">
+                            <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
+                            <span id="vendedorText" className='info-box-text'>Sheyla {orderCountMonthVendedor1}</span>
+                            <b><span id="vendedorNumber" className='info-box-number'> S/{orderPriceMonthVendedor1.toFixed(0)}{" "}{orderPriceMonthVendedor1 > orderPriceMonthVendedor2 ? "😁" : "😢"}</span></b>
                         </div>
-                        <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
-                            <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
-                            <span className='info-box-text' style={{ margin: "5px" }}>Daniel {orderCountMonthVendedor2}</span>
-                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}>S/{orderPriceMonthVendedor2.toFixed(0)}{" "}{orderPriceMonthVendedor2 > orderPriceMonthVendedor1 ? "😁" : "😢"}</span></b>
+                        <div id="vendedorCard" className="card card-outline">
+                            <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
+                            <span id="vendedorText" className='info-box-text'>Daniel {orderCountMonthVendedor2}</span>
+                            <b><span id="vendedorNumber" className='info-box-number'>S/{orderPriceMonthVendedor2.toFixed(0)}{" "}{orderPriceMonthVendedor2 > orderPriceMonthVendedor1 ? "😁" : "😢"}</span></b>
                         </div>
-                        <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
-                            <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
-                            <span className='info-box-text' style={{ margin: "5px" }}>Francis  0</span>
-                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}>S/0</span></b>
+                        <div id="vendedorCard" className="card card-outline">
+                            <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
+                            <span id="vendedorText" className='info-box-text'>Francis  0</span>
+                            <b><span id="vendedorNumber" className='info-box-number'>S/0</span></b>
                         </div>
-                        <div className="card card-outline" style={{ padding: "10px", display: "block" }}>
-                            <b><i className='fas fa-cash-register' style={{ fontSize: "28px", color: "#1A5276", margin: "5px" }} /></b>
-                            <span className='info-box-text' style={{ margin: "5px" }}>Rodrigo  0</span>
-                            <b><span className='info-box-number' style={{ fontSize: "15px", margin: "5px" }}>S/0</span></b>
+                        <div id="vendedorCard" className="card card-outline">
+                            <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
+                            <span id="vendedorText" className='info-box-text'>Rodrigo  0</span>
+                            <b><span id="vendedorNumber" className='info-box-number'>S/0</span></b>
                         </div>
                     </div>
-                    <div className="card card-outline" style={{ width: "15%", marginLeft: "10px", justifyContent: "center", textAlign: "center" }}>
-                        <div style={{ height: "15%", display: "inline-block", width: "fit-content", backgroundColor: "#1A5276", borderRadius: "10px", padding: "10px", margin: "0 auto", textAlign: "center", marginBottom: "5px", color: "white" }}>
-                            <p>
-                                <i className='fas fa-bullseye'></i>{" "}Objetivo del mes</p></div>
-                        <div style={{ height: "65%", display: "flex", fontSize: "30px", alignItems: "center", justifyContent: "center" }}><b>S/5000.00</b></div>
+                    <div id="objetivoCard" className="card card-outline">
+                        <div className="contentObjetivo">
+                            <p><i className='fas fa-bullseye'></i>{" "}Objetivo del mes</p>
+                        </div>
+                        <div className="numObjetivo">
+                            <b>S/5000.00</b>
+                        </div>
                     </div>
-                    <div className='card card-outline' style={{ width: "63%", marginLeft: "10px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <div id="graficoCard" className='card card-outline'>
                         <Chart
                             width={'100%'}
                             height={'300px'}
@@ -691,7 +698,7 @@ export default function contentInventory() {
                     </Box>
                 </div>
                 <Modal open={modalHistoryOpen} onClose={handleCloseHistoryModal}>
-                    <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
+                    <div className="modalDetalle">
                         <ContentSocial />
                     </div>
                 </Modal>
