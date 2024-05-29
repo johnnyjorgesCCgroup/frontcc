@@ -18,7 +18,7 @@ export default function contentInventory() {
     const [productMap, setProductMap] = useState({});
     const [productMapSku, setProductMapSku] = useState({});
     const [modalHistoryOpen, setModalHistoryOpen] = useState(false);
-    const matches = useMediaQuery('(min-width:1000px)');
+    const matches = useMediaQuery('(min-width:1300px)');
     const [orderCountMonthVendedor1, SetorderCountMonthVendedor1] = useState(0);
     const [orderCountMonthVendedor2, SetorderCountMonthVendedor2] = useState(0);
     const [orderPriceMonthVendedor1, SetorderPriceMonthVendedor1] = useState(0);

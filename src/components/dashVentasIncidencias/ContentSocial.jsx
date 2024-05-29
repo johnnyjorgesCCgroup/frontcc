@@ -36,7 +36,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 const ContentSocial = () => {
 
-  const matches = useMediaQuery('(min-width:1000px)');
+  const matches = useMediaQuery('(min-width:1300px)');
   const [socialNext, setSocialNext] = useState(null);
   const [send, setSennd] = useState('');
   const [userId, setUserId] = useState('');
