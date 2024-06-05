@@ -607,7 +607,7 @@ export default function contentInventory() {
                         </div>
                         <div id="vendedorCard" className="card card-outline">
                             <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
-                            <span id="vendedorText" className='info-box-text'>Mariana {orderCountMonthVendedor2}</span>
+                            <span id="vendedorText" className='info-box-text'>Mariana {orderCountMonthVendedor3}</span>
                             <b><span id="vendedorNumber" className='info-box-number'>S/{orderPriceMonthVendedor3.toFixed(0)}{" "}{orderPriceMonthVendedor2 > orderPriceMonthVendedor3 ? "😁" : "😢"}</span></b>
                         </div>
                     </div>
