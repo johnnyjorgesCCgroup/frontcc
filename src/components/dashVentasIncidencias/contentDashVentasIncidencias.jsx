@@ -21,8 +21,10 @@ export default function contentInventory() {
     const matches = useMediaQuery('(min-width:1300px)');
     const [orderCountMonthVendedor1, SetorderCountMonthVendedor1] = useState(0);
     const [orderCountMonthVendedor2, SetorderCountMonthVendedor2] = useState(0);
+    const [orderCountMonthVendedor3, SetorderCountMonthVendedor3] = useState(0);
     const [orderPriceMonthVendedor1, SetorderPriceMonthVendedor1] = useState(0);
     const [orderPriceMonthVendedor2, SetorderPriceMonthVendedor2] = useState(0);
+    const [orderPriceMonthVendedor3, SetorderPriceMonthVendedor3] = useState(0);
     const [orderCountEneroVendedor1, setorderCountEneroVendedor1] = useState(0);
     const [orderCountFebreroVendedor1, setorderCountFebreroVendedor1] = useState(0);
     const [orderCountMarzoVendedor1, setorderCountMarzoVendedor1] = useState(0);
@@ -134,6 +136,26 @@ export default function contentInventory() {
                 }, 0);
                 SetorderPriceMonthVendedor2(orderPriceMonthVendedor2);
 
+                const orderCountMonthVendedor3 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 23) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthVendedor3(orderCountMonthVendedor3);
+
+                const orderPriceMonthVendedor3 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 23) {
+                        return count + parseFloat(item.total);
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderPriceMonthVendedor3(orderPriceMonthVendedor3);
+
                 //countAnualMensualEneroVendedor
                 const startOfMonthEnero = new Date(year, 0, 1);
                 const endOfMonthEnero = new Date(year, 0, 31);
@@ -157,6 +179,16 @@ export default function contentInventory() {
                     }
                 }, 0);
                 setorderCountEneroVendedor2(orderCountEneroVendedor2);
+
+                const orderCountEneroVendedor3 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthEnero && itemDate <= endOfMonthEnero && item.user_id === 23) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountEneroVendedor3(orderCountEneroVendedor3);
 
                 //countAnualMensualFebreroVendedor
                 const isLeapYear = (year) => {
@@ -185,6 +217,16 @@ export default function contentInventory() {
                     }
                 }, 0);
                 setorderCountFebreroVendedor2(orderCountFebreroVendedor2);
+
+                const orderCountFebreroVendedor3 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthFebrero && itemDate <= endOfMonthFebrero && item.user_id === 23) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountFebreroVendedor3(orderCountFebreroVendedor3);
 
                 //countAnualMensualMarzo
                 const startOfMonthMarzo = new Date(year, 2, 1);
@@ -481,7 +523,7 @@ export default function contentInventory() {
         { field: 'date', headerName: 'Fecha', flex: 0 },
         {
             field: 'user_id', headerName: 'Asesor', flex: 1, renderCell: (params) => (
-                <>{params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : "Usuario No registrado"}</>
+                <>{params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id == 23 ? "Mariana" : "Usuario No registrado"}</>
             ),
         },
         { field: 'total', headerName: 'Precio', flex: 0 },
@@ -565,8 +607,8 @@ export default function contentInventory() {
                         </div>
                         <div id="vendedorCard" className="card card-outline">
                             <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
-                            <span id="vendedorText" className='info-box-text'>Rodrigo  0</span>
-                            <b><span id="vendedorNumber" className='info-box-number'>S/0</span></b>
+                            <span id="vendedorText" className='info-box-text'>Mariana {orderCountMonthVendedor2}</span>
+                            <b><span id="vendedorNumber" className='info-box-number'>S/{orderPriceMonthVendedor3.toFixed(0)}{" "}{orderPriceMonthVendedor2 > orderPriceMonthVendedor3 ? "😁" : "😢"}</span></b>
                         </div>
                     </div>
                     <div id="objetivoCard" className="card card-outline">
@@ -584,19 +626,19 @@ export default function contentInventory() {
                             chartType="LineChart"
                             loader={<div>Loading Chart</div>}
                             data={[
-                                ['Month', 'Sheyla', 'Daniel'],
-                                ['Enero', orderCountEneroVendedor1, orderCountEneroVendedor2],
-                                ['Febrero', orderCountFebreroVendedor1, orderCountFebreroVendedor2],
-                                ['Marzo', orderCountMarzoVendedor1, orderCountMarzoVendedor2],
-                                ['Abril', orderCountAbrilVendedor1, orderCountAbrilVendedor2],
-                                ['Mayo', orderCountMayoVendedor1, orderCountMayoVendedor2],
-                                ['Junio', orderCountJunioVendedor1, orderCountJunioVendedor2],
-                                ['Julio', orderCountJulioVendedor1, orderCountJulioVendedor2],
-                                ['Agosto', orderCountAgostoVendedor1, orderCountAgostoVendedor2],
-                                ['Septiembre', orderCountSeptiembreVendedor1, orderCountSeptiembreVendedor2],
-                                ['Octubre', orderCountOctubreVendedor1, orderCountOctubreVendedor2],
-                                ['Noviembre', orderCountNoviembreVendedor1, orderCountNoviembreVendedor2],
-                                ['Diciembre', orderCountDiciembreVendedor1, orderCountDiciembreVendedor2],
+                                ['Month', 'Sheyla', 'Daniel', 'Mariana'],
+                                ['Enero', orderCountEneroVendedor1, orderCountEneroVendedor2, 10],
+                                ['Febrero', orderCountFebreroVendedor1, orderCountFebreroVendedor2, 10],
+                                ['Marzo', orderCountMarzoVendedor1, orderCountMarzoVendedor2, 10],
+                                ['Abril', orderCountAbrilVendedor1, orderCountAbrilVendedor2, 10],
+                                ['Mayo', orderCountMayoVendedor1, orderCountMayoVendedor2, 10],
+                                ['Junio', orderCountJunioVendedor1, orderCountJunioVendedor2, 10],
+                                ['Julio', orderCountJulioVendedor1, orderCountJulioVendedor2, 10],
+                                ['Agosto', orderCountAgostoVendedor1, orderCountAgostoVendedor2, 10],
+                                ['Septiembre', orderCountSeptiembreVendedor1, orderCountSeptiembreVendedor2, 10],
+                                ['Octubre', orderCountOctubreVendedor1, orderCountOctubreVendedor2, 10],
+                                ['Noviembre', orderCountNoviembreVendedor1, orderCountNoviembreVendedor2, 10],
+                                ['Diciembre', orderCountDiciembreVendedor1, orderCountDiciembreVendedor2, 10],
                             ]}
                             options={{
                                 title: 'Ventas Mensuales',
