@@ -19,8 +19,8 @@
     display: flex;
 }
 
-.vendedoresCard{
-    width: 22%;
+.vendedoresCard1{
+    width: 20%;
     justify-content: center;
     text-align: center; 
 }
@@ -45,8 +45,8 @@
     margin: 5px
 }
 
-#objetivoCard{
-    width: 15%;
+#objetivoCard1{
+    width: 20%;
     margin-left: 10px;
     justify-content: center;
     text-align: center
@@ -73,7 +73,7 @@
     justify-content: center 
 }
 
-#graficoCard{
+#graficoCard1{
     width: 63%;
     margin-left: 10px;
     display: flex;
@@ -82,13 +82,13 @@
 }
 
 @media only screen and (max-width: 1300px){
-    .vendedoresCard{
+    .vendedoresCard1{
         width: 65%;
     }
-    #objetivoCard{
+    #objetivoCard1{
         width: 35%;
     }
-    #graficoCard{
+    #graficoCard1{
         display: none
     }
 }

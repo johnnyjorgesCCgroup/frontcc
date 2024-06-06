@@ -706,7 +706,7 @@ export default function contentInventory() {
                     </div>
                 </div>
                 <div className="principalCard">
-                    <div className="vendedoresCard">
+                    <div className="vendedoresCard1">
                         <div id="vendedorCard" className="card card-outline">
                             <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
                             <span id="vendedorText" className='info-box-text'>Sheyla {orderCountMonthVendedor1}</span>
@@ -728,7 +728,7 @@ export default function contentInventory() {
                             <b><span id="vendedorNumber" className='info-box-number'>S/{orderPriceMonthVendedor3.toFixed(0)}{" "}{orderPriceMonthVendedor2 > orderPriceMonthVendedor3 ? "😁" : "😢"}</span></b>
                         </div>
                     </div>
-                    <div id="objetivoCard" className="card card-outline">
+                    <div id="objetivoCard1" className="card card-outline">
                         <div className="contentObjetivo">
                             <p><i className='fas fa-bullseye'></i>{" "}Objetivo del mes</p>
                         </div>
@@ -736,7 +736,7 @@ export default function contentInventory() {
                             <b>S/8000.00 😈</b>
                         </div>
                     </div>
-                    <div id="graficoCard" className='card card-outline'>
+                    <div id="graficoCard1" className='card card-outline'>
                         <Chart
                             width={'100%'}
                             height={'300px'}
