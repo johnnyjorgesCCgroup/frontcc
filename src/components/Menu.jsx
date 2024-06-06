@@ -125,8 +125,8 @@ const Menu = () => {
                   </li>
                   <li className="nav-item">
                     <Link
-                      to="/dashventasincidencias"
-                      className={`nav-link ${location.pathname === "/dashventasincidencias" ? "active" : ""
+                      to="/colaborador"
+                      className={`nav-link ${location.pathname === "/colaborador" ? "active" : ""
                         }`}
                     >
                       <i className="far fa-circle nav-icon" />

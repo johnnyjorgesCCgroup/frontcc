@@ -1,0 +1,54 @@
+.modalDetalle{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    max-height: 80vh
+}
+
+#cardGeneral{
+    padding: 20px
+}
+
+.principalCard{
+    display: flex;
+}
+
+.vendedoresCard{
+    width: 100%;
+    justify-content: center;
+    text-align: center; 
+}
+
+#vendedorCard{
+    padding: 10px;
+    display: block
+}
+
+#cajaRegistradora{
+    font-size: 28px;
+    color: #1A5276;
+    margin: 5px
+}
+
+#vendedorText{
+    margin: 5px
+}
+
+#vendedorNumber{
+    font-size: 15px;
+    margin: 5px
+}
+
+#graficoCard{
+    width: 63%;
+    margin-left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
