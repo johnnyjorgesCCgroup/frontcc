@@ -120,7 +120,17 @@ const Menu = () => {
                         }`}
                     >
                       <i className="far fa-circle nav-icon" />
-                      <p>Ventas & Incidencias</p>
+                      <p>Ventas</p>
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      to="/dashventasincidencias"
+                      className={`nav-link ${location.pathname === "/dashventasincidencias" ? "active" : ""
+                        }`}
+                    >
+                      <i className="far fa-circle nav-icon" />
+                      <p>Colaborador</p>
                     </Link>
                   </li>
                 </ul>

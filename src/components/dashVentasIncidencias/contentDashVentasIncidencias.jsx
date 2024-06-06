@@ -70,37 +70,38 @@ export default function contentInventory() {
                 const data = await response.json();
 
                 const responseData = data.data;
-                const filteredData = responseData.map(item => {
+                const filteredData = responseData
+                    .filter(item => ![5, 7, 10, 18, 22].includes(item.user_id))
+                    .map(item => {
+                        const primerProductoRRSS = item.social_line[0];
 
-                    const primerProductoRRSS = item.social_line[0];
+                        return {
+                            id: item.id,
+                            serie: item.serie,
+                            platform: item.platform,
+                            total: item.total,
+                            status: item.status,
+                            date: item.date,
+                            origin: item.origin,
+                            client: item.person.name,
+                            user_id: item.user_id,
+                            document_number: item.document_number,
+                            document_type: item.document_type,
+                            phone: item.person.phone_number,
+                            productosRRSS: item.social_line,
+                            client_type: item.client_type,
+                            address: item.person.address,
+                            reference: item.person.reference,
+                            departament: item.person.departament,
+                            province: item.person.province,
+                            district: item.person.district,
+                            status_text: item.status_text,
+                            obs: item.obs,
+                            product_id: primerProductoRRSS ? primerProductoRRSS.product_id : null,
+                        };
+                    });
 
-                    return {
-                        id: item.id,
-                        serie: item.serie,
-                        platform: item.platform,
-                        total: item.total,
-                        status: item.status,
-                        date: item.date,
-                        origin: item.origin,
-                        client: item.person.name,
-                        user_id: item.user_id,
-                        document_number: item.document_number,
-                        document_type: item.document_type,
-                        phone: item.person.phone_number,
-                        productosRRSS: item.social_line,
-                        client_type: item.client_type,
-                        address: item.person.address,
-                        reference: item.person.reference,
-                        departament: item.person.departament,
-                        province: item.person.province,
-                        district: item.person.district,
-                        status_text: item.status_text,
-                        obs: item.obs,
-                        product_id: primerProductoRRSS ? primerProductoRRSS.product_id : null,
-                    };
-                });
-
-                setIncidentes(filteredData)
+                setIncidentes(filteredData);
 
                 //semanal y mensual
                 const today = new Date();
@@ -636,7 +637,9 @@ export default function contentInventory() {
         { field: 'serie', headerName: 'Orden', flex: 0 },
         { field: 'date', headerName: 'Fecha', flex: 0 },
         {
-            field: 'user_id', headerName: 'Asesor', flex: 1, renderCell: (params) => (
+            field: 'user_id', headerName: 'Asesor', flex: 1, 
+            valueGetter: (params) => params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id == 23 ? "Mariana" : "Usuario No registrado",
+            renderCell: (params) => (
                 <>{params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id == 23 ? "Mariana" : "Usuario No registrado"}</>
             ),
         },
