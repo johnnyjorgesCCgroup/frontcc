@@ -85,6 +85,7 @@ export default function contentInventory() {
                             origin: item.origin,
                             client: item.person.name,
                             user_id: item.user_id,
+                            payment_type: item.payment_type,
                             document_number: item.document_number,
                             document_type: item.document_type,
                             phone: item.person.phone_number,
@@ -766,6 +767,7 @@ export default function contentInventory() {
                                             Asesor: {selectedIncident.user_id === 20 ? "Sheyla Ramirez Cruz" : selectedIncident.user_id === 15 ? "Daniel Lama" : "No es vendedor"} <br />
                                             Venta por: {selectedIncident.client_type} <br />
                                             Plataforma: {selectedIncident.platform} <br />
+                                            Entrega: {selectedIncident.payment_type}<br />
                                             Fecha de ingreso: {selectedIncident.date}<br />
                                             Cliente: {selectedIncident.client}<br />
                                             Documento: {selectedIncident.document_type}, {selectedIncident.document_number}<br />

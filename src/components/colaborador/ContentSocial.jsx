@@ -75,64 +75,24 @@ const ContentSocial = () => {
 
   const [chanelList, setChanelList] = useState([
     {
-      label: 'VENTA DIRECTA',
+      label: 'VENTA COLABORADOR ',
       key: 1
-    },
-    {
-      label: 'VENTA CORPORATIVA',
-      key: 2
-    },
-    {
-      label: 'VENTA TIENDA',
-      key: 3
-    },
-    {
-      label: 'VENTA CONTRA ENTREGA',
-      key: 4
-    },
-    {
-      label: 'VENTA PROVINCIA',
-      key: 5
-    },
-    {
-      label: 'VENTA ALMACEN ',
-      key: 6
-    },
+    }
   ]);
   const [selChanel, setSelChanel] = useState([]);
 
   const [entregaList, setEntregaList] = useState([
     {
-      label: '24 horas',
-      key: 1
-    },
-    {
-      label: '48 horas',
-      key: 2
-    },
-    {
       label: 'Recojo en tienda',
-      key: 3
-    },
-    {
-      label: 'Recojo en almacen',
-      key: 4
-    },
-    {
-      label: 'Contra-Entrega',
-      key: 5
-    },
-    {
-      label: 'No especificado',
-      key: 6
-    },
+      key: 1
+    }
   ]);
 
   const [selEntrega, setSelEntrega] = useState([]);
 
   const [pagoList, setPagoList] = useState([
     {
-      label: 'PLIN',
+      label: 'Descuento Planilla',
       key: 1
     },
     {
@@ -140,32 +100,16 @@ const ContentSocial = () => {
       key: 2
     },
     {
-      label: 'WEB',
+      label: 'PLIN',
       key: 3
     },
     {
-      label: 'LINK',
+      label: 'EFECTIVO',
       key: 4
     },
     {
-      label: 'EFECTIVO',
-      key: 5
-    },
-    {
-      label: 'DEPOSITO',
-      key: 6
-    },
-    {
       label: 'TARJETA',
-      key: 7
-    },
-    {
-      label: 'TRANSFERENCIA',
-      key: 8
-    },
-    {
-      label: 'NO ESPECIFICADO',
-      key: 9
+      key: 5
     },
   ]);
 
@@ -175,32 +119,8 @@ const ContentSocial = () => {
 
   const [plataformaList, setPlataformaList] = useState([
     {
-      label: 'FACEBBOK',
+      label: 'Oficina CCgroup',
       key: 1
-    },
-    {
-      label: 'FB/WSP',
-      key: 2
-    },
-    {
-      label: 'INSTAGRAM',
-      key: 3
-    },
-    {
-      label: 'TIENDA',
-      key: 4
-    },
-    {
-      label: 'WHATSAPP',
-      key: 5
-    },
-    {
-      label: 'Ad fly',
-      key: 6
-    },
-    {
-      label: 'Mercado Libre',
-      key: 7
     },
   ]);
 
@@ -687,13 +607,7 @@ const ContentSocial = () => {
     setObs(null);
     newProducto.oc = '';
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Nuevo Venta RRSS de Creada!',
-      showConfirmButton: false,
-      timer: 1500,
-    });
-
+    alert("Venta Creada")
 
   };
 
@@ -721,7 +635,7 @@ const ContentSocial = () => {
 
     const sele = {
       label: value.label,
-      key: value.key
+      key: value.keys
     };
 
     setSelChanel(sele);
@@ -1438,7 +1352,7 @@ const ContentSocial = () => {
         <Grid item xs={12} md={12}>
           <br />
           <Typography variant="h5" gutterBottom>
-            Registro de Venta por Redes
+            Registro de Venta Colaborador
           </Typography>
           <Typography variant="h5" gutterBottom>
             Nº {socialNext || []}

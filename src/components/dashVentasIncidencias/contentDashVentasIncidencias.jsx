@@ -79,6 +79,7 @@ export default function contentInventory() {
                             id: item.id,
                             serie: item.serie,
                             platform: item.platform,
+                            payment_type: item.payment_type,
                             total: item.total,
                             status: item.status,
                             date: item.date,
@@ -820,6 +821,7 @@ export default function contentInventory() {
                                             Asesor: {selectedIncident.user_id === 20 ? "Sheyla Ramirez Cruz" : selectedIncident.user_id === 15 ? "Daniel Lama" : "No es vendedor"} <br />
                                             Venta por: {selectedIncident.client_type} <br />
                                             Plataforma: {selectedIncident.platform} <br />
+                                            Entrega: {selectedIncident.payment_type}<br />
                                             Fecha de ingreso: {selectedIncident.date}<br />
                                             Cliente: {selectedIncident.client}<br />
                                             Documento: {selectedIncident.document_type}, {selectedIncident.document_number}<br />
