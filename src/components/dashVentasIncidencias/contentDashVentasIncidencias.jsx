@@ -636,7 +636,7 @@ export default function contentInventory() {
     const columns = [
         { field: 'id', headerName: 'ID', flex: 0 },
         { field: 'serie', headerName: 'Orden', flex: 0 },
-        { field: 'date', headerName: 'Fecha', flex: 0 },
+        { field: 'date', headerName: 'Fecha', flex: 0.5 },
         {
             field: 'user_id', headerName: 'Asesor', flex: 1, 
             valueGetter: (params) => params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id == 23 ? "Mariana" : "Usuario No registrado",
@@ -686,7 +686,7 @@ export default function contentInventory() {
                         <div className="row mb-2" style={{ alignItems: "center" }}>
                             <div className="col-sm-6">
                                 <h3 className="card-title">
-                                    <b>Dashboard Ventas y Incidencias</b>
+                                    <b>Dashboard Ventas General</b>
                                 </h3>
                                 <Switch id="switch1" {...label} checked={switchOn} onChange={handleSwitchChange} color="secondary" size="small" />
                             </div>

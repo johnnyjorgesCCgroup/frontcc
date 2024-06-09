@@ -82,7 +82,7 @@ const Menu = () => {
               data-accordion="true"
             >
               <li
-                className={`nav-item ${location.pathname === "/dashboard" || "/dashgeneral" ? "menu-open" : ""
+                className={`nav-item ${location.pathname === "/dashboard" || "/dashgeneral" || "/dashproductos" ? "menu-open" : ""
                   }`}
               >
                 <a href="#" className="nav-link">
@@ -115,8 +115,32 @@ const Menu = () => {
                   </li>
                   <li className="nav-item">
                     <Link
-                      to="/dashventasincidencias"
-                      className={`nav-link ${location.pathname === "/dashventasincidencias" ? "active" : ""
+                      to="/dashproductos"
+                      className={`nav-link ${location.pathname === "/dashproductos" ? "active" : ""
+                        }`}
+                    >
+                      <i className="far fa-circle nav-icon" />
+                      <p>Productos</p>
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+              <li
+                className={`nav-item ${location.pathname === "/ticket" || "/activos" || "ventas" || "colaborador" ? "menu-open" : ""
+                  }`}
+              >
+                <a href="#" className="nav-link">
+                  <i className="nav-icon fas fa-edit" />
+                  <p>
+                    Formulario
+                    <i className="fas fa-angle-left right" />
+                  </p>
+                </a>
+                <ul className="nav nav-treeview">
+                  <li className="nav-item">
+                    <Link
+                      to="/ventas"
+                      className={`nav-link ${location.pathname === "/ventas" ? "active" : ""
                         }`}
                     >
                       <i className="far fa-circle nav-icon" />
@@ -133,20 +157,6 @@ const Menu = () => {
                       <p>Colaborador</p>
                     </Link>
                   </li>
-                </ul>
-              </li>
-              <li
-                className={`nav-item ${location.pathname === "/ticket", "/inventory" ? "menu-open" : ""
-                  }`}
-              >
-                <a href="#" className="nav-link">
-                  <i className="nav-icon fas fa-edit" />
-                  <p>
-                    Formulario
-                    <i className="fas fa-angle-left right" />
-                  </p>
-                </a>
-                <ul className="nav nav-treeview">
                   <li className="nav-item">
                     <Link
                       to="/ticket"
@@ -159,18 +169,18 @@ const Menu = () => {
                   </li>
                   <li className="nav-item">
                     <Link
-                      to="/inventory"
-                      className={`nav-link ${location.pathname === "/inventory" ? "active" : ""
+                      to="/activos"
+                      className={`nav-link ${location.pathname === "/activos" ? "active" : ""
                         }`}
                     >
                       <i className="far fa-circle nav-icon" />
-                      <p>Inventario</p>
+                      <p>Activos</p>
                     </Link>
                   </li>
                 </ul>
               </li>
               <li
-                className={`nav-item ${location.pathname === "/fechasrapidas" ? "menu-open" : ""
+                className={`nav-item ${location.pathname === "/fechasrapidas" || "registroMoto" ? "menu-open" : ""
                   }`}
               >
                 <a href="#" className="nav-link">

@@ -121,7 +121,7 @@ export default function contentInventory() {
                         <div className="row mb-2" style={{ alignItems: "center" }}>
                             <div className="col-sm-6">
                                 <h3 className="card-title">
-                                    <b>Inventario</b>
+                                    <b>Activos de CCGROUP</b>
                                 </h3>
                                 <Switch id="switch1" {...label} checked={switchOn} onChange={handleSwitchChange} color="secondary" size="small" />
                             </div>

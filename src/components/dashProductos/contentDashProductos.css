@@ -1,0 +1,55 @@
+.cardContainerProducts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.cardProducts {
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cardProducts img {
+    width: 120px;
+    height: 70px;
+    background-color: white;
+}
+
+.cardContentProducts {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.cardContentProducts div {
+    padding: 2%;
+    justify-content: center;
+}
+
+.productInfo {
+    width: 40%;
+}
+
+.productInfo b {
+    display: block;
+}
+
+.productInfo p {
+    margin: 0;
+}
+
+.productCuts,
+.productOutputs {
+    width: 25%;
+    justify-content: center;
+    text-align: center;
+}
+
+.productCuts p,
+.productOutputs p {
+    margin: 0;
+}

@@ -10,6 +10,7 @@ import IndexRegisterMotorizado from '../views/RegisterMotorizado/index';
 import IndexDashGeneral from '../views/DashGeneral/index';
 import IndexDashVentasIncidencias from '../views/DashVentasIncidencias/index';
 import IndexColaborador from '../views/Colaborador/index'
+import IndexDashColaborador from '../views/DashProductos/index'
 import './ProtectedRoutes.css'
 
 
@@ -41,13 +42,14 @@ const ProtectedRoutes = () => {
       <Route path="/" element={<IndexDashGeneral />} />
       <Route path="/ticket" element={<IndexTicket />} />
       <Route path="/hooks" element={<IndexHooks />} />
-      <Route path="/inventory" element={<IndexInventory />} />
+      <Route path="/activos" element={<IndexInventory />} />
       <Route path="/dashboard" element={<IndexDashboard />} />
       <Route path="/fechasrapidas" element={<IndexFechasRapidas />} />
       <Route path="/registroMoto" element={<IndexRegisterMotorizado />} />
       <Route path="/dashgeneral" element={<IndexDashGeneral />} />
-      <Route path="/dashventasincidencias" element={<IndexDashVentasIncidencias />} />
+      <Route path="/ventas" element={<IndexDashVentasIncidencias />} />
       <Route path="/colaborador" element={<IndexColaborador />} />
+      <Route path="/dashproductos" element={<IndexDashColaborador />} />
     </Routes>
   );
 };
