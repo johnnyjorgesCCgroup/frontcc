@@ -30,7 +30,101 @@
     align-items: center
 }
 
+.cardEstadosTitle{
+    display: flex;
+    justify-content: space-between
+}
+
+#cardEstadosNum{
+    width: 100%;
+}
+
+.dashPrincipal{
+    display: flex;
+    width: 100%
+}
+
+#cardAnual1{
+    width: 50%;
+    margin-left: 3%;
+    padding: 15px
+}
+
+#cardAnual2{
+    width: 50%;
+    margin-left: 3%;
+    margin-right: 3%;
+    padding: 15px
+}
+
+.cardAnualGeneral{
+    display: flex;
+    height: 430px
+}
+
+.cardAyerSemanalAnualGeneral{
+    display: flex;
+    justify-content: center
+}
+
+#cardAyerGeneral{
+    width: 27.3%
+}
+
+#cardSemanalGeneral{
+    width: 27.3%;
+    margin-left: 1%
+}
+
+#cardMensualGeneral{
+    width: 27.3%;
+    margin-left: 1%
+}
 
 @media only screen and (max-width: 600px) {
-
+    .cardEstadosDashGeneral{
+        display: block;
+    }
+    .dashPrincipal{
+        display: block;
+    }
+    #cardAyerDetalles{
+        display: none
+    }
+    #cardSemanalDetalles{
+        display: none
+    }
+    #cardMensualDetalles{
+        display: none
+    }
+    #cardUltimosMovimientos{
+        display: none
+    }
+    .cardAnualGeneral{
+        display: flex;
+        height: 100%
+    }
+    #cardAnual1{
+        display: none
+    }
+    #cardAnual2{
+        width: 100%;
+    }
+    .cardAyerSemanalAnualGeneral{
+        display: block;
+        justify-content: center
+    }
+    #cardAyerGeneral{
+        width: 100%
+    }
+    
+    #cardSemanalGeneral{
+        width: 100%;
+        margin-left: 0
+    }
+    
+    #cardMensualGeneral{
+        width: 100%;
+        margin-left: 0
+    }
 }

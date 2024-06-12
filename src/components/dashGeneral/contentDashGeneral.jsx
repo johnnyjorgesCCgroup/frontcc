@@ -1079,7 +1079,7 @@ export default function contentInventory() {
                 <div className="card card-outline">
                     <div className="card-header border-0">
                         <div className="cardEstadosDashGeneral">
-                            <div className="cardEstadosTitle" style={{ display: "flex", justifyContent: "space-between" }}>
+                            <div className="cardEstadosTitle">
                                 <h3 className="card-title">
                                     <b style={{ color: switchOn ? "#E3E3E3" : "black", marginRight: "10px" }}>Hoy</b>
                                     <Switch id="switch1" {...label} checked={switchOn} onChange={handleSwitchChange} color="primary" size="small" />
@@ -1091,7 +1091,7 @@ export default function contentInventory() {
                                 </div>
                             </div>
                             <div className="row" style={{ width: "100%" }}>
-                                <div className="dashPrincipal" style={{ display: "flex", width: "100%" }}>
+                                <div className="dashPrincipal">
                                     <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
                                         <span className='info-box-icon'>
                                             <i className='fas fa-boxes-stacked' style={{ color: "#C0392B" }} />
@@ -1151,8 +1151,8 @@ export default function contentInventory() {
                         </div>
                     </div>
                 </div>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <div className="card card-outline" style={{ width: "27.3%" }}>
+                <div className="cardAyerSemanalAnualGeneral">
+                    <div className="card card-outline" id="cardAyerGeneral">
                         <div className="card-header border-0">
                             <div>
                                 <div>
@@ -1230,7 +1230,7 @@ export default function contentInventory() {
                             </div>
                         </div>
                     </div>
-                    <div className="card card-outline" style={{ width: "27.3%", marginLeft: "1%" }}>
+                    <div className="card card-outline" id="cardSemanalGeneral">
                         <div className="card-header border-0">
                             <div>
                                 <div>
@@ -1308,7 +1308,7 @@ export default function contentInventory() {
                             </div>
                         </div>
                     </div>
-                    <div className="card card-outline" style={{ width: "27.3%", marginLeft: "1%" }}>
+                    <div className="card card-outline" id="cardMensualGeneral">
                         <div className="card-header border-0">
                             <div>
                                 <div>
@@ -1386,7 +1386,7 @@ export default function contentInventory() {
                             </div>
                         </div>
                     </div>
-                    <div className='card card-outline' style={{ width: "18.1%", marginLeft: "1%", paddingTop: "10px", paddingLeft: "10px", paddingRight: "10px" }}>
+                    <div className='card card-outline' id="cardUltimosMovimientos" style={{ width: "18.1%", marginLeft: "1%", paddingTop: "10px", paddingLeft: "10px", paddingRight: "10px" }}>
                         <div style={{ display: "inline-block", width: "fit-content", backgroundColor: "#E4EEF3", borderRadius: "10px", padding: "10px", margin: "0 auto", textAlign: "center", marginBottom: "5px" }}>
                             <i className='fas fa-box-open' style={{ color: "#1A5276" }}></i>
                         </div>
@@ -1425,11 +1425,11 @@ export default function contentInventory() {
                             </div>
                         </div>
                     </div>
-                    <div style={{display: "flex", height: "430px" }}>
-                        <div className='card card-outline' style={{ width: "50%", marginLeft: "3%", padding: "15px" }}>
+                    <div className="cardAnualGeneral">
+                        <div className='card card-outline' id="cardAnual1">
                             <canvas ref={chartAllRef} style={{width:"100%"}}/>
                         </div>
-                        <div className='card card-outline' style={{ width: "50%", marginLeft: "3%", marginRight: "3%", padding: "15px" }}>
+                        <div className='card card-outline' id="cardAnual2">
                             <canvas ref={chartLineMonthRef} style={{width:"100%"}}/>
                         </div>
                     </div>
