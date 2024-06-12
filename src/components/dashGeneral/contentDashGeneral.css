@@ -25,3 +25,12 @@
     visibility: visible;
     opacity: 1;
 }
+
+.cardEstadosDashGeneral{
+    align-items: center
+}
+
+
+@media only screen and (max-width: 600px) {
+
+}

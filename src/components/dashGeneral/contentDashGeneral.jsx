@@ -1078,8 +1078,8 @@ export default function contentInventory() {
                 </div>
                 <div className="card card-outline">
                     <div className="card-header border-0">
-                        <div style={{ alignItems: "center" }}>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <div className="cardEstadosDashGeneral">
+                            <div className="cardEstadosTitle" style={{ display: "flex", justifyContent: "space-between" }}>
                                 <h3 className="card-title">
                                     <b style={{ color: switchOn ? "#E3E3E3" : "black", marginRight: "10px" }}>Hoy</b>
                                     <Switch id="switch1" {...label} checked={switchOn} onChange={handleSwitchChange} color="primary" size="small" />

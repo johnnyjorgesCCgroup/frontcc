@@ -73,7 +73,7 @@ export default function contentInventory() {
                 const filteredData = responseData
                     .filter(item => ![5, 7, 10, 18, 22].includes(item.user_id))
                     .map(item => {
-                        const primerProductoRRSS = item.social_line[0];
+                        const primerProductoRRSS = item.social_lines[0];
 
                         return {
                             id: item.id,
@@ -89,7 +89,7 @@ export default function contentInventory() {
                             document_number: item.document_number,
                             document_type: item.document_type,
                             phone: item.person.phone_number,
-                            productosRRSS: item.social_line,
+                            productosRRSS: item.social_lines,
                             client_type: item.client_type,
                             address: item.person.address,
                             reference: item.person.reference,
