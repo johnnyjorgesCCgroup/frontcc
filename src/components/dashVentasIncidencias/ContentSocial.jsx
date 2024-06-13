@@ -206,6 +206,10 @@ const ContentSocial = () => {
       label: 'Mercado Libre',
       key: 7
     },
+    {
+      label: 'Feria',
+      key: 8
+    },
   ]);
 
   const [selPlataforma, setSelPlataforma] = useState([]);
