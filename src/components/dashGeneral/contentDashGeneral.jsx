@@ -37,18 +37,21 @@ export default function contentInventory() {
     const [orderCountYesterdayEntregado, SetorderCountYesterdayEntregado] = useState(0);
     const [orderCountYesterdayAnulado, SetorderCountYesterdayAnulado] = useState(0);
     const [orderCountYesterdayDevolucion, SetorderCountYesterdayDevolucion] = useState(0);
+    const [orderCountYesterdayRegularizar, SetorderCountYesterdayRegularizar] = useState(0);
     const [orderCountWeeklyEtiqueta, SetorderCountWeeklyEtiqueta] = useState(0);
     const [orderCountWeeklyPendiente, SetorderCountWeeklyPendiente] = useState(0);
     const [orderCountWeeklyEnRuta, SetorderCountWeeklyEnRuta] = useState(0);
     const [orderCountWeeklyEntregado, SetorderCountWeeklyEntregado] = useState(0);
     const [orderCountWeeklyAnulado, SetorderCountWeeklyAnulado] = useState(0);
     const [orderCountWeeklyDevolucion, SetorderCountWeeklyDevolucion] = useState(0);
+    const [orderCountWeeklyRegularizar, SetorderCountWeeklyRegularizar] = useState(0);
     const [orderCountMonthEtiqueta, SetorderCountMonthEtiqueta] = useState(0);
     const [orderCountMonthPendiente, SetorderCountMonthPendiente] = useState(0);
     const [orderCountMonthEnRuta, SetorderCountMonthEnRuta] = useState(0);
     const [orderCountMonthEntregado, SetorderCountMonthEntregado] = useState(0);
     const [orderCountMonthAnulado, SetorderCountMonthAnulado] = useState(0);
     const [orderCountMonthDevolucion, SetorderCountMonthDevolucion] = useState(0);
+    const [orderCountMonthRegularizar, SetorderCountMonthRegularizar] = useState(0);
     const [orderCountYesterdayVtex, SetorderCountYesterdayVtex] = useState(0);
     const [orderCountYesterdaySaga, SetorderCountYesterdaySaga] = useState(0);
     const [orderCountYesterdayIntercorp, SetorderCountYesterdayIntercorp] = useState(0);
@@ -84,6 +87,7 @@ export default function contentInventory() {
     const [orderCountDiciembre, setorderCountDiciembre] = useState(0);
     const [totalPriceWeekly, SetTotalPriceWeekly] = useState(0);
     const [totalPriceMonth, SetTotalPriceMonth] = useState(0);
+    const [modalHistoryOpen, setModalHistoryOpen] = useState(0);
 
     const handleSwitchChange = () => {
         setSwitchOn(!switchOn);
@@ -99,6 +103,13 @@ export default function contentInventory() {
 
     const handlePriceMensualChange = () => {
         setPriceMensualOn(!priceMensualOn);
+    }
+
+    const handleOpenHistoryModal = () => {
+        setModalHistoryOpen(true);
+    }
+    const handleCloseHistoryModal = () => {
+        setModalHistoryOpen(false);
     }
 
     const fetchDataFromAPI = () => {
@@ -298,6 +309,14 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetorderCountYesterdayDevolucion(orderCountYesterdayDevolucion);
+                const orderCountYesterdayRegularizar = filteredData.reduce((count, item) => {
+                    if (item.date === formattedYesterday && item.status === 12) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountYesterdayRegularizar(orderCountYesterdayRegularizar);
 
                 //countAyerMarkets
                 const orderCountYesterdayVtex = filteredData.reduce((count, item) => {
@@ -603,6 +622,15 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetorderCountWeeklyDevolucion(orderCountWeeklyDevolucion);
+                const orderCountWeeklyRegularizar = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfWeek && itemDate <= endOfWeek && item.status === 12) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountWeeklyRegularizar(orderCountWeeklyRegularizar);
 
                 //countWeeklyMarkets
                 const orderCountWeeklyVtex = filteredData.reduce((count, item) => {
@@ -706,6 +734,15 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetorderCountMonthDevolucion(orderCountMonthDevolucion);
+                const orderCountMonthRegularizar = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.status === 12) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthRegularizar(orderCountMonthRegularizar);
 
                 //priceMensual
                 const totalPriceMonth = filteredData.reduce((count, item) => {
@@ -829,10 +866,10 @@ export default function contentInventory() {
 
 
     const allTodo = allPendiente + allEtiqueta + allEnRuta + allEntregado + allAnulado + allDevolucion + allRegularizar;
-    const allHoy = orderCountTodayEtiqueta + orderCountTodayPendiente + orderCountTodayEnRuta + orderCountTodayEntregado + orderCountTodayAnulado + orderCountTodayDevolucion + orderCountTodayRegularizar;
-    const allAyer = orderCountYesterdayEtiqueta + orderCountYesterdayPendiente + orderCountYesterdayEnRuta + orderCountYesterdayEntregado + orderCountYesterdayAnulado + orderCountYesterdayDevolucion;
-    const allSemanal = orderCountWeeklyEtiqueta + orderCountWeeklyPendiente + orderCountWeeklyEnRuta + orderCountWeeklyEntregado + orderCountWeeklyAnulado + orderCountWeeklyDevolucion;
-    const allMensual = orderCountMonthEtiqueta + orderCountMonthPendiente + orderCountMonthEnRuta + orderCountMonthEntregado + orderCountMonthAnulado + orderCountMonthDevolucion;
+    const allHoy = orderCountTodayEtiqueta + orderCountTodayPendiente + orderCountTodayEnRuta + orderCountTodayEntregado + orderCountTodayAnulado + orderCountTodayDevolucion + orderCountTodayRegularizar + orderCountTodayRegularizar;
+    const allAyer = orderCountYesterdayEtiqueta + orderCountYesterdayPendiente + orderCountYesterdayEnRuta + orderCountYesterdayEntregado + orderCountYesterdayAnulado + orderCountYesterdayDevolucion + orderCountYesterdayRegularizar;
+    const allSemanal = orderCountWeeklyEtiqueta + orderCountWeeklyPendiente + orderCountWeeklyEnRuta + orderCountWeeklyEntregado + orderCountWeeklyAnulado + orderCountWeeklyDevolucion + orderCountWeeklyRegularizar;
+    const allMensual = orderCountMonthEtiqueta + orderCountMonthPendiente + orderCountMonthEnRuta + orderCountMonthEntregado + orderCountMonthAnulado + orderCountMonthDevolucion + orderCountMonthRegularizar;
 
     //BardChart
     useEffect(() => {
@@ -1112,7 +1149,7 @@ export default function contentInventory() {
                                 </h3>
                                 <div style={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
                                     <i className='fas fa-caret-up' style={{ color: "green", marginRight: "5px" }}></i>
-                                    <a style={{ color: "green" }}>{switchOn ? allTodo : allHoy} Ordenes</a>
+                                    <a onClick={handleOpenHistoryModal} style={{ color: "green" }}>{switchOn ? allTodo : allHoy} Ordenes</a>
                                 </div>
                             </div>
                             <div className="row" style={{ width: "100%" }}>
@@ -1259,6 +1296,15 @@ export default function contentInventory() {
                                                 <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountYesterdayDevolucion}</span>
                                             </div>
                                         </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-hourglass' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Regularizar</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountYesterdayRegularizar}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1335,6 +1381,15 @@ export default function contentInventory() {
                                             <div className='info-box-content'>
                                                 <span className='info-box-text'>Devolución / Cambio</span>
                                                 <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountWeeklyDevolucion}</span>
+                                            </div>
+                                        </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-hourglass' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Regularizar</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountWeeklyRegularizar}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1415,6 +1470,15 @@ export default function contentInventory() {
                                                 <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountMonthDevolucion}</span>
                                             </div>
                                         </div>
+                                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                            <span className='info-box-icon'>
+                                                <i className='fas fa-hourglass' style={{ color: "#1A5276" }} />
+                                            </span>
+                                            <div className='info-box-content'>
+                                                <span className='info-box-text'>Regularizar</span>
+                                                <span className='info-box-number' style={{ fontSize: "20px" }}>{orderCountMonthRegularizar}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1469,6 +1533,130 @@ export default function contentInventory() {
                     </div>
                 </div>
             </div>
+            <Modal open={modalHistoryOpen} onClose={handleCloseHistoryModal}>
+                <div className="modalDetalle">
+                    <h3 className="card-title">
+                        <Typography>Cortes Diarios</Typography>
+                    </h3>
+                    <br />
+                    <br />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Corte</th>
+                                <th>Inicio</th>
+                                <th>Fin</th>
+                                <th>CCG</th>
+                                <th>OPL</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Vtex 1°</td>
+                                <td>08:00</td>
+                                <td>09:30</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Ripley 1°</td>
+                                <td>08:00</td>
+                                <td>09:30</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Ventas RRSS 1°</td>
+                                <td>08:00</td>
+                                <td>09:30</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Incidencias</td>
+                                <td>08:00</td>
+                                <td>09:30</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Mercado Libre</td>
+                                <td>08:00</td>
+                                <td>09:30</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Intercorp 1°</td>
+                                <td>12:50</td>
+                                <td>13:00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Intercorp 2°</td>
+                                <td>15:30</td>
+                                <td>16:00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Ripley 2°</td>
+                                <td>15:30</td>
+                                <td>16:00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>Vtex 2°</td>
+                                <td>16:00</td>
+                                <td>16:30</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>Ventas RRSS 2°</td>
+                                <td>16:00</td>
+                                <td>16:30</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>Falabella Antiguo</td>
+                                <td>16:00</td>
+                                <td>16:30</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </Modal>
         </div>
     );
 }
