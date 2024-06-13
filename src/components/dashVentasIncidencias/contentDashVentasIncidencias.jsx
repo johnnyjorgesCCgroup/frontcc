@@ -22,9 +22,11 @@ export default function contentInventory() {
     const [orderCountMonthVendedor1, SetorderCountMonthVendedor1] = useState(0);
     const [orderCountMonthVendedor2, SetorderCountMonthVendedor2] = useState(0);
     const [orderCountMonthVendedor3, SetorderCountMonthVendedor3] = useState(0);
+    const [orderCountMonthVendedor4, SetorderCountMonthVendedor4] = useState(0);
     const [orderPriceMonthVendedor1, SetorderPriceMonthVendedor1] = useState(0);
     const [orderPriceMonthVendedor2, SetorderPriceMonthVendedor2] = useState(0);
     const [orderPriceMonthVendedor3, SetorderPriceMonthVendedor3] = useState(0);
+    const [orderPriceMonthVendedor4, SetorderPriceMonthVendedor4] = useState(0);
     const [orderCountEneroVendedor1, setorderCountEneroVendedor1] = useState(0);
     const [orderCountFebreroVendedor1, setorderCountFebreroVendedor1] = useState(0);
     const [orderCountMarzoVendedor1, setorderCountMarzoVendedor1] = useState(0);
@@ -61,6 +63,18 @@ export default function contentInventory() {
     const [orderCountOctubreVendedor3, setorderCountOctubreVendedor3] = useState(0);
     const [orderCountNoviembreVendedor3, setorderCountNoviembreVendedor3] = useState(0);
     const [orderCountDiciembreVendedor3, setorderCountDiciembreVendedor3] = useState(0);
+    const [orderCountEneroVendedor4, setorderCountEneroVendedor4] = useState(0);
+    const [orderCountFebreroVendedor4, setorderCountFebreroVendedor4] = useState(0);
+    const [orderCountMarzoVendedor4, setorderCountMarzoVendedor4] = useState(0);
+    const [orderCountAbrilVendedor4, setorderCountAbrilVendedor4] = useState(0);
+    const [orderCountMayoVendedor4, setorderCountMayoVendedor4] = useState(0);
+    const [orderCountJunioVendedor4, setorderCountJunioVendedor4] = useState(0);
+    const [orderCountJulioVendedor4, setorderCountJulioVendedor4] = useState(0);
+    const [orderCountAgostoVendedor4, setorderCountAgostoVendedor4] = useState(0);
+    const [orderCountSeptiembreVendedor4, setorderCountSeptiembreVendedor4] = useState(0);
+    const [orderCountOctubreVendedor4, setorderCountOctubreVendedor4] = useState(0);
+    const [orderCountNoviembreVendedor4, setorderCountNoviembreVendedor4] = useState(0);
+    const [orderCountDiciembreVendedor4, setorderCountDiciembreVendedor4] = useState(0);
 
 
     const obtenerIncidentes = async () => {
@@ -71,7 +85,7 @@ export default function contentInventory() {
 
                 const responseData = data.data;
                 const filteredData = responseData
-                    .filter(item => ![5, 7, 10, 18, 22].includes(item.user_id))
+                    .filter(item => ![5, 7, 10, 18, 22, 21].includes(item.user_id))
                     .map(item => {
                         const primerProductoRRSS = item.social_lines[0];
 
@@ -171,6 +185,26 @@ export default function contentInventory() {
                 }, 0);
                 SetorderPriceMonthVendedor3(orderPriceMonthVendedor3);
 
+                const orderCountMonthVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountMonthVendedor4(orderCountMonthVendedor4);
+
+                const orderPriceMonthVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonth && itemDate <= endOfMonth && item.user_id === 21) {
+                        return count + parseFloat(item.total);
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderPriceMonthVendedor4(orderPriceMonthVendedor4);
+
                 //countAnualMensualEneroVendedor
                 const startOfMonthEnero = new Date(year, 0, 1);
                 const endOfMonthEnero = new Date(year, 0, 31);
@@ -204,6 +238,16 @@ export default function contentInventory() {
                     }
                 }, 0);
                 setorderCountEneroVendedor3(orderCountEneroVendedor3);
+
+                const orderCountEneroVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthEnero && itemDate <= endOfMonthEnero && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountEneroVendedor4(orderCountEneroVendedor4);
 
                 //countAnualMensualFebreroVendedor
                 const isLeapYear = (year) => {
@@ -243,6 +287,16 @@ export default function contentInventory() {
                 }, 0);
                 setorderCountFebreroVendedor3(orderCountFebreroVendedor3);
 
+                const orderCountFebreroVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthFebrero && itemDate <= endOfMonthFebrero && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountFebreroVendedor4(orderCountFebreroVendedor4);
+
                 //countAnualMensualMarzo
                 const startOfMonthMarzo = new Date(year, 2, 1);
                 const endOfMonthMarzo = new Date(year, 2, 31);
@@ -276,6 +330,16 @@ export default function contentInventory() {
                     }
                 }, 0);
                 setorderCountMarzoVendedor3(orderCountMarzoVendedor3);
+
+                const orderCountMarzoVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthMarzo && itemDate <= endOfMonthMarzo && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountMarzoVendedor4(orderCountMarzoVendedor4);
 
                 //countAnualMensualAbril
                 const startOfMonthAbril = new Date(year, 3, 1);
@@ -311,6 +375,16 @@ export default function contentInventory() {
                 }, 0);
                 setorderCountAbrilVendedor3(orderCountAbrilVendedor3);
 
+                const orderCountAbrilVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthAbril && itemDate <= endOfMonthAbril && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountAbrilVendedor4(orderCountAbrilVendedor4);
+
                 //countAnualMensualMayo
                 const startOfMonthMayo = new Date(year, 4, 1);
                 const endOfMonthMayo = new Date(year, 4, 31); // Mayo tiene 31 días
@@ -344,6 +418,16 @@ export default function contentInventory() {
                     }
                 }, 0);
                 setorderCountMayoVendedor3(orderCountMayoVendedor3);
+
+                const orderCountMayoVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthMayo && itemDate <= endOfMonthMayo && item.user_id === 23) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountMayoVendedor4(orderCountMayoVendedor4);
 
 
                 //countAnualMensualJunio
@@ -380,6 +464,16 @@ export default function contentInventory() {
                 }, 0);
                 setorderCountJunioVendedor3(orderCountJunioVendedor3);
 
+                const orderCountJunioVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthJunio && itemDate <= endOfMonthJunio && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountJunioVendedor4(orderCountJunioVendedor4);
+
                 //countAnualMensualJulio
                 const startOfMonthJulio = new Date(year, 6, 1);
                 const endOfMonthJulio = new Date(year, 6, 31); // Julio tiene 31 días
@@ -413,6 +507,16 @@ export default function contentInventory() {
                     }
                 }, 0);
                 setorderCountJulioVendedor3(orderCountJulioVendedor3);
+
+                const orderCountJulioVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthJulio && itemDate <= endOfMonthJulio && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountJulioVendedor4(orderCountJulioVendedor4);
 
                 //countAnualMensualAgosto
                 const startOfMonthAgosto = new Date(year, 7, 1);
@@ -448,6 +552,16 @@ export default function contentInventory() {
                 }, 0);
                 setorderCountAgostoVendedor3(orderCountAgostoVendedor3);
 
+                const orderCountAgostoVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthAgosto && itemDate <= endOfMonthAgosto && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountAgostoVendedor4(orderCountAgostoVendedor4);
+
                 //countAnualMensualSeptiembre
                 const startOfMonthSeptiembre = new Date(year, 8, 1);
                 const endOfMonthSeptiembre = new Date(year, 8, 30); // Septiembre tiene 30 días
@@ -481,6 +595,16 @@ export default function contentInventory() {
                     }
                 }, 0);
                 setorderCountSeptiembreVendedor3(orderCountSeptiembreVendedor3);
+
+                const orderCountSeptiembreVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthSeptiembre && itemDate <= endOfMonthSeptiembre && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountSeptiembreVendedor4(orderCountSeptiembreVendedor4);
 
                 //countAnualMensualOctubre
                 const startOfMonthOctubre = new Date(year, 9, 1);
@@ -516,6 +640,16 @@ export default function contentInventory() {
                 }, 0);
                 setorderCountOctubreVendedor3(orderCountOctubreVendedor3);
 
+                const orderCountOctubreVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthOctubre && itemDate <= endOfMonthOctubre && item.user_id === 23) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountOctubreVendedor4(orderCountOctubreVendedor4);
+
                 //countAnualMensualNoviembre
                 const startOfMonthNoviembre = new Date(year, 10, 1);
                 const endOfMonthNoviembre = new Date(year, 10, 30); // Noviembre tiene 30 días
@@ -550,6 +684,16 @@ export default function contentInventory() {
                 }, 0);
                 setorderCountNoviembreVendedor3(orderCountNoviembreVendedor3);
 
+                const orderCountNoviembreVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthNoviembre && itemDate <= endOfMonthNoviembre && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountNoviembreVendedor4(orderCountNoviembreVendedor4);
+
                 //countAnualMensualDiciembre
                 const startOfMonthDiciembre = new Date(year, 11, 1);
                 const endOfMonthDiciembre = new Date(year, 11, 31); // Diciembre tiene 31 días
@@ -583,6 +727,16 @@ export default function contentInventory() {
                     }
                 }, 0);
                 setorderCountDiciembreVendedor3(orderCountDiciembreVendedor3);
+
+                const orderCountDiciembreVendedor4 = filteredData.reduce((count, item) => {
+                    const itemDate = new Date(item.date);
+                    if (itemDate >= startOfMonthDiciembre && itemDate <= endOfMonthDiciembre && item.user_id === 21) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                setorderCountDiciembreVendedor4(orderCountDiciembreVendedor4);
 
             } else {
                 console.error("Error de fetch", response.statusText);
@@ -639,9 +793,9 @@ export default function contentInventory() {
         { field: 'date', headerName: 'Fecha', flex: 0.5 },
         {
             field: 'user_id', headerName: 'Asesor', flex: 1, 
-            valueGetter: (params) => params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id == 23 ? "Mariana" : "Usuario No registrado",
+            valueGetter: (params) => params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id == 23 ? "Mariana" : params.row.user_id == 21 ? "Rodrigo" : "Usuario No registrado",
             renderCell: (params) => (
-                <>{params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id == 23 ? "Mariana" : "Usuario No registrado"}</>
+                <>{params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id == 23 ? "Mariana" : params.row.user_id == 21 ? "Rodrigo" : "Usuario No registrado"}</>
             ),
         },
         { field: 'total', headerName: 'Precio', flex: 0 },
@@ -720,8 +874,8 @@ export default function contentInventory() {
                         </div>
                         <div id="vendedorCard" className="card card-outline">
                             <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
-                            <span id="vendedorText" className='info-box-text'>Francis  0</span>
-                            <b><span id="vendedorNumber" className='info-box-number'>S/0</span></b>
+                            <span id="vendedorText" className='info-box-text'>Rodrigo Feria  {orderCountMonthVendedor4}</span>
+                            <b><span id="vendedorNumber" className='info-box-number'>S/{orderPriceMonthVendedor4}{" "}{orderPriceMonthVendedor4 > orderPriceMonthVendedor1 ? "😁" : "😢"}</span></b>
                         </div>
                         <div id="vendedorCard" className="card card-outline">
                             <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
@@ -734,7 +888,7 @@ export default function contentInventory() {
                             <p><i className='fas fa-bullseye'></i>{" "}Objetivo del mes</p>
                         </div>
                         <div className="numObjetivo">
-                            <b>S/8000.00 😈</b>
+                            <b>S/8000.00</b>
                         </div>
                     </div>
                     <div id="graficoCard1" className='card card-outline'>
@@ -744,19 +898,19 @@ export default function contentInventory() {
                             chartType="LineChart"
                             loader={<div>Loading Chart</div>}
                             data={[
-                                ['Month', 'Sheyla', 'Daniel', 'Mariana'],
-                                ['Enero', orderCountEneroVendedor1, orderCountEneroVendedor2, orderCountEneroVendedor3],
-                                ['Febrero', orderCountFebreroVendedor1, orderCountFebreroVendedor2, orderCountFebreroVendedor3],
-                                ['Marzo', orderCountMarzoVendedor1, orderCountMarzoVendedor2, orderCountMarzoVendedor3],
-                                ['Abril', orderCountAbrilVendedor1, orderCountAbrilVendedor2, orderCountAbrilVendedor3],
-                                ['Mayo', orderCountMayoVendedor1, orderCountMayoVendedor2, orderCountMayoVendedor3],
-                                ['Junio', orderCountJunioVendedor1, orderCountJunioVendedor2, orderCountJunioVendedor3],
-                                ['Julio', orderCountJulioVendedor1, orderCountJulioVendedor2, orderCountJulioVendedor3],
-                                ['Agosto', orderCountAgostoVendedor1, orderCountAgostoVendedor2, orderCountAgostoVendedor2],
-                                ['Septiembre', orderCountSeptiembreVendedor1, orderCountSeptiembreVendedor2, orderCountSeptiembreVendedor3],
-                                ['Octubre', orderCountOctubreVendedor1, orderCountOctubreVendedor2, orderCountOctubreVendedor3],
-                                ['Noviembre', orderCountNoviembreVendedor1, orderCountNoviembreVendedor2, orderCountNoviembreVendedor3],
-                                ['Diciembre', orderCountDiciembreVendedor1, orderCountDiciembreVendedor2, orderCountDiciembreVendedor3],
+                                ['Month', 'Sheyla', 'Daniel', 'Mariana', 'Rodrigo'],
+                                ['Enero', orderCountEneroVendedor1, orderCountEneroVendedor2, orderCountEneroVendedor3, orderCountEneroVendedor4],
+                                ['Febrero', orderCountFebreroVendedor1, orderCountFebreroVendedor2, orderCountFebreroVendedor3, orderCountFebreroVendedor4],
+                                ['Marzo', orderCountMarzoVendedor1, orderCountMarzoVendedor2, orderCountMarzoVendedor3, orderCountMarzoVendedor4],
+                                ['Abril', orderCountAbrilVendedor1, orderCountAbrilVendedor2, orderCountAbrilVendedor3, orderCountAbrilVendedor4],
+                                ['Mayo', orderCountMayoVendedor1, orderCountMayoVendedor2, orderCountMayoVendedor3, orderCountMayoVendedor4],
+                                ['Junio', orderCountJunioVendedor1, orderCountJunioVendedor2, orderCountJunioVendedor3, orderCountJunioVendedor4],
+                                ['Julio', orderCountJulioVendedor1, orderCountJulioVendedor2, orderCountJulioVendedor3, orderCountJulioVendedor4],
+                                ['Agosto', orderCountAgostoVendedor1, orderCountAgostoVendedor2, orderCountAgostoVendedor3, orderCountAgostoVendedor4],
+                                ['Septiembre', orderCountSeptiembreVendedor1, orderCountSeptiembreVendedor2, orderCountSeptiembreVendedor3, orderCountSeptiembreVendedor4],
+                                ['Octubre', orderCountOctubreVendedor1, orderCountOctubreVendedor2, orderCountOctubreVendedor3, orderCountOctubreVendedor4],
+                                ['Noviembre', orderCountNoviembreVendedor1, orderCountNoviembreVendedor2, orderCountNoviembreVendedor3, orderCountNoviembreVendedor4],
+                                ['Diciembre', orderCountDiciembreVendedor1, orderCountDiciembreVendedor2, orderCountDiciembreVendedor3, orderCountDiciembreVendedor4],
                             ]}
                             options={{
                                 title: 'Ventas Mensuales',

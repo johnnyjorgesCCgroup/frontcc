@@ -98,6 +98,10 @@ const ContentSocial = () => {
       label: 'VENTA ALMACEN ',
       key: 6
     },
+    {
+      label: 'VENTA FERIA',
+      key: 7
+    },
   ]);
   const [selChanel, setSelChanel] = useState([]);
 

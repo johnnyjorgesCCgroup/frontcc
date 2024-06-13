@@ -107,15 +107,22 @@ export default function contentInventory() {
             .then(data => {
                 const responseData = data.data;
                 const sortedData = responseData.sort((a, b) => b.id - a.id);
-                const filteredData = sortedData.map(item => {
-                    return {
-                        oc: item.oc,
-                        price: item.price,
-                        status: item.status,
-                        date: item.date,
-                        origin: item.origin,
-                        client: item.client,
-                    };
+                // Usar un Set para llevar un registro de los valores únicos de oc
+                const uniqueOcSet = new Set();
+                const filteredData = [];
+
+                sortedData.forEach(item => {
+                    if (!uniqueOcSet.has(item.oc)) {
+                        uniqueOcSet.add(item.oc);
+                        filteredData.push({
+                            oc: item.oc,
+                            price: item.price,
+                            status: item.status,
+                            date: item.date,
+                            origin: item.origin,
+                            client: item.client,
+                        });
+                    }
                 });
 
                 //allData
@@ -351,7 +358,7 @@ export default function contentInventory() {
                 const daysUntilMonday = (dayOfWeek === 0) ? 6 : dayOfWeek - 1; //descuenta 1 al día de la semana
                 const startOfWeek = new Date(today); //fecha de hoy
                 const endOfWeek = new Date(startOfWeek);
-                startOfWeek.setDate(today.getDate() - daysUntilMonday -1);
+                startOfWeek.setDate(today.getDate() - daysUntilMonday - 1);
                 endOfWeek.setDate(startOfWeek.getDate() + 6);
                 const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
                 const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
@@ -822,7 +829,7 @@ export default function contentInventory() {
 
 
     const allTodo = allPendiente + allEtiqueta + allEnRuta + allEntregado + allAnulado + allDevolucion + allRegularizar;
-    const allHoy = orderCountTodayEtiqueta + orderCountTodayPendiente + orderCountTodayEnRuta + orderCountTodayEntregado + orderCountTodayAnulado + orderCountTodayDevolucion;
+    const allHoy = orderCountTodayEtiqueta + orderCountTodayPendiente + orderCountTodayEnRuta + orderCountTodayEntregado + orderCountTodayAnulado + orderCountTodayDevolucion + orderCountTodayRegularizar;
     const allAyer = orderCountYesterdayEtiqueta + orderCountYesterdayPendiente + orderCountYesterdayEnRuta + orderCountYesterdayEntregado + orderCountYesterdayAnulado + orderCountYesterdayDevolucion;
     const allSemanal = orderCountWeeklyEtiqueta + orderCountWeeklyPendiente + orderCountWeeklyEnRuta + orderCountWeeklyEntregado + orderCountWeeklyAnulado + orderCountWeeklyDevolucion;
     const allMensual = orderCountMonthEtiqueta + orderCountMonthPendiente + orderCountMonthEnRuta + orderCountMonthEntregado + orderCountMonthAnulado + orderCountMonthDevolucion;
@@ -981,7 +988,7 @@ export default function contentInventory() {
     const createBarChartYear = (orderCountYearVtex, orderCountYearSaga, orderCountYearIntercorp, orderCountYearRipley, orderCountYearVentas) => {
         try {
             let myChart = null;
-    
+
             const ctx = chartAllRef.current.getContext('2d');
             myChart = new Chart(ctx, {
                 type: 'bar',
@@ -1026,13 +1033,13 @@ export default function contentInventory() {
                 }
             });
             return myChart;
-    
+
         } catch (error) {
             console.error("Error al crear el gráfico:", error);
             return null;
         }
     };
-    
+
     const createLineChartMonth = (orderCountEnero, orderCountFebrero, orderCountMarzo, orderCountAbril, orderCountMayo, orderCountJunio, orderCountJulio, orderCountAgosto, orderCountSeptiembre, orderCountOctubre, orderCountNoviembre, orderCountDiciembre) => {
         try {
             let myChart = null;
@@ -1431,8 +1438,8 @@ export default function contentInventory() {
                                 <tbody>
                                     {data.map(item => (
                                         <tr key={item.oc} id="tooltip">
-                                            <td style={{fontSize:"12px"}}><b>{item.oc}</b></td>
-                                            <td style={{fontSize:"12px"}}><b>S/{item.price}</b>
+                                            <td style={{ fontSize: "12px" }}><b>{item.oc}</b></td>
+                                            <td style={{ fontSize: "12px" }}><b>S/{item.price}</b>
                                                 <span className="tooltiptext">Fecha: <span style={{ fontSize: "12px" }}>{item.date}</span><br />Origen: <span style={{ fontSize: "12px" }}>{item.origin}</span><br />Cliente: <span style={{ fontSize: "12px" }}>{item.client}</span><br />Estado: <span style={{ fontSize: "12px" }}>{item.status === 0 ? "Pendiente" : item.status === 1 ? "ETIQUETA" : item.status === 2 ? "EN RUTA" : item.status === 3 ? "ENTREGADO" : item.status === 4 ? "ANULADO" : item.status === 5 ? "DEVOLUCION" : "OTROS"}</span></span></td>
                                         </tr>
                                     ))}
@@ -1441,23 +1448,23 @@ export default function contentInventory() {
                         </div>
                     </div>
                 </div>
-                <div className="card card-outline" style={{ paddingBottom: "30px"}}>
+                <div className="card card-outline" style={{ paddingBottom: "30px" }}>
                     <div className="card-header border-0">
                         <div className="row mb-2" style={{ alignItems: "center" }}>
                             <div className="col-sm-6">
                                 <h3 className="card-title">
                                     <b>Anual</b>
-                                    <span style={{ marginLeft: '10px', fontSize: '18px', color:"green" }}>{new Date().getFullYear()}</span>
+                                    <span style={{ marginLeft: '10px', fontSize: '18px', color: "green" }}>{new Date().getFullYear()}</span>
                                 </h3>
                             </div>
                         </div>
                     </div>
                     <div className="cardAnualGeneral">
                         <div className='card card-outline' id="cardAnual1">
-                            <canvas ref={chartAllRef} style={{width:"100%"}}/>
+                            <canvas ref={chartAllRef} style={{ width: "100%" }} />
                         </div>
                         <div className='card card-outline' id="cardAnual2">
-                            <canvas ref={chartLineMonthRef} style={{width:"100%"}}/>
+                            <canvas ref={chartLineMonthRef} style={{ width: "100%" }} />
                         </div>
                     </div>
                 </div>
