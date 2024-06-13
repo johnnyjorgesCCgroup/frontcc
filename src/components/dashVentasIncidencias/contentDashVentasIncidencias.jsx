@@ -85,7 +85,7 @@ export default function contentInventory() {
 
                 const responseData = data.data;
                 const filteredData = responseData
-                    .filter(item => ![5, 7, 10, 18, 22, 21].includes(item.user_id))
+                    .filter(item => ![5, 7, 10, 18, 22].includes(item.user_id))
                     .map(item => {
                         const primerProductoRRSS = item.social_lines[0];
 
