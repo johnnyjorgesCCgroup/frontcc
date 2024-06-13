@@ -213,8 +213,10 @@ export default function contentInventory() {
     let columns = [
         { field: 'date_cut', headerName: 'Fecha de Corte', flex: 0 },
         { field: 'origin', headerName: 'Plataforma', flex: 0 },
-        { field: 'oc', headerName: 'Orden', flex: matches ? 1 : undefined,
-          width: matches ? undefined : 200, },
+        {
+            field: 'oc', headerName: 'Orden', flex: matches ? 1 : undefined,
+            width: matches ? undefined : 200,
+        },
         {
             field: 'action',
             headerName: 'Acción',
@@ -262,7 +264,7 @@ export default function contentInventory() {
         columns.splice(ocIndex + 1, 0, { field: 'product', headerName: 'Producto', flex: 0.5 });
         columns.splice(ocIndex + 0, 0, { field: 'product_id', headerName: 'ID del producto', flex: 0.5 });
         columns = [
-            { field: 'id', headerName: 'Id', width: 30},
+            { field: 'id', headerName: 'Id', width: 30 },
             { field: 'date', headerName: 'Fecha de Subida', flex: 0 },
             { field: 'client', headerName: 'Cliente', flex: 0.5 },
             {
@@ -270,7 +272,7 @@ export default function contentInventory() {
                 headerName: 'Estado',
                 flex: 0.8,
                 filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
-                valueGetter: (params) => params.row.status === 0 ? "etiqueta" : params.row.status === 2 ? "en ruta" : params.row.status === 3 ? "entregado" : params.row.status === 4 ? "anulado" : params.row.status === 5 ? "devolucion" || "cambio" : "0", // Obtener el valor para el filtro
+                valueGetter: (params) => params.row.status === 1 ? "etiqueta" : params.row.status === 0 ? "pendiente": params.row.status === 2 ? "en ruta" : params.row.status === 3 ? "entregado" : params.row.status === 4 ? "anulado" : params.row.status === 5 ? "devolucion" || "cambio" : params.row.status === 12 ? "regularizar" : "0", // Obtener el valor para el filtro
                 renderCell: (params) => {
                     return (
                         <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex", justifyContent: "center" }}>
@@ -281,7 +283,7 @@ export default function contentInventory() {
                                     height: "25px",
                                     backgroundColor: switchOn ? "#9C27B0" :
                                         params.row.status === 0 || params.row.status === 4 || params.row.status === 5 ? "red" :
-                                            params.row.status === 2 ? "#FFD848" : params.row.status === 1 ? "#0083CA" : 
+                                            params.row.status === 2 ? "#FFD848" : params.row.status === 1 ? "#0083CA" :
                                                 "#22FF94",
                                     color: switchOn || params.row.status === 0 || params.row.status === 4 || params.row.status === 5 || params.row.status === 1 ? "white" : "black"
                                 }}
@@ -292,7 +294,8 @@ export default function contentInventory() {
                                         params.row.status === 2 ? "En Ruta" :
                                             params.row.status === 3 ? "Entregado" :
                                                 params.row.status === 4 ? "Anulado" :
-                                                    params.row.status === 5 ? "Devolución / Cambio" : "Desconocido"}
+                                                    params.row.status === 5 ? "Devolución / Cambio" :
+                                                        params.row.status === 12 ? "Regularizar" : "Desconocido"}
                             </Button>
                         </div>
                     );

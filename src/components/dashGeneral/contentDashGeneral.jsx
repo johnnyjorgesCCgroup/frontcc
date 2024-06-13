@@ -13,6 +13,7 @@ export default function contentInventory() {
     const [allEntregado, SetAllEntregado] = useState(0);
     const [allAnulado, SetAllAnulado] = useState(0);
     const [allDevolucion, SetAllDevolucion] = useState(0);
+    const [allRegularizar, SetAllRegularizar] = useState(0);
     const [switchOn, setSwitchOn] = useState(false);
     const [priceAyerOn, setPriceAyerOn] = useState(false);
     const [priceSemanalOn, setPriceSemanalOn] = useState(false);
@@ -29,6 +30,7 @@ export default function contentInventory() {
     const [orderCountTodayEntregado, SetorderCountTodayEntregado] = useState(0);
     const [orderCountTodayAnulado, SetorderCountTodayAnulado] = useState(0);
     const [orderCountTodayDevolucion, SetorderCountTodayDevolucion] = useState(0);
+    const [orderCountTodayRegularizar, SetorderCountTodayRegularizar] = useState(0);
     const [orderCountYesterdayEtiqueta, SetorderCountYesterdayEtiqueta] = useState(0);
     const [orderCountYesterdayPendiente, SetorderCountYesterdayPendiente] = useState(0);
     const [orderCountYesterdayEnRuta, SetorderCountYesterdayEnRuta] = useState(0);
@@ -165,6 +167,14 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetAllDevolucion(allDevolucion);
+                const allRegularizar = filteredData.reduce((count, item) => {
+                    if (item.status === 12) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllRegularizar(allRegularizar);
 
                 //countHoy
                 const currentDate = new Date().toISOString().split('T')[0];
@@ -219,6 +229,14 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetorderCountTodayDevolucion(orderCountTodayDevolucion);
+                const orderCountTodayRegularizar = filteredData.reduce((count, item) => {
+                    if (item.date === currentDate && item.status === 12) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountTodayRegularizar(orderCountTodayRegularizar);
 
                 //countAyer
                 const yesterday = new Date();
@@ -803,7 +821,7 @@ export default function contentInventory() {
     }, []);
 
 
-    const allTodo = allPendiente + allEtiqueta + allEnRuta + allEntregado + allAnulado + allDevolucion;
+    const allTodo = allPendiente + allEtiqueta + allEnRuta + allEntregado + allAnulado + allDevolucion + allRegularizar;
     const allHoy = orderCountTodayEtiqueta + orderCountTodayPendiente + orderCountTodayEnRuta + orderCountTodayEntregado + orderCountTodayAnulado + orderCountTodayDevolucion;
     const allAyer = orderCountYesterdayEtiqueta + orderCountYesterdayPendiente + orderCountYesterdayEnRuta + orderCountYesterdayEntregado + orderCountYesterdayAnulado + orderCountYesterdayDevolucion;
     const allSemanal = orderCountWeeklyEtiqueta + orderCountWeeklyPendiente + orderCountWeeklyEnRuta + orderCountWeeklyEntregado + orderCountWeeklyAnulado + orderCountWeeklyDevolucion;
@@ -1144,6 +1162,15 @@ export default function contentInventory() {
                                         <div className='info-box-content'>
                                             <span className='info-box-text'>Devolución / Cambio</span>
                                             <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allDevolucion : orderCountTodayDevolucion}</span>
+                                        </div>
+                                    </div>
+                                    <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                        <span className='info-box-icon'>
+                                            <i className='fas fa-hourglass' style={{ color: "#1A5276" }} />
+                                        </span>
+                                        <div className='info-box-content'>
+                                            <span className='info-box-text'>Regularizar</span>
+                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allRegularizar : orderCountTodayRegularizar}</span>
                                         </div>
                                     </div>
                                 </div>
