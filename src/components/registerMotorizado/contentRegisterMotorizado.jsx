@@ -272,7 +272,7 @@ export default function contentInventory() {
                 headerName: 'Estado',
                 flex: 0.8,
                 filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
-                valueGetter: (params) => params.row.status === 1 ? "etiqueta" : params.row.status === 0 ? "pendiente": params.row.status === 2 ? "en ruta" : params.row.status === 3 ? "entregado" : params.row.status === 4 ? "anulado" : params.row.status === 5 ? "devolucion" || "cambio" : params.row.status === 12 ? "regularizar" : "0", // Obtener el valor para el filtro
+                valueGetter: (params) => params.row.status === 1 ? "etiqueta" : params.row.status === 0 ? "pendiente" : params.row.status === 2 ? "en ruta" : params.row.status === 3 ? "entregado" : params.row.status === 4 ? "anulado" : params.row.status === 5 ? "devolucion" || "cambio" : params.row.status === 12 ? "regularizar" : params.row.status === 7 ? "empaquetado" : "0", // Obtener el valor para el filtro
                 renderCell: (params) => {
                     return (
                         <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex", justifyContent: "center" }}>
@@ -295,7 +295,8 @@ export default function contentInventory() {
                                             params.row.status === 3 ? "Entregado" :
                                                 params.row.status === 4 ? "Anulado" :
                                                     params.row.status === 5 ? "Devolución / Cambio" :
-                                                        params.row.status === 12 ? "Regularizar" : "Desconocido"}
+                                                        params.row.status === 12 ? "Regularizar" :
+                                                            params.row.status === 7 ? "Empaquetado" : "Desconocido"}
                             </Button>
                         </div>
                     );
