@@ -86,11 +86,13 @@ export default function contentInventory() {
             });
             const data = await response.text();
             console.log(data);
-            alert("Tu imagen fue subida 🤭")
+            alert("Tu imagen fue subida. cargando.....")
         } catch (error) {
             console.error('Error al cargar la imagen:', error);
         }
         handleCloseUpModal();
+        handleCloseModal();
+        obtenerIncidentes();
     };
 
     const handleSubmitSelect = async () => {
