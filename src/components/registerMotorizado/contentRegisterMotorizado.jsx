@@ -217,13 +217,48 @@ export default function contentInventory() {
         { field: 'origin', headerName: 'Plataforma', flex: 0 },
         {
             field: 'oc', headerName: 'Orden', flex: matches ? 1 : undefined,
-            width: matches ? undefined : 200,
+            width: matches ? undefined : 100,
+        },
+        {
+            field: 'Estado',
+            headerName: 'Estado',
+            flex: matches ? 0.8 : undefined,
+            width: matches ? undefined : 150,
+            filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
+            valueGetter: (params) => params.row.status === 1 ? "etiqueta" : params.row.status === 0 ? "pendiente" : params.row.status === 2 ? "en ruta" : params.row.status === 3 ? "entregado" : params.row.status === 4 ? "anulado" : params.row.status === 5 ? "devolucion" || "cambio" : params.row.status === 12 ? "regularizar" : params.row.status === 7 ? "empaquetado" : "0", // Obtener el valor para el filtro
+            renderCell: (params) => {
+                return (
+                    <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex", justifyContent: "center" }}>
+                        <Button
+                            variant="contained"
+                            style={{
+                                height: "25px",
+                                backgroundColor: switchOn ? "#9C27B0" :
+                                    params.row.status === 0 || params.row.status === 4 || params.row.status === 5 ? "red" :
+                                        params.row.status === 2 ? "#FFD848" : params.row.status === 1 ? "#0083CA" :
+                                            "#22FF94",
+                                color: switchOn || params.row.status === 0 || params.row.status === 4 || params.row.status === 5 || params.row.status === 1 ? "white" : "black"
+                            }}
+                            disabled={true}
+                        >
+                            {params.row.status === 1 ? "Etiqueta" :
+                                params.row.status === 0 ? "Pendiente" :
+                                    params.row.status === 2 ? "En Ruta" :
+                                        params.row.status === 3 ? "Entregado" :
+                                            params.row.status === 4 ? "Anulado" :
+                                                params.row.status === 5 ? "Devolución / Cambio" :
+                                                    params.row.status === 12 ? "Regularizar" :
+                                                        params.row.status === 7 ? "Empaquetado" : "Desconocido"}
+                        </Button>
+                    </div>
+                );
+            },
         },
         {
             field: 'action',
             headerName: 'Acción',
             flex: matches ? 1 : undefined,
-            width: matches ? undefined : 200,
+            width: matches ? undefined : 150,
             renderCell: (params) => (
                 <ButtonGroup aria-label="Basic button group" >
                     <Button
@@ -269,41 +304,6 @@ export default function contentInventory() {
             { field: 'id', headerName: 'Id', width: 30 },
             { field: 'date', headerName: 'Fecha de Subida', flex: 0 },
             { field: 'client', headerName: 'Cliente', flex: 0.5 },
-            {
-                field: 'Estado',
-                headerName: 'Estado',
-                flex: 0.8,
-                filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
-                valueGetter: (params) => params.row.status === 1 ? "etiqueta" : params.row.status === 0 ? "pendiente" : params.row.status === 2 ? "en ruta" : params.row.status === 3 ? "entregado" : params.row.status === 4 ? "anulado" : params.row.status === 5 ? "devolucion" || "cambio" : params.row.status === 12 ? "regularizar" : params.row.status === 7 ? "empaquetado" : "0", // Obtener el valor para el filtro
-                renderCell: (params) => {
-                    return (
-                        <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex", justifyContent: "center" }}>
-                            <Button
-                                variant="contained"
-                                style={{
-                                    width: "190px",
-                                    height: "25px",
-                                    backgroundColor: switchOn ? "#9C27B0" :
-                                        params.row.status === 0 || params.row.status === 4 || params.row.status === 5 ? "red" :
-                                            params.row.status === 2 ? "#FFD848" : params.row.status === 1 ? "#0083CA" :
-                                                "#22FF94",
-                                    color: switchOn || params.row.status === 0 || params.row.status === 4 || params.row.status === 5 || params.row.status === 1 ? "white" : "black"
-                                }}
-                                disabled={true}
-                            >
-                                {params.row.status === 1 ? "Etiqueta" :
-                                    params.row.status === 0 ? "Pendiente" :
-                                        params.row.status === 2 ? "En Ruta" :
-                                            params.row.status === 3 ? "Entregado" :
-                                                params.row.status === 4 ? "Anulado" :
-                                                    params.row.status === 5 ? "Devolución / Cambio" :
-                                                        params.row.status === 12 ? "Regularizar" :
-                                                            params.row.status === 7 ? "Empaquetado" : "Desconocido"}
-                            </Button>
-                        </div>
-                    );
-                },
-            },
 
             ...columns,
         ];
@@ -509,37 +509,28 @@ export default function contentInventory() {
                                             Direccion: {selectedIncident.address}, {selectedIncident.distrito}<br />
                                             Producto: {selectedIncident.code} - {selectedIncident.product}<br />
                                             Cantidad y Precio: {selectedIncident.quantity} - {selectedIncident.price}<br />
-                                            {selectedIncident.photo !== null ? (
-                                                <React.Fragment>
-                                                    Imagen: {selectedIncident.photo}
-                                                    <Button onClick={() => handleOpenImageModal(selectedIncident.photo)}>Ver</Button>
-                                                </React.Fragment>
-                                            ) : (
-                                                <React.Fragment>
-                                                    No hay imagen:
-                                                    <Button onClick={handleOpenUploadModal}>Subir</Button>
-                                                </React.Fragment>
-                                            )}
-                                            <br />
                                             ID de Movimiento: {selectedIncident.idMove ? selectedIncident.idMove : "No se registró Movimiento"}<br />
                                             ID de Incidente: {selectedIncident.idIncident ? selectedIncident.idIncident : "No se registró Incidente"}<br />
                                             <br />
-                                            {selectedIncident.isdeliveryccg === 1 && selectedIncident.status === 2 && (
-                                                <div>
-                                                    <Button
-                                                        variant="contained"
-                                                        style={{ backgroundColor: switchOn ? "#9C27B0" : "#9C27B0", color: switchOn ? "white" : "white" }}
-                                                        size="small"
-                                                        onClick={() => handleAnullCut(selectedIncident.id)}
-                                                    >
-                                                        Confirmar Entrega Motorizado
-                                                    </Button>
-                                                </div>
-                                            )}<br />
-                                            <div>
+                                            <div style={{display:"flex", width:"100%"}}>
+                                                {selectedIncident.photo !== null ? (
+                                                    <React.Fragment>
+                                                        <Button variant="contained"
+                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin:"2px" }}
+                                                            size="small"
+                                                            onClick={() => handleOpenImageModal(selectedIncident.photo)}>Ver</Button>
+                                                    </React.Fragment>
+                                                ) : (
+                                                    <React.Fragment>
+                                                        <Button variant="contained"
+                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width:"50%", margin:"2px" }}
+                                                            size="small"
+                                                            onClick={handleOpenUploadModal}>Subir</Button>
+                                                    </React.Fragment>
+                                                )}
                                                 <Button
                                                     variant="contained"
-                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}
+                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width:"50%", margin:"2px"}}
                                                     size="small"
                                                     onClick={handleOpenHistoryModal}
                                                 >
