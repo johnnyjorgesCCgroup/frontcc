@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 80,
+    port: 5173,
     host: true,
     fs: {
       strict: false // Permite el acceso a cualquier archivo en el sistema de archivos

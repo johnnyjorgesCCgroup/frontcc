@@ -154,7 +154,7 @@ export default function contentInventory() {
                 }, 0);
                 SetAllPendiente(allPendiente);
                 const allEnRuta = filteredData.reduce((count, item) => {
-                    if (item.status === 2) {
+                    if (item.status === 2 || item.status === 7) {
                         return count + 1;
                     } else {
                         return count;
@@ -216,7 +216,7 @@ export default function contentInventory() {
                 }, 0);
                 SetorderCountTodayPendiente(orderCountTodayPendiente);
                 const orderCountTodayEnRuta = filteredData.reduce((count, item) => {
-                    if (item.date === currentDate && item.status === 2) {
+                    if (item.date === currentDate && item.status === 2 || item.date === currentDate && item.status === 7) {
                         return count + 1;
                     } else {
                         return count;
@@ -1204,7 +1204,7 @@ export default function contentInventory() {
                                             <i className='fas fa-truck-ramp-box' style={{ color: "#1A5276" }} />
                                         </span>
                                         <div className='info-box-content'>
-                                            <span className='info-box-text'>Devolución / Cambio</span>
+                                            <span className='info-box-text'>Cambio</span>
                                             <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allDevolucion : orderCountTodayDevolucion}</span>
                                         </div>
                                     </div>
