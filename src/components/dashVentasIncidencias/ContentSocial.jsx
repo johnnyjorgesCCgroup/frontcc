@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import './contentDashVentasIncidencias.css';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -32,7 +33,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 const ContentSocial = () => {
 
@@ -99,7 +99,11 @@ const ContentSocial = () => {
       key: 6
     },
     {
-      label: 'VENTA FERIA',
+      label: 'VENTA COLABORADOR ',
+      key: 6
+    },
+    {
+      label: 'VENTA FERIA ',
       key: 7
     },
   ]);
@@ -128,6 +132,10 @@ const ContentSocial = () => {
     },
     {
       label: 'No especificado',
+      key: 6
+    },
+    {
+      label: 'Entrega Almacen',
       key: 6
     },
   ]);
@@ -170,6 +178,10 @@ const ContentSocial = () => {
     {
       label: 'NO ESPECIFICADO',
       key: 9
+    },
+    {
+      label: 'DESCUENTO PLANILLA',
+      key: 10
     },
   ]);
 
@@ -362,7 +374,7 @@ const ContentSocial = () => {
 
       setNewPerson((prevPerson) => ({
         ...prevPerson,
-        'province': id,
+        'departament': id,
       }));
       console.log("Aquii;", resultados_final)
       setSelectProvince(resultados_final);
@@ -400,10 +412,33 @@ const ContentSocial = () => {
   };
 
   const handleDistrict = (event) => {
+
     const id = event.target.value;
+    console.log("Aqui esta el departamento", event);
+    setNewPerson((prevPerson) => ({
+      ...prevPerson,
+      'province': id,
+    }));
+
+
     setSelectDistrict(event.target.value);
     fetchDataSelectDistrict(id);
   };
+
+
+  const handleFinalDistrict = (event) => {
+
+    const id = event.target.value;
+    console.log("Aqui esta el distrito", event);
+    setNewPerson((prevPerson) => ({
+      ...prevPerson,
+      'district': id,
+    }));
+
+
+  };
+
+
 
 
   const handleDistrictDelivery = (event) => {
@@ -492,7 +527,7 @@ const ContentSocial = () => {
 
     setNewPerson((prevPerson) => ({
       ...prevPerson,
-      'departament': id,
+      'province': id,
     }));
 
     setSelectProvince(event.target.value);
@@ -670,13 +705,12 @@ const ContentSocial = () => {
         "user_id": userId
       }
 
-      obtenerSocialAPI();
+
 
       const response = await fetch('https://api.cvimport.com/api/social', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Otros encabezados si es necesario
         },
         body: JSON.stringify(send),
       });
@@ -702,7 +736,7 @@ const ContentSocial = () => {
       timer: 1500,
     });
 
-
+    obtenerSocialAPI();
   };
 
   const handleInputChange = (event) => {
@@ -772,7 +806,6 @@ const ContentSocial = () => {
       label: value.label,
       key: value.key
     };
-
     setSelPlataforma(sele);
   }
 
@@ -899,8 +932,6 @@ const ContentSocial = () => {
     }
   };
 
-
-
   const modalContent = (
     <Box
       sx={{
@@ -916,7 +947,7 @@ const ContentSocial = () => {
       <Typography variant="h6" gutterBottom>
         Editar
       </Typography>
-      {/* Contenido del modal, por ejemplo, un campo de entrada para la nueva cantidad */}
+      <p>"Funcion editar en mantenimiento, colocar precio real en las observaciones"</p>
       <TextField
         fullWidth
         label="Nueva Cantidad"
@@ -992,7 +1023,7 @@ const ContentSocial = () => {
 
           <Grid item xs={12} md={matches ? 3 : 8}>
             <TextField
-            style={{ marginTop: matches ? "0px" : "-10px" }}
+              style={{ marginTop: matches ? "0px" : "-10px" }}
               label="Numero de Documento"
               variant="outlined"
               fullWidth
@@ -1078,6 +1109,8 @@ const ContentSocial = () => {
             />
           </Grid>
 
+
+
           <Grid item xs={12} md={6}>
             <TextField
               label="Referencia"
@@ -1102,7 +1135,7 @@ const ContentSocial = () => {
               id="demo-select-small-label"
               name="departament"
               fullWidth
-              value={newPerson.departament}
+              //   value={newPerson.departament}
               onChange={handleProvince}
               label="Departamento"
               sx={{ color: 'black' }}
@@ -1131,7 +1164,7 @@ const ContentSocial = () => {
               id="demo-select-small-label"
               name="province"
               fullWidth
-              value={newPerson.province}
+              //     value={newPerson.province}
               label="Tipo de Proveedor"
               sx={{ color: 'black' }}
               onChange={handleDistrict}
@@ -1159,7 +1192,8 @@ const ContentSocial = () => {
               id="demo-select-small-label"
               name="district"
               fullWidth
-              value={newPerson.district}
+              onChange={handleFinalDistrict}
+              //    value={newPerson.district}
               label="Distrito"
               sx={{ color: 'black' }}
             >

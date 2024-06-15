@@ -822,7 +822,7 @@ const ContentSocial = () => {
       <Typography variant="h6" gutterBottom>
         Editar
       </Typography>
-      {/* Contenido del modal, por ejemplo, un campo de entrada para la nueva cantidad */}
+      <p>"Funcion editar en mantenimiento, colocar precio real en las observaciones"</p>
       <TextField
         fullWidth
         label="Nueva Cantidad"

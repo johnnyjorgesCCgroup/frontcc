@@ -875,7 +875,7 @@ export default function contentInventory() {
                         <div id="vendedorCard" className="card card-outline">
                             <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
                             <span id="vendedorText" className='info-box-text'>Rodrigo Feria  {orderCountMonthVendedor4}</span>
-                            <b><span id="vendedorNumber" className='info-box-number'>S/{orderPriceMonthVendedor4}{" "}{orderPriceMonthVendedor4 > orderPriceMonthVendedor1 ? "😁" : "😢"}</span></b>
+                            <b><span id="vendedorNumber" className='info-box-number'>S/{orderPriceMonthVendedor4.toFixed(0)}{" "}{orderPriceMonthVendedor4 > orderPriceMonthVendedor1 ? "😁" : "😢"}</span></b>
                         </div>
                         <div id="vendedorCard" className="card card-outline">
                             <b><i id="cajaRegistradora" className='fas fa-cash-register' /></b>
