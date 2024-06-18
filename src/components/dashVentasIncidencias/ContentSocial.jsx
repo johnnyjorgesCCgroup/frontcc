@@ -333,7 +333,12 @@ const ContentSocial = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      alert("cliente creado")
+      Swal.fire({
+        icon: 'success',
+        title: 'Nuevo Cliente Creado!',
+        showConfirmButton: false,
+        timer: 1500,
+      });
 
       handleCloseModalClient();
       setUpdateCount((prevCount) => prevCount + 1);

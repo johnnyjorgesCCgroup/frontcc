@@ -8,7 +8,7 @@ export default defineConfig({
     port: 80,
     host: true,
     fs: {
-      strict: false // Permite el acceso a cualquier archivo en el sistema de archivos
+      strict: false
     }
   },
   optimizeDeps: {
