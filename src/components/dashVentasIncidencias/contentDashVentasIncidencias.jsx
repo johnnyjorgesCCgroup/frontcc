@@ -4,7 +4,7 @@ import { Modal, Typography, Button, Box, TextField, FormControl, InputLabel, Sel
 import { Chart } from 'react-google-charts';
 import productsData from './products.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faCopy, faEye, faPlus, faRefresh } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faCopy, faEye, faPlus, faRefresh, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ContentSocial from './ContentSocial.jsx';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import './contentDashVentasIncidencias.css';
@@ -75,17 +75,19 @@ export default function contentInventory() {
     const [orderCountOctubreVendedor4, setorderCountOctubreVendedor4] = useState(0);
     const [orderCountNoviembreVendedor4, setorderCountNoviembreVendedor4] = useState(0);
     const [orderCountDiciembreVendedor4, setorderCountDiciembreVendedor4] = useState(0);
+    const [loadingOrderDetails, setLoadingOrderDetails] = useState(false);
 
 
     const obtenerIncidentes = async () => {
         try {
+            setLoadingOrderDetails(true);
             const response = await fetch("https://api.cvimport.com/api/social");
             if (response.ok) {
                 const data = await response.json();
 
                 const responseData = data.data;
                 const filteredData = responseData
-                    .filter(item => ![5, 7, 10, 18, 22].includes(item.user_id))
+                    .filter(item => ![5, 7, 10, 22].includes(item.user_id))
                     .map(item => {
                         const primerProductoRRSS = item.social_lines[0];
 
@@ -116,7 +118,10 @@ export default function contentInventory() {
                         };
                     });
 
+
+                
                 setIncidentes(filteredData);
+                setLoadingOrderDetails(false);
 
                 //semanal y mensual
                 const today = new Date();
@@ -766,6 +771,30 @@ export default function contentInventory() {
         setProductMapSku(mapSku);
     }, []);
 
+    const handelCloseAlert = async (id) => {
+        // Mostrar el confirm para que el usuario acepte o cancele la acción
+        const userConfirmed = confirm("*Asesor registrado*, ¿Está seguro que desea anular la venta?");
+
+        // Si el usuario cancela, no hacer nada
+        if (!userConfirmed) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://api.cvimport.com/api/social/endStatus/${id}`);
+            const data = await response.json();
+            console.log("handleClose Compra:", data);
+
+            obtenerIncidentes();
+            alert("Venta anulada, Ojito");
+
+        } catch (error) {
+            console.error('Error fetching edit data:', error);
+            // Manejar el error (mostrar un mensaje al usuario, por ejemplo)
+        }
+    };
+
+
     const handleRowClick = (id) => {
         const incident = incidentes.find(incidente => incidente.id === id);
         setSelectedIncident(incident);
@@ -785,6 +814,7 @@ export default function contentInventory() {
     }
     const handleCloseHistoryModal = () => {
         setModalHistoryOpen(false);
+        obtenerIncidentes();
     }
 
     const columns = [
@@ -792,7 +822,7 @@ export default function contentInventory() {
         { field: 'serie', headerName: 'Orden', flex: 0 },
         { field: 'date', headerName: 'Fecha', flex: 0.5 },
         {
-            field: 'user_id', headerName: 'Asesor', flex: 1, 
+            field: 'user_id', headerName: 'Asesor', flex: 1,
             valueGetter: (params) => params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id == 23 ? "Mariana" : params.row.user_id == 21 ? "Rodrigo" : "Usuario No registrado",
             renderCell: (params) => (
                 <>{params.row.user_id === 20 ? "Sheyla Ramirez Cruz" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 11 ? "Francis" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 5 ? "Julio Soporte" : params.row.user_id === 15 ? "Daniel Lama" : params.row.user_id === 18 ? "Johnny Soporte" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id == 23 ? "Mariana" : params.row.user_id == 21 ? "Rodrigo" : "Usuario No registrado"}</>
@@ -821,6 +851,22 @@ export default function contentInventory() {
                     startIcon={<FontAwesomeIcon icon={faEye} />}
                 >
                     {matches ? "Ver Detalles" : ""}
+                </Button>
+            ),
+        },
+        {
+            field: 'anular',
+            headerName: 'Anular',
+            flex: 1,
+            renderCell: (params) => (
+                <Button
+                    variant="contained"
+                    style={{ backgroundColor: switchOn ? "#9C27B0" : "red", color: switchOn ? "white" : "white" }}
+                    size="small"
+                    onClick={() => handelCloseAlert(params.row.id)}
+                    startIcon={<FontAwesomeIcon icon={faTrash} />}
+                >
+                    {matches ? "Anular" : ""}
                 </Button>
             ),
         },
@@ -940,6 +986,7 @@ export default function contentInventory() {
                                 pageSizeOptions={[7, 10, 15]}
                                 autoHeight
                                 checkboxSelection
+                                loading={loadingOrderDetails}
                                 {...options}
                             />
                         </div>
@@ -1005,6 +1052,7 @@ export default function contentInventory() {
                                                     ))}
                                                 </tbody>
                                             </table>
+                                            <br />
                                         </Typography>
                                     </>
                                 )}
@@ -1017,6 +1065,7 @@ export default function contentInventory() {
                         <ContentSocial />
                     </div>
                 </Modal>
+
             </div>
         </div>
     );

@@ -333,12 +333,7 @@ const ContentSocial = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Nuevo Cliente Creado!',
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      alert("cliente creado")
 
       handleCloseModalClient();
       setUpdateCount((prevCount) => prevCount + 1);
@@ -347,12 +342,7 @@ const ContentSocial = () => {
     } catch (error) {
       console.error('Error creating category:', error);
       setOpenModalClient(false);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error al crear Cliente,!',
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      alert("error al crear cliente, revisa los datos obligatorios")
     }
   };
 
@@ -729,12 +719,8 @@ const ContentSocial = () => {
     setObs(null);
     newProducto.oc = '';
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Nuevo Venta RRSS de Creada!',
-      showConfirmButton: false,
-      timer: 1500,
-    });
+
+    alert("Nueva Venta RRSS de Creada!")
 
     obtenerSocialAPI();
   };
@@ -980,15 +966,16 @@ const ContentSocial = () => {
     <Modal open={openModalClient}
       onClose={handleCloseModalClient}
     >
+      
       <div className="modalDetalle">
         <h2 style={{ textAlign: 'center', marginBottom: '20px' }}
         >Crear Nuevo Cliente</h2>
 
         <Grid container rowSpacing={2} spacing={1} alignItems="center">
           <Grid item xs={12} md={12}>
-
+          <div style={{display:"flex"}}><p style={{color:"red", fontSize:"25px", marginRight:"10px", marginBottom:"-40px"}}>*</p><p>Campo Obligatorio</p></div>
             <TextField
-              label="Nombre"
+              label="*Nombre"
               variant="outlined"
               fullWidth
               margin="normal"
@@ -1002,7 +989,7 @@ const ContentSocial = () => {
         <Grid container rowSpacing={4} spacing={4} alignItems="center">
 
           <Grid item xs={12} md={matches ? 2 : 12}>
-            <InputLabel id="demo-select-small-label">Tipo de Documento</InputLabel>
+            <InputLabel id="demo-select-small-label">* Tipo de Documento</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select-autowidth"
@@ -1010,7 +997,7 @@ const ContentSocial = () => {
               fullWidth
               sx={{ color: 'black' }}
               value={newPerson.document_type}
-              label="Tipo de Documento"
+              label="*Tipo de Documento"
               onChange={handleInputChangePerson}
             >
               <MenuItem value={"RUC"}>RUC</MenuItem>
@@ -1024,7 +1011,7 @@ const ContentSocial = () => {
           <Grid item xs={12} md={matches ? 3 : 8}>
             <TextField
               style={{ marginTop: matches ? "0px" : "-10px" }}
-              label="Numero de Documento"
+              label="* Numero de Documento"
               variant="outlined"
               fullWidth
               margin="normal"
@@ -1055,7 +1042,7 @@ const ContentSocial = () => {
           <Grid item xs={12} md={matches ? 3 : 6}>
             <TextField
               style={{ marginTop: matches ? "0px" : "-20px" }}
-              label="Email"
+              label="* Email"
               variant="outlined"
               fullWidth
               margin="normal"
@@ -1068,7 +1055,7 @@ const ContentSocial = () => {
           <Grid item xs={12} md={matches ? 3 : 6}>
             <TextField
               style={{ marginTop: matches ? "0px" : "-20px" }}
-              label="Telefono"
+              label="* Telefono (9 digitos)"
               variant="outlined"
               fullWidth
               margin="normal"
@@ -1099,7 +1086,7 @@ const ContentSocial = () => {
         <Grid container rowSpacing={2} spacing={2} alignItems="center">
           <Grid item xs={12} md={6}>
             <TextField
-              label="Direccion"
+              label="* Direccion"
               variant="outlined"
               fullWidth
               margin="normal"
@@ -1113,7 +1100,7 @@ const ContentSocial = () => {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="Referencia"
+              label="* Referencia"
               variant="outlined"
               fullWidth
               margin="normal"
@@ -1129,7 +1116,7 @@ const ContentSocial = () => {
         <Grid container rowSpacing={3} spacing={3} alignItems="center">
 
           <Grid item xs={12} md={4}>
-            <InputLabel id="demo-select-small-label">Departamento</InputLabel>
+            <InputLabel id="demo-select-small-label">* Departamento</InputLabel>
             <Select
               labelId="demo-select-small-label"
               id="demo-select-small-label"
@@ -1158,7 +1145,7 @@ const ContentSocial = () => {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <InputLabel id="demo-select-small-label">Provincia</InputLabel>
+            <InputLabel id="demo-select-small-label">* Provincia</InputLabel>
             <Select
               labelId="demo-select-small-label"
               id="demo-select-small-label"
@@ -1186,7 +1173,7 @@ const ContentSocial = () => {
 
 
           <Grid item xs={12} md={4}>
-            <InputLabel id="demo-select-small-label">Distrito</InputLabel>
+            <InputLabel id="demo-select-small-label">* Distrito</InputLabel>
             <Select
               labelId="demo-select-small-label"
               id="demo-select-small-label"
