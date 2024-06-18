@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Modal, Typography, Button, Box, Switch, TextField } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faCopy, faEye, faPlus, faRefresh } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faCopy, faEye, faPlus, faRefresh, faCamera } from '@fortawesome/free-solid-svg-icons';
 import Alert from '@mui/material/Alert';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -220,6 +220,33 @@ export default function contentInventory() {
             width: matches ? undefined : 100,
         },
         {
+            field: 'photo',
+            headerName: 'Imagen',
+            flex: matches ? 1 : undefined,
+            width: matches ? undefined : 100,
+            filter: 'agSetColumnFilter',
+            valueGetter: (params) => params.row.photo != null ? 0.2 : 0,
+            renderCell: (params) => {
+                return (
+                    <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex", justifyContent: "center" }}>
+                        <Button
+                            variant="contained"
+                            style={{
+                                height: "25px",
+                                backgroundColor: switchOn ? "#9C27B0" :
+                                params.row.photo != null ? "#9C27B0" : "red",
+                                color: params.row.photo != null ? "white" : "white"
+                            }}
+                            disabled={true}
+                            startIcon={<FontAwesomeIcon icon={faCamera} />}
+                        >
+                            {params.row.photo != null ? "Si" : "No"}
+                        </Button>
+                    </div>
+                );
+            },
+        },
+        {
             field: 'Estado',
             headerName: 'Estado',
             flex: matches ? 0.8 : undefined,
@@ -260,7 +287,7 @@ export default function contentInventory() {
             flex: matches ? 1 : undefined,
             width: matches ? undefined : 150,
             renderCell: (params) => (
-                <ButtonGroup aria-label="Basic button group" >
+                <ButtonGroup aria-label="Basic button group">
                     <Button
                         variant="contained"
                         style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}
@@ -298,8 +325,8 @@ export default function contentInventory() {
 
     if (matches) {
         const ocIndex = columns.findIndex(column => column.field === 'oc');
+        columns.splice(ocIndex + 0, 0, { field: 'product_id', headerName: 'ID producto', flex: 0.4 });
         columns.splice(ocIndex + 1, 0, { field: 'product', headerName: 'Producto', flex: 0.5 });
-        columns.splice(ocIndex + 0, 0, { field: 'product_id', headerName: 'ID del producto', flex: 0.5 });
         columns = [
             { field: 'id', headerName: 'Id', width: 30 },
             { field: 'date', headerName: 'Fecha de Subida', flex: 0 },
@@ -512,25 +539,25 @@ export default function contentInventory() {
                                             ID de Movimiento: {selectedIncident.idMove ? selectedIncident.idMove : "No se registró Movimiento"}<br />
                                             ID de Incidente: {selectedIncident.idIncident ? selectedIncident.idIncident : "No se registró Incidente"}<br />
                                             <br />
-                                            <div style={{display:"flex", width:"100%"}}>
+                                            <div style={{ display: "flex", width: "100%" }}>
                                                 {selectedIncident.photo !== null ? (
                                                     <React.Fragment>
                                                         <Button variant="contained"
-                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin:"2px" }}
+                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin: "2px" }}
                                                             size="small"
                                                             onClick={() => handleOpenImageModal(selectedIncident.photo)}>Ver</Button>
                                                     </React.Fragment>
                                                 ) : (
                                                     <React.Fragment>
                                                         <Button variant="contained"
-                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width:"50%", margin:"2px" }}
+                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin: "2px" }}
                                                             size="small"
                                                             onClick={handleOpenUploadModal}>Subir</Button>
                                                     </React.Fragment>
                                                 )}
                                                 <Button
                                                     variant="contained"
-                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width:"50%", margin:"2px"}}
+                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin: "2px" }}
                                                     size="small"
                                                     onClick={handleOpenHistoryModal}
                                                 >
