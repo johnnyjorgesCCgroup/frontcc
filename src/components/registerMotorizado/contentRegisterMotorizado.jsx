@@ -234,11 +234,11 @@ export default function contentInventory() {
                             style={{
                                 height: "25px",
                                 backgroundColor: switchOn ? "#9C27B0" :
-                                params.row.photo != null ? "#9C27B0" : "red",
+                                    params.row.photo != null ? "#9C27B0" : "red",
                                 color: params.row.photo != null ? "white" : "white"
                             }}
-                            disabled={true}
                             startIcon={<FontAwesomeIcon icon={faCamera} />}
+                            disabled={true}
                         >
                             {params.row.photo != null ? "Si" : "No"}
                         </Button>
@@ -559,9 +559,9 @@ export default function contentInventory() {
                                                     variant="contained"
                                                     style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin: "2px" }}
                                                     size="small"
-                                                    onClick={handleOpenHistoryModal}
+                                                    onClick={() => handleAnullCut(selectedIncident.id)}
                                                 >
-                                                    Historial
+                                                    Confirmar Entrega
                                                 </Button>
                                             </div>
                                         </Typography>
