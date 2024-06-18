@@ -724,8 +724,13 @@ const ContentSocial = () => {
     setObs(null);
     newProducto.oc = '';
 
-
-    alert("Nueva Venta RRSS de Creada!")
+    Swal.fire({
+      icon: 'success',
+      title: 'Nueva Venta RRSS de Creada!',
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  
 
     obtenerSocialAPI();
   };
