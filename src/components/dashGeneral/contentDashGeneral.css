@@ -44,6 +44,11 @@
     width: 100%
 }
 
+.dashPrincipal2{
+    display: flex;
+    margin: 20px
+}
+
 #cardAnual1{
     width: 50%;
     margin-left: 3%;

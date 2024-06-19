@@ -25,6 +25,11 @@ export default function contentInventory() {
     const chartLineMonthRef = useRef(null);
     const [filteredStatus, setFilteredStatus] = useState([]);
     const [orderCountTodayEtiqueta, SetorderCountTodayEtiqueta] = useState(0);
+    const [orderCountTodayEtiquetaVtex, SetorderCountTodayEtiquetaVtex] = useState(0);
+    const [orderCountTodayEtiquetaFalabella, SetorderCountTodayEtiquetaFalabella] = useState(0);
+    const [orderCountTodayEtiquetaRipley, SetorderCountTodayEtiquetaRipley] = useState(0);
+    const [orderCountTodayEtiquetaIntercorp, SetorderCountTodayEtiquetaIntercorp] = useState(0);
+    const [orderCountTodayEtiquetaVentas, SetorderCountTodayEtiquetaVentas] = useState(0);
     const [orderCountTodayPendiente, SetorderCountTodayPendiente] = useState(0);
     const [orderCountTodayEnRuta, SetorderCountTodayEnRuta] = useState(0);
     const [orderCountTodayEntregado, SetorderCountTodayEntregado] = useState(0);
@@ -88,6 +93,24 @@ export default function contentInventory() {
     const [totalPriceWeekly, SetTotalPriceWeekly] = useState(0);
     const [totalPriceMonth, SetTotalPriceMonth] = useState(0);
     const [modalHistoryOpen, setModalHistoryOpen] = useState(0);
+    const [modalEtiquetaOpen, setModalEtiquetaOpen] = useState(0);
+    const todayMarkets = new Date();
+
+    const formatDateTime = (date, timeZone) => {
+        const options = {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+          timeZone: timeZone,
+        };
+        return new Intl.DateTimeFormat('en-GB', options).format(date);
+      };
+      const formattedDateTime = formatDateTime(todayMarkets, 'America/Lima');
+      
 
     const handleSwitchChange = () => {
         setSwitchOn(!switchOn);
@@ -108,8 +131,14 @@ export default function contentInventory() {
     const handleOpenHistoryModal = () => {
         setModalHistoryOpen(true);
     }
+    const handleOpenEtiquetaModal = () => {
+        setModalEtiquetaOpen(true);
+    }
     const handleCloseHistoryModal = () => {
         setModalHistoryOpen(false);
+    }
+    const handleCloseEtiquetaModal = () => {
+        setModalEtiquetaOpen(false);
     }
 
     const fetchDataFromAPI = () => {
@@ -207,6 +236,46 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetorderCountTodayEtiqueta(orderCountTodayEtiqueta);
+                const orderCountTodayEtiquetaVtex = filteredData.reduce((count, item) => {
+                    if (item.date === currentDate && item.status === 1 && item.origin === "Vtex") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountTodayEtiquetaVtex(orderCountTodayEtiquetaVtex);
+                const orderCountTodayEtiquetaFalabella = filteredData.reduce((count, item) => {
+                    if (item.date === currentDate && item.status === 1 && item.origin === "Saga") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountTodayEtiquetaFalabella(orderCountTodayEtiquetaFalabella);
+                const orderCountTodayEtiquetaRipley = filteredData.reduce((count, item) => {
+                    if (item.date === currentDate && item.status === 1 && item.origin === "Ripley") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountTodayEtiquetaRipley(orderCountTodayEtiquetaRipley);
+                const orderCountTodayEtiquetaIntercorp = filteredData.reduce((count, item) => {
+                    if (item.date === currentDate && item.status === 1 && item.origin === "InterCorp") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountTodayEtiquetaIntercorp(orderCountTodayEtiquetaIntercorp);
+                const orderCountTodayEtiquetaVentas = filteredData.reduce((count, item) => {
+                    if (item.date === currentDate && item.status === 1 && item.origin === "VENTA") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountTodayEtiquetaVentas(orderCountTodayEtiquetaVentas);
                 const orderCountTodayPendiente = filteredData.reduce((count, item) => {
                     if (item.date === currentDate && item.status === 0) {
                         return count + 1;
@@ -1156,11 +1225,11 @@ export default function contentInventory() {
                                 <div className="dashPrincipal">
                                     <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
                                         <span className='info-box-icon'>
-                                            <i className='fas fa-boxes-stacked' style={{ color: "#C0392B" }} />
+                                            <i onClick={handleOpenEtiquetaModal} className='fas fa-boxes-stacked' style={{ color: "#C0392B" }} />
                                         </span>
                                         <div className='info-box-content'>
-                                            <span className='info-box-text'>Etiqueta</span>
-                                            <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiqueta : orderCountTodayEtiqueta}</span>
+                                            <a onClick={handleOpenEtiquetaModal} style={{ color: 'inherit', textDecoration: 'none' }} className='info-box-text'>Etiqueta</a>
+                                            <a onClick={handleOpenEtiquetaModal} className='info-box-number' style={{ fontSize: "20px", color: 'inherit', textDecoration: 'none' }}>{switchOn ? allEtiqueta : orderCountTodayEtiqueta}</a>
                                         </div>
                                     </div>
                                     <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -1655,6 +1724,61 @@ export default function contentInventory() {
                         </tbody>
                     </table>
 
+                </div>
+            </Modal>
+            <Modal open={modalEtiquetaOpen} onClose={handleCloseEtiquetaModal}>
+                <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
+                    <h3 className="card-title">
+                        <b>Etiquetas de hoy: {formattedDateTime}</b>
+                    </h3>
+                    <br />
+                        <div className="dashPrincipal2">
+                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                <span className='info-box-icon'>
+                                    <i onClick={handleOpenEtiquetaModal} className='fas fa-square' style={{ color: "#FF00D4" }} />
+                                </span>
+                                <div className='info-box-content'>
+                                    <a onClick={handleOpenEtiquetaModal} style={{ color: 'inherit', textDecoration: 'none' }} className='info-box-text'>Vtex</a>
+                                    <a onClick={handleOpenEtiquetaModal} className='info-box-number' style={{ fontSize: "20px", color: 'inherit', textDecoration: 'none' }}>{switchOn ? 0 : orderCountTodayEtiquetaVtex}</a>
+                                </div>
+                            </div>
+                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                <span className='info-box-icon'>
+                                    <i className='fas fa-square' style={{ color: "#ADD608" }} />
+                                </span>
+                                <div className='info-box-content'>
+                                    <span className='info-box-text'>Falabella</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? 0 : orderCountTodayEtiquetaFalabella}</span>
+                                </div>
+                            </div>
+                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                <span className='info-box-icon'>
+                                    <i className='fas fa-square' style={{ color: "#6620BB" }} />
+                                </span>
+                                <div className='info-box-content'>
+                                    <span className='info-box-text'>Ripley</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEnRuta : orderCountTodayEtiquetaRipley}</span>
+                                </div>
+                            </div>
+                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                <span className='info-box-icon'>
+                                    <i className='fas fa-square' style={{ color: "#5ACAFA" }} />
+                                </span>
+                                <div className='info-box-content'>
+                                    <span className='info-box-text'>Intercorp</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEntregado : orderCountTodayEtiquetaIntercorp}</span>
+                                </div>
+                            </div>
+                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                <span className='info-box-icon'>
+                                    <i className='fas fa-square' style={{ color: "#1A5276" }} />
+                                </span>
+                                <div className='info-box-content'>
+                                    <span className='info-box-text'>Ventas RRSS</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allAnulado : orderCountTodayEtiquetaVentas}</span>
+                                </div>
+                            </div>
+                    </div>
                 </div>
             </Modal>
         </div>
