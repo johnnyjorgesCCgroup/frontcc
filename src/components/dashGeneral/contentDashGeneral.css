@@ -118,6 +118,9 @@
     .dashPrincipal{
         display: block;
     }
+    .dashPrincipal2{
+        display: block;
+    }
     #cardAyerDetalles{
         display: none
     }

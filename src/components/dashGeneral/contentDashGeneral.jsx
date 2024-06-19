@@ -136,9 +136,11 @@ export default function contentInventory() {
     }
     const handleCloseHistoryModal = () => {
         setModalHistoryOpen(false);
+        fetchDataFromAPI();
     }
     const handleCloseEtiquetaModal = () => {
         setModalEtiquetaOpen(false);
+        fetchDataFromAPI();
     }
 
     const fetchDataFromAPI = () => {
@@ -147,7 +149,6 @@ export default function contentInventory() {
             .then(data => {
                 const responseData = data.data;
                 const sortedData = responseData.sort((a, b) => b.id - a.id);
-                // Usar un Set para llevar un registro de los valores únicos de oc
                 const uniqueOcSet = new Set();
                 const filteredData = [];
 
@@ -1729,7 +1730,7 @@ export default function contentInventory() {
             <Modal open={modalEtiquetaOpen} onClose={handleCloseEtiquetaModal}>
                 <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
                     <h3 className="card-title">
-                        <b>Etiquetas de hoy: {formattedDateTime}</b>
+                        <b>{switchOn ? "Todas las etiquetas" : "Etiquetas de hoy: " + formattedDateTime}</b>
                     </h3>
                     <br />
                         <div className="dashPrincipal2">
@@ -1757,7 +1758,7 @@ export default function contentInventory() {
                                 </span>
                                 <div className='info-box-content'>
                                     <span className='info-box-text'>Ripley</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEnRuta : orderCountTodayEtiquetaRipley}</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? 0 : orderCountTodayEtiquetaRipley}</span>
                                 </div>
                             </div>
                             <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -1766,7 +1767,7 @@ export default function contentInventory() {
                                 </span>
                                 <div className='info-box-content'>
                                     <span className='info-box-text'>Intercorp</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEntregado : orderCountTodayEtiquetaIntercorp}</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? 0 : orderCountTodayEtiquetaIntercorp}</span>
                                 </div>
                             </div>
                             <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -1775,7 +1776,7 @@ export default function contentInventory() {
                                 </span>
                                 <div className='info-box-content'>
                                     <span className='info-box-text'>Ventas RRSS</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allAnulado : orderCountTodayEtiquetaVentas}</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? 0 : orderCountTodayEtiquetaVentas}</span>
                                 </div>
                             </div>
                     </div>
