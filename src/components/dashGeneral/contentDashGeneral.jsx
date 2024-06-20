@@ -8,6 +8,13 @@ export default function contentInventory() {
 
     const [data, setData] = useState([]);
     const [allEtiqueta, SetAllEtiqueta] = useState(0);
+    const [allEtiquetaVtex, SetAllEtiquetaVtex] = useState(0);
+    const [allEtiquetaFalabella, SetAllEtiquetaFalabella] = useState(0);
+    const [allEtiquetaRipley, SetAllEtiquetaRipley] = useState(0);
+    const [allEtiquetaIntercorp, SetAllEtiquetaIntercorp] = useState(0);
+    const [allEtiquetaVentas, SetAllEtiquetaVentas] = useState(0);
+    const [allEtiquetaMercadolibre, SetAllEtiquetaMercadolibre] = useState(0);
+    const [allEtiquetaIncidencias, SetAllEtiquetaIncidencias] = useState(0);
     const [allPendiente, SetAllPendiente] = useState(0);
     const [allEnRuta, SetAllEnRuta] = useState(0);
     const [allEntregado, SetAllEntregado] = useState(0);
@@ -30,6 +37,8 @@ export default function contentInventory() {
     const [orderCountTodayEtiquetaRipley, SetorderCountTodayEtiquetaRipley] = useState(0);
     const [orderCountTodayEtiquetaIntercorp, SetorderCountTodayEtiquetaIntercorp] = useState(0);
     const [orderCountTodayEtiquetaVentas, SetorderCountTodayEtiquetaVentas] = useState(0);
+    const [orderCountTodayEtiquetaMercadolibre, SetorderCountTodayEtiquetaMercadolibre] = useState(0);
+    const [orderCountTodayEtiquetaIncidencias, SetorderCountTodayEtiquetaIncidencias] = useState(0);
     const [orderCountTodayPendiente, SetorderCountTodayPendiente] = useState(0);
     const [orderCountTodayEnRuta, SetorderCountTodayEnRuta] = useState(0);
     const [orderCountTodayEntregado, SetorderCountTodayEntregado] = useState(0);
@@ -175,6 +184,62 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetAllEtiqueta(allEtiqueta);
+                const allEtiquetaVtex = filteredData.reduce((count, item) => {
+                    if (item.status === 1 && item.origin === "Vtex") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllEtiquetaVtex(allEtiquetaVtex);
+                const allEtiquetaFalabella = filteredData.reduce((count, item) => {
+                    if (item.status === 1 && item.origin === "Saga") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllEtiquetaFalabella(allEtiquetaFalabella);
+                const allEtiquetaRipley = filteredData.reduce((count, item) => {
+                    if (item.status === 1 && item.origin === "Ripley") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllEtiquetaRipley(allEtiquetaRipley);
+                const allEtiquetaIntercorp = filteredData.reduce((count, item) => {
+                    if (item.status === 1 && item.origin === "InterCorp") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllEtiquetaIntercorp(allEtiquetaIntercorp);
+                const allEtiquetaVentas = filteredData.reduce((count, item) => {
+                    if (item.status === 1 && item.origin === "VENTA") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllEtiquetaVentas(allEtiquetaVentas);
+                const allEtiquetaMercadolibre = filteredData.reduce((count, item) => {
+                    if (item.status === 1 && item.origin === "MERCADO LIBRE") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllEtiquetaMercadolibre(allEtiquetaMercadolibre);
+                const allEtiquetaIncidencias = filteredData.reduce((count, item) => {
+                    if (item.status === 1 && item.origin === "INCIDENTE") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllEtiquetaIncidencias(allEtiquetaIncidencias);
                 const allPendiente = filteredData.reduce((count, item) => {
                     if (item.status === 0) {
                         return count + 1;
@@ -277,6 +342,22 @@ export default function contentInventory() {
                     }
                 }, 0);
                 SetorderCountTodayEtiquetaVentas(orderCountTodayEtiquetaVentas);
+                const orderCountTodayEtiquetaMercadolibre = filteredData.reduce((count, item) => {
+                    if (item.date === currentDate && item.status === 1 && item.origin === "MERCADO LIBRE") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountTodayEtiquetaMercadolibre(orderCountTodayEtiquetaMercadolibre);
+                const orderCountTodayEtiquetaIncidencias = filteredData.reduce((count, item) => {
+                    if (item.date === currentDate && item.status === 1 && item.origin === "INCIDENTE") {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetorderCountTodayEtiquetaIncidencias(orderCountTodayEtiquetaIncidencias);
                 const orderCountTodayPendiente = filteredData.reduce((count, item) => {
                     if (item.date === currentDate && item.status === 0) {
                         return count + 1;
@@ -406,7 +487,7 @@ export default function contentInventory() {
                 }, 0);
                 SetorderCountYesterdaySaga(orderCountYesterdaySaga);
                 const orderCountYesterdayIntercorp = filteredData.reduce((count, item) => {
-                    if (item.date === formattedYesterday && item.origin === "Intercorp") {
+                    if (item.date === formattedYesterday && item.origin === "InterCorp") {
                         return count + 1;
                     } else {
                         return count;
@@ -1740,7 +1821,7 @@ export default function contentInventory() {
                                 </span>
                                 <div className='info-box-content'>
                                     <a onClick={handleOpenEtiquetaModal} style={{ color: 'inherit', textDecoration: 'none' }} className='info-box-text'>Vtex</a>
-                                    <a onClick={handleOpenEtiquetaModal} className='info-box-number' style={{ fontSize: "20px", color: 'inherit', textDecoration: 'none' }}>{switchOn ? 0 : orderCountTodayEtiquetaVtex}</a>
+                                    <a onClick={handleOpenEtiquetaModal} className='info-box-number' style={{ fontSize: "20px", color: 'inherit', textDecoration: 'none' }}>{switchOn ? allEtiquetaVtex : orderCountTodayEtiquetaVtex}</a>
                                 </div>
                             </div>
                             <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -1749,7 +1830,7 @@ export default function contentInventory() {
                                 </span>
                                 <div className='info-box-content'>
                                     <span className='info-box-text'>Falabella</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? 0 : orderCountTodayEtiquetaFalabella}</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaFalabella : orderCountTodayEtiquetaFalabella}</span>
                                 </div>
                             </div>
                             <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -1758,7 +1839,7 @@ export default function contentInventory() {
                                 </span>
                                 <div className='info-box-content'>
                                     <span className='info-box-text'>Ripley</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? 0 : orderCountTodayEtiquetaRipley}</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaRipley : orderCountTodayEtiquetaRipley}</span>
                                 </div>
                             </div>
                             <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -1767,7 +1848,7 @@ export default function contentInventory() {
                                 </span>
                                 <div className='info-box-content'>
                                     <span className='info-box-text'>Intercorp</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? 0 : orderCountTodayEtiquetaIntercorp}</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaIntercorp : orderCountTodayEtiquetaIntercorp}</span>
                                 </div>
                             </div>
                             <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
@@ -1776,7 +1857,25 @@ export default function contentInventory() {
                                 </span>
                                 <div className='info-box-content'>
                                     <span className='info-box-text'>Ventas RRSS</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? 0 : orderCountTodayEtiquetaVentas}</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaVentas : orderCountTodayEtiquetaVentas}</span>
+                                </div>
+                            </div>
+                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                <span className='info-box-icon'>
+                                    <i className='fas fa-square' style={{ color: "yellow" }} />
+                                </span>
+                                <div className='info-box-content'>
+                                    <span className='info-box-text'>Mercado Libre</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaMercadolibre : orderCountTodayEtiquetaMercadolibre}</span>
+                                </div>
+                            </div>
+                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                                <span className='info-box-icon'>
+                                    <i className='fas fa-square' style={{ color: "#1A5276" }} />
+                                </span>
+                                <div className='info-box-content'>
+                                    <span className='info-box-text'>Incidencias</span>
+                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaIncidencias : orderCountTodayEtiquetaIncidencias}</span>
                                 </div>
                             </div>
                     </div>
