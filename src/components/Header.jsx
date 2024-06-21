@@ -10,7 +10,7 @@ const Header = () => {
             <i className="fas fa-bars" />
           </a>
         </li>
-        <li className="nav-item d-none d-sm-inline-block">
+        {/*<li className="nav-item d-none d-sm-inline-block">
           <a href="index3.html" className="nav-link">
             Home
           </a>
@@ -19,11 +19,9 @@ const Header = () => {
           <a href="#" className="nav-link">
             Contact
           </a>
-        </li>
+        </li>*/}
       </ul>
-      {/* Right navbar links */}
-      <ul className="navbar-nav ml-auto">
-        {/* Navbar Search */}
+      {/*<ul className="navbar-nav ml-auto">
         <li className="nav-item">
           <a
             className="nav-link"
@@ -58,7 +56,6 @@ const Header = () => {
             </form>
           </div>
         </li>
-        {/* Messages Dropdown Menu */}
         <li className="nav-item dropdown">
           <a className="nav-link" data-toggle="dropdown" href="#">
             <i className="far fa-comments" />
@@ -66,7 +63,6 @@ const Header = () => {
           </a>
           <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <a href="#" className="dropdown-item">
-              {/* Message Start */}
               <div className="media">
                 <img
                   src="dist/img/user1-128x128.jpg"
@@ -86,11 +82,9 @@ const Header = () => {
                   </p>
                 </div>
               </div>
-              {/* Message End */}
             </a>
             <div className="dropdown-divider" />
             <a href="#" className="dropdown-item">
-              {/* Message Start */}
               <div className="media">
                 <img
                   src="dist/img/user8-128x128.jpg"
@@ -110,11 +104,9 @@ const Header = () => {
                   </p>
                 </div>
               </div>
-              {/* Message End */}
             </a>
             <div className="dropdown-divider" />
             <a href="#" className="dropdown-item">
-              {/* Message Start */}
               <div className="media">
                 <img
                   src="dist/img/user3-128x128.jpg"
@@ -134,7 +126,6 @@ const Header = () => {
                   </p>
                 </div>
               </div>
-              {/* Message End */}
             </a>
             <div className="dropdown-divider" />
             <a href="#" className="dropdown-item dropdown-footer">
@@ -142,7 +133,6 @@ const Header = () => {
             </a>
           </div>
         </li>
-        {/* Notifications Dropdown Menu */}
         <li className="nav-item dropdown">
           <a className="nav-link" data-toggle="dropdown" href="#">
             <i className="far fa-bell" />
@@ -194,7 +184,7 @@ const Header = () => {
             <i className="fas fa-th-large" />
           </a>
         </li>
-      </ul>
+      </ul>*/}
     </nav>
   );
 };

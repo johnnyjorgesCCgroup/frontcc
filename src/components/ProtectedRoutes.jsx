@@ -11,6 +11,7 @@ import IndexDashGeneral from '../views/DashGeneral/index';
 import IndexDashVentasIncidencias from '../views/DashVentasIncidencias/index';
 import IndexColaborador from '../views/Colaborador/index'
 import IndexDashColaborador from '../views/DashProductos/index'
+import IndexSubirImagenMoto from '../views/SubirImagenMoto/index'
 import './ProtectedRoutes.css'
 
 
@@ -50,6 +51,7 @@ const ProtectedRoutes = () => {
       <Route path="/ventas" element={<IndexDashVentasIncidencias />} />
       <Route path="/colaborador" element={<IndexColaborador />} />
       <Route path="/dashproductos" element={<IndexDashColaborador />} />
+      <Route path="/subirimagenmoto" element={<IndexSubirImagenMoto />} />
     </Routes>
   );
 };

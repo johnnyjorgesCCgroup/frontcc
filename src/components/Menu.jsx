@@ -211,6 +211,16 @@ const Menu = () => {
                       <p>Registro de Moto</p>
                     </Link>
                   </li>
+                  <li className="nav-item">
+                    <Link
+                      to="/subirimagenmoto"
+                      className={`nav-link ${location.pathname === "/subirimagenmoto" ? "active" : ""
+                        }`}
+                    >
+                      <i className="far fa-circle nav-icon" />
+                      <p>Subir Imagen Moto</p>
+                    </Link>
+                  </li>
                 </ul>
               </li>
               <li
