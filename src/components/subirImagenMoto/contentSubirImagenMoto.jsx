@@ -68,9 +68,13 @@ export default function ContentSubirImagenMoto() {
                     return fechaIncidente >= fechaInicioSemana;
                 });
 
-                // Filtrar por motorizado si el usuario es "soporte@ccgroupperu.com"
+                // Filtrar por motorizado según el usuario
                 if (username1 === 'soporte@ccgroupperu.com') {
                     incidentesFiltrados = incidentesFiltrados.filter(incidente => incidente.motorizado === 'HOME DELIVERY');
+                } else if (username1 === 'alfredo.ccgroup@gmail.com') {
+                    incidentesFiltrados = incidentesFiltrados.filter(incidente => incidente.motorizado === 'LUIS ALFREDO ORMEÑO PINO');
+                } else if (username1 === 'bryanandrecasanova2009@hotmail.com') {
+                    incidentesFiltrados = incidentesFiltrados.filter(incidente => incidente.motorizado === 'Bryan Andre Casanova Rios');
                 }
 
                 setIncidentes(incidentesFiltrados);
@@ -205,7 +209,7 @@ export default function ContentSubirImagenMoto() {
                             variant="outlined"
                             value={idImg}
                             onChange={(e) => setIdImg(e.target.value)}
-                            style={{ marginBottom: '10px', display: 'none'}}
+                            style={{ marginBottom: '10px', display: 'none' }}
                         />
                         <br />
                         <TextField
