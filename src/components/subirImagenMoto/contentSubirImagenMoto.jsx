@@ -79,7 +79,7 @@ export default function ContentSubirImagenMoto() {
                 const diaDeLaSemana = hoy.getDay();
                 // Calcular la fecha del lunes de esta semana
                 const fechaInicioSemana = new Date(hoy);
-                fechaInicioSemana.setDate(hoy.getDate() - diaDeLaSemana + (diaDeLaSemana === 0 ? -6 : 1) - 1);
+                fechaInicioSemana.setDate(hoy.getDate() - diaDeLaSemana + (diaDeLaSemana === 0 ? -6 : 1) - 5);
                 fechaInicioSemana.setHours(0, 0, 0, 0); // Poner la fecha de inicio al comienzo del día
 
                 // Filtrar los incidentes a partir del lunes de esta semana
