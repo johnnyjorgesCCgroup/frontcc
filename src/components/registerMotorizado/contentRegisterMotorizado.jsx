@@ -558,7 +558,7 @@ export default function contentInventory() {
                                                 )}
                                                 <Button
                                                     variant="contained"
-                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin: "2px" }}
+                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin: "2px", display: selectedIncident.status === 3 ? "none" : "" }}
                                                     size="small"
                                                     onClick={() => handleAnullCut(selectedIncident.id)}
                                                 >
