@@ -13,6 +13,10 @@ export default function ContentSubirImagenMoto() {
     const [countIncidentes, setCountIncidentes] = useState(0);
     const [modalUpOpen, setModalUpOpen] = useState(false);
     const [options, setOptions] = useState([]);
+    const [buttonHomeDeliveryFilter, setButtonHomeDeliveryFilter] = useState(false)
+    const [buttonAlfredoDeliveryFilter, setButtonAlfredoDeliveryFilter] = useState(false)
+    const [buttonBryanDeliveryFilter, setButtonBryanDeliveryFilter] = useState(false)
+    const [buttonWilliamDeliveryFilter, setButtonWilliamDeliveryFilter] = useState(false)
     const todayMarkets = new Date();
 
     const handleOpenUploadModal = (incident) => {
@@ -23,6 +27,22 @@ export default function ContentSubirImagenMoto() {
     const handleCloseUpModal = () => {
         setModalUpOpen(false);
     };
+
+    const handleButtonHomeDelivery = () => {
+        setButtonHomeDeliveryFilter(true);
+    }
+
+    const handleButtonAlfredoDelivery = () => {
+        setButtonAlfredoDeliveryFilter(true);
+    }
+
+    const handleButtonBryanDelivery = () => {
+        setButtonBryanDeliveryFilter(true);
+    }
+
+    const handleButtonWilliamDelivery = () => {
+        setButtonWilliamDeliveryFilter(true);
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -68,17 +88,34 @@ export default function ContentSubirImagenMoto() {
                     return fechaIncidente >= fechaInicioSemana;
                 });
 
+                // Ordenar incidentes por motorizado de forma ascendente
+                incidentesFiltrados.sort((a, b) => {
+                    if (a.client < b.client) return -1;
+                    if (a.client > b.client) return 1;
+                    return 0;
+                });
+
                 // Filtrar por motorizado según el usuario
-                if (username1 === 'william.ccgroupo@gmail.com') {
-                    incidentesFiltrados = incidentesFiltrados.filter(incidente => incidente.motorizado === 'HOME DELIVERY');
-                } else if (username1 === 'alfredo.ccgroup@gmail.com') {
+                if (buttonHomeDeliveryFilter) {
+                    incidentesFiltrados = incidentesFiltrados.filter(incidente => incidente.motorizado === 'WILLIAM');
+                } else if (buttonAlfredoDeliveryFilter) {
                     incidentesFiltrados = incidentesFiltrados.filter(incidente => incidente.motorizado === 'LUIS ALFREDO ORMEÑO PINO');
-                } else if (username1 === 'bryanandrecasanova2009@hotmail.com') {
+                } else if (buttonBryanDeliveryFilter) {
                     incidentesFiltrados = incidentesFiltrados.filter(incidente => incidente.motorizado === 'Bryan Andre Casanova Rios');
                 }
 
-                setIncidentes(incidentesFiltrados);
-                setCountIncidentes(incidentesFiltrados.length);
+                // Filtrar para obtener incidentes con OC únicos
+                const uniqueOcSet = new Set();
+                const filteredData = [];
+                incidentesFiltrados.forEach(item => {
+                    if (!uniqueOcSet.has(item.oc)) {
+                        uniqueOcSet.add(item.oc);
+                        filteredData.push(item);
+                    }
+                });
+
+                setIncidentes(filteredData);
+                setCountIncidentes(filteredData.length);
 
                 // Formatear datos para el select
                 const formattedOptions = incidentesFiltrados.map(incidente => ({
@@ -130,13 +167,17 @@ export default function ContentSubirImagenMoto() {
 
     useEffect(() => {
         obtenerIncidentes();
-    }, [username1]);
+    }, [buttonHomeDeliveryFilter, buttonAlfredoDeliveryFilter, buttonBryanDeliveryFilter, buttonWilliamDeliveryFilter]);
 
     return (
         <div className='content-wrapper'>
             <div>
                 <div style={{ display: "block", justifyContent: "center", textAlign: "center", paddingTop: "15px" }}>
-                    <p style={{ marginBottom: "-3px" }}>{usernamePart}</p>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <Button onClick={handleButtonAlfredoDelivery} style={{ display: username1 === "soporte@ccgroupperu.com" || username1 === "alfredo.ccgroup@gmail.com" ? "" : "none" }}>Alfredo</Button>
+                        <Button onClick={handleButtonBryanDelivery} style={{ display: username1 === "soporte@ccgroupperu.com" || username1 === "bryanandrecasanova2009@hotmail.com" ? "" : "none" }}>Bryan</Button>
+                        <Button onClick={handleButtonHomeDelivery} style={{ display: username1 === "soporte@ccgroupperu.com" || username1 === "william.ccgroup@gmail.com" ? "" : "none" }}>William</Button>
+                    </div>
                     <h2>Mis Pedidos</h2>
                     <p>{formattedDateTime} - Semanal</p>
                     <h1>{countIncidentes}</h1>
@@ -150,13 +191,17 @@ export default function ContentSubirImagenMoto() {
                     />
                 </div>
             </div>
-            {incidentes.map((incidente) => (
+            {incidentes.map((incidente, index) => (
                 <div style={{ padding: "25px" }} key={incidente.oc}>
                     <div className='card card-outline' style={{ justifyContent: "center", padding: "10px", backgroundColor: "#E1FFF8" }}>
                         <div style={{ display: "flex", width: "100%" }}>
                             <div style={{ width: "70%" }}>
-                                <h5>({incidente.id}){" "}{incidente.client}</h5>
-                                <h5><i style={{ fontSize: "15px" }} className='fas fa-phone'></i>{incidente.phone}</h5>
+                                <h5>{index + 1}.{" "}{incidente.client}</h5>
+                                <h5>
+                                    <a href={`tel:${incidente.phone}`}>
+                                        <i style={{ fontSize: "15px" }} className='fas fa-phone'></i> {incidente.phone}
+                                    </a>
+                                </h5>
                             </div>
                             <div style={{ width: "30%", paddingLeft: "5px" }}>
                                 {incidente.photo !== null ? (
