@@ -638,8 +638,8 @@ export default function contentInventory() {
                         <Modal open={!!selectedImage} onClose={handleCloseImageModal}>
                             <div className='divImage'>
                                 <div className='textFieldImg'>
-                                    <TextField label="Cliente" value={selectedIncident ? selectedIncident.client : ''} size="small" sx={{ '& input': { fontSize: '0.75rem' } }}></TextField>
                                     <TextField label="Motorizado" value={selectedIncident ? selectedIncident.worker_id === 63 ? "LUIS ALFREDO ORMEÑO PINO" : selectedIncident.worker_id === 62 ? "Bryan Andre Casanova Rios" : selectedIncident.worker_id === 69 ? "WILLIAM" : selectedIncident.worker_id === 0 ? "" : "Motorizado no registrado" : ""} size="small" sx={{ '& input': { fontSize: '0.75rem' } }}></TextField>
+                                    <TextField label="Cliente" value={selectedIncident ? selectedIncident.client : ''} size="small" sx={{ '& input': { fontSize: '0.75rem' } }}></TextField>
                                     <TextField label="producto" value={selectedIncident ? selectedIncident.product : ''} size="small" sx={{ '& input': { fontSize: '0.75rem' } }}></TextField>
                                 </div>
                                 {selectedImage && <img className='viewImage'
