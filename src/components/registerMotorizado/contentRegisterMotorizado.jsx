@@ -20,11 +20,9 @@ export default function contentInventory() {
     const [modalHistoryOpen, setModalHistoryOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedIncident, setSelectedIncident] = useState(null);
-    const [selectedDocument, setSelectedDocument] = useState(null);
     const [client, setClient] = useState('');
     const [documentNumber, setDocumentNumber] = useState('');
     const [product, setProduct] = useState('');
-    const [documentos, setDocumentos] = useState(null);
     const [switchOn, setSwitchOn] = useState(false);
     const [today, setToday] = useState(new Date());
     const yesterday = new Date(today);
@@ -35,9 +33,6 @@ export default function contentInventory() {
 
     const handleOpenImageModal = (imageName) => {
         setSelectedImage(`https://api.cvimport.com/storage/${imageName}`);
-    };
-    const handleChange = (selectedOption) => {
-        setSelectedDocument(selectedOption);
     };
     const handleCloseImageModal = () => {
         setSelectedImage(null);
@@ -53,17 +48,6 @@ export default function contentInventory() {
                 const data = await response.json();
                 setIncidentes(data.data);
                 setLoadingOrderDetails(false);
-                const opciones = data.data.flatMap(incidente => {
-                    return [
-                        { label: incidente.document_number, value: incidente.document_number },
-                        { label: incidente.oc, value: incidente.oc },
-                        { label: incidente.client, value: incidente.client }
-                    ];
-                });
-                const opcionesUnicas = Array.from(new Set(opciones.map(opcion => opcion.label)))
-                    .map(label => opciones.find(opcion => opcion.label === label));
-                const opcionesFiltradas = selectedDocument === '' ? opcionesUnicas.slice(0, 4) : opcionesUnicas;
-                setDocumentos(opcionesFiltradas);
 
             } else {
                 console.error("Error de fetch", response.statusText);
@@ -93,21 +77,6 @@ export default function contentInventory() {
         handleCloseUpModal();
         handleCloseModal();
         obtenerIncidentes();
-    };
-
-    const handleSubmitSelect = async () => {
-        if (!selectedDocument) {
-            obtenerIncidentes();
-            return;
-        }
-        const incidentesFiltrados = incidentes.filter(incidente => {
-            return (
-                incidente.document_number === selectedDocument.label ||
-                incidente.oc === selectedDocument.label ||
-                incidente.client === selectedDocument.label
-            );
-        });
-        setIncidentes(incidentesFiltrados);
     };
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
@@ -220,9 +189,22 @@ export default function contentInventory() {
             width: matches ? undefined : 100,
         },
         {
+            field: 'user_id',
+            headerName: 'Vendedor',
+            flex: matches ? 0.5 : undefined,
+            width: matches ? undefined : 150,
+            filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
+            valueGetter: (params) => params.row.user_id === 5 ? "Soporte" : params.row.user_id === 18 ? "Soporte" : params.row.user_id === 20 ? "Sheyla" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id === 23 ? "Mariana" : "N/A",
+            renderCell: (params) => {
+                return (
+                    params.row.user_id === 5 ? "Soporte" : params.row.user_id === 18 ? "Soporte" : params.row.user_id === 20 ? "Sheyla" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id === 23 ? "Mariana" : "N/A"
+                );
+            },
+        },
+        {
             field: 'photo',
             headerName: 'Imagen',
-            flex: matches ? 1 : undefined,
+            flex: matches ? 0.5 : undefined,
             width: matches ? undefined : 100,
             filter: 'agSetColumnFilter',
             valueGetter: (params) => params.row.photo != null ? 0.2 : 0,
@@ -325,7 +307,6 @@ export default function contentInventory() {
 
     if (matches) {
         const ocIndex = columns.findIndex(column => column.field === 'oc');
-        columns.splice(ocIndex + 0, 0, { field: 'product_id', headerName: 'ID producto', flex: 0.4 });
         columns.splice(ocIndex + 1, 0, { field: 'product', headerName: 'Producto', flex: 0.5 });
         columns = [
             { field: 'id', headerName: 'Id', width: 30 },
@@ -388,16 +369,6 @@ export default function contentInventory() {
                                     <Button onClick={handleAllDatesClick} variant="contained" style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }} startIcon={<FontAwesomeIcon icon={faRefresh} />}>Refresh</Button>
                                 </div>
                             </ButtonGroup>
-                        </div>
-                        <div style={{ display: filterVisible ? 'flex' : 'none', alignItems: "center", justifyContent: "center", padding: "14px" }}>
-                            <Select
-                                value={selectedDocument}
-                                onChange={handleChange}
-                                options={documentos}
-                                placeholder="Busqueda DNI OC Nombre"
-                                isClearable={true}
-                            /><span />
-                            <Button onClick={handleSubmitSelect}>Buscar</Button>
                         </div>
                     </div>
                 </div>
@@ -527,6 +498,7 @@ export default function contentInventory() {
 
                                         </Typography>
                                         <Typography>
+                                            Venta y corte subido por: {selectedIncident.user_id === 5 ? "Julio Soporte" : selectedIncident.user_id === 7 ? "Inteligencia Comercial" : selectedIncident.user_id === 8 ? "Rodolfo Gerencia" : selectedIncident.user_id === 10 ? "Christian Casanova" : selectedIncident.user_id === 11 ? "Francis" : selectedIncident.user_id === 18 ? "Johnny Soporte" : selectedIncident.user_id === 20 ? "Sheyla Ramirez" : selectedIncident.user_id === 21 ? "Rodrigo" : selectedIncident.user_id === 22 ? "Contabilidad" : selectedIncident.user_id === 23 ? "Mariana" : "N/A"} <br />
                                             Plataforma: {selectedIncident.origin} <br />
                                             Fecha de ingreso: {selectedIncident.date}<br />
                                             Fecha del corte: {selectedIncident.date_cut}<br />

@@ -21,11 +21,9 @@ export default function contentInventory() {
     const [modalHistoryOpen, setModalHistoryOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedIncident, setSelectedIncident] = useState(null);
-    const [selectedDocument, setSelectedDocument] = useState(null);
     const [client, setClient] = useState('');
     const [documentNumber, setDocumentNumber] = useState('');
     const [product, setProduct] = useState('');
-    const [documentos, setDocumentos] = useState(null);
     const [switchOn, setSwitchOn] = useState(false);
     const [today, setToday] = useState(new Date());
     const yesterday = new Date(today);
@@ -36,9 +34,6 @@ export default function contentInventory() {
 
     const handleOpenImageModal = (imageName) => {
         setSelectedImage(`https://api.cvimport.com/storage/${imageName}`);
-    };
-    const handleChange = (selectedOption) => {
-        setSelectedDocument(selectedOption);
     };
     const handleCloseImageModal = () => {
         setSelectedImage(null);
@@ -54,17 +49,6 @@ export default function contentInventory() {
                 const data = await response.json();
                 setIncidentes(data);
                 setLoadingOrderDetails(false);
-                const opciones = data.flatMap(incidente => {
-                    return [
-                        { label: incidente.document_number, value: incidente.document_number },
-                        { label: incidente.oc, value: incidente.oc },
-                        { label: incidente.client, value: incidente.client }
-                    ];
-                });
-                const opcionesUnicas = Array.from(new Set(opciones.map(opcion => opcion.label)))
-                    .map(label => opciones.find(opcion => opcion.label === label));
-                const opcionesFiltradas = selectedDocument === '' ? opcionesUnicas.slice(0, 4) : opcionesUnicas;
-                setDocumentos(opcionesFiltradas);
 
             } else {
                 console.error("Error de fetch", response.statusText);
@@ -92,21 +76,6 @@ export default function contentInventory() {
             console.error('Error al cargar la imagen:', error);
         }
         handleCloseUpModal();
-    };
-
-    const handleSubmitSelect = async () => {
-        if (!selectedDocument) {
-            obtenerIncidentes();
-            return;
-        }
-        const incidentesFiltrados = incidentes.filter(incidente => {
-            return (
-                incidente.document_number === selectedDocument.label ||
-                incidente.oc === selectedDocument.label ||
-                incidente.client === selectedDocument.label
-            );
-        });
-        setIncidentes(incidentesFiltrados);
     };
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
@@ -203,7 +172,7 @@ export default function contentInventory() {
                 });
 
                 showAlert('Producto Entregado!', 'success');
-                obtenerIncidentes(); // Llamar a la función para obtener los incidentes
+                obtenerIncidentes();
             } catch (error) {
                 console.error('Error deleting provedor:', error);
                 showAlert('An error occurred while deleting!', 'error');
@@ -217,9 +186,56 @@ export default function contentInventory() {
         alert(message);
     };
     let columns = [
-        { field: 'date_cut', headerName: 'Fecha de Corte', flex: 0 },
         { field: 'origin', headerName: 'Plataforma', flex: 0 },
         { field: 'oc', headerName: 'Orden', flex: 0 },
+        {
+            field: 'user_id',
+            headerName: 'Vendedor',
+            flex: matches ? 0.5 : undefined,
+            width: matches ? undefined : 150,
+            filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
+            valueGetter: (params) => params.row.user_id === 5 ? "Soporte" : params.row.user_id === 18 ? "Soporte" : params.row.user_id === 20 ? "Sheyla" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id === 23 ? "Mariana" : "N/A",
+            renderCell: (params) => {
+                return (
+                    params.row.user_id === 5 ? "Soporte" : params.row.user_id === 18 ? "Soporte" : params.row.user_id === 20 ? "Sheyla" : params.row.user_id === 21 ? "Rodrigo" : params.row.user_id === 22 ? "Contabilidad" : params.row.user_id === 23 ? "Mariana" : "N/A"
+                );
+            },
+        },
+        {
+            field: 'Estado',
+            headerName: 'Estado',
+            flex: 0.8,
+            filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
+            valueGetter: (params) => params.row.status === 0 ? "pendiente" : params.row.status === 1 ? "etiqueta" : params.row.status === 2 ? "en ruta" : params.row.status === 3 ? "entregado" : params.row.status === 4 ? "anulado" : params.row.status === 5 ? "devolucion" || "cambio" : params.row.status === 12 ? "regularizar" : params.row.status === 7 ? "Empaquetado" : "0", // Obtener el valor para el filtro
+            renderCell: (params) => {
+                return (
+                    <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex", justifyContent: "center" }}>
+                        <Button
+                            variant="contained"
+                            style={{
+                                width: "170px",
+                                height: "25px",
+                                backgroundColor: switchOn ? "#9C27B0" :
+                                    params.row.status === 0 || params.row.status === 4 || params.row.status === 5 ? "red" :
+                                        params.row.status === 2 ? "#FFD848" : params.row.status === 1 ? "#0083CA" :
+                                            "#22FF94",
+                                color: switchOn || params.row.status === 0 || params.row.status === 4 || params.row.status === 5 || params.row.status === 1 ? "white" : "black"
+                            }}
+                            disabled={true}
+                        >
+                            {params.row.status === 1 ? "Etiqueta" :
+                                params.row.status === 0 ? "Pendiente" :
+                                    params.row.status === 2 ? "En Ruta" :
+                                        params.row.status === 3 ? "Entregado" :
+                                            params.row.status === 4 ? "Anulado" :
+                                                params.row.status === 5 ? "Devolución / Cambio" :
+                                                    params.row.status === 12 ? "Regularizar" :
+                                                        params.row.status === 7 ? "Empaquetado" : "Desconocido"}
+                        </Button>
+                    </div>
+                );
+            },
+        },
         {
             field: 'action',
             headerName: 'Acción',
@@ -244,7 +260,7 @@ export default function contentInventory() {
                             size="small"
                             onClick={() => handleRowClick(params.row.id)}
                         >
-                            Ver Detalles
+                            Detalles
                         </Button>
                     )}
                     {!matches && (
@@ -330,41 +346,7 @@ export default function contentInventory() {
                     );
                 },
             },
-            {
-                field: 'Estado',
-                headerName: 'Estado',
-                flex: 0.8,
-                filter: 'agSetColumnFilter', // Habilitar filtro de conjunto de valores
-                valueGetter: (params) => params.row.status === 0 ? "pendiente" : params.row.status === 1 ? "etiqueta" : params.row.status === 2 ? "en ruta" : params.row.status === 3 ? "entregado" : params.row.status === 4 ? "anulado" : params.row.status === 5 ? "devolucion" || "cambio" : params.row.status === 12 ? "regularizar" : params.row.status === 7 ? "Empaquetado" : "0", // Obtener el valor para el filtro
-                renderCell: (params) => {
-                    return (
-                        <div className='Resultado_IDincidenciaInventoryMoves' style={{ display: "flex", justifyContent: "center" }}>
-                            <Button
-                                variant="contained"
-                                style={{
-                                    width: "190px",
-                                    height: "25px",
-                                    backgroundColor: switchOn ? "#9C27B0" :
-                                        params.row.status === 0 || params.row.status === 4 || params.row.status === 5 ? "red" :
-                                            params.row.status === 2 ? "#FFD848" : params.row.status === 1 ? "#0083CA" :
-                                                "#22FF94",
-                                    color: switchOn || params.row.status === 0 || params.row.status === 4 || params.row.status === 5 || params.row.status === 1 ? "white" : "black"
-                                }}
-                                disabled={true}
-                            >
-                                {params.row.status === 1 ? "Etiqueta" :
-                                    params.row.status === 0 ? "Pendiente" :
-                                        params.row.status === 2 ? "En Ruta" :
-                                            params.row.status === 3 ? "Entregado" :
-                                                params.row.status === 4 ? "Anulado" :
-                                                    params.row.status === 5 ? "Devolución / Cambio" :
-                                                        params.row.status === 12 ? "Regularizar" :
-                                                            params.row.status === 7 ? "Empaquetado" : "Desconocido"}
-                            </Button>
-                        </div>
-                    );
-                },
-            },
+
 
             ...columns,
         ];
@@ -446,16 +428,6 @@ export default function contentInventory() {
                                     <Button onClick={handleAllDatesClick} variant="contained" style={{ backgroundColor: switchOn ? "#55CD49" : "#DAF7A6", color: switchOn ? "white" : "black" }} startIcon={<FontAwesomeIcon icon={faRefresh} />}>Refresh</Button>
                                 </div>
                             </ButtonGroup>
-                        </div>
-                        <div style={{ display: filterVisible ? 'flex' : 'none', alignItems: "center", justifyContent: "center", padding: "14px" }}>
-                            <Select
-                                value={selectedDocument}
-                                onChange={handleChange}
-                                options={documentos}
-                                placeholder="Busqueda DNI OC Nombre"
-                                isClearable={true}
-                            /><span />
-                            <Button onClick={handleSubmitSelect}>Buscar</Button>
                         </div>
                     </div>
                 </div>
@@ -585,6 +557,8 @@ export default function contentInventory() {
 
                                         </Typography>
                                         <Typography>
+                                        <br />
+                                            Venta y corte subido por: {selectedIncident.user_id === 5 ? "Julio Soporte" : selectedIncident.user_id === 7 ? "Inteligencia Comercial" : selectedIncident.user_id === 8 ? "Rodolfo Gerencia" : selectedIncident.user_id === 10 ? "Christian Casanova" : selectedIncident.user_id === 11 ? "Francis" : selectedIncident.user_id === 18 ? "Johnny Soporte" : selectedIncident.user_id === 20 ? "Sheyla Ramirez" : selectedIncident.user_id === 21 ? "Rodrigo" : selectedIncident.user_id === 22 ? "Contabilidad" : selectedIncident.user_id === 23 ? "Mariana" : "N/A"} <br />
                                             Plataforma: {selectedIncident.origin} <br />
                                             Fecha de ingreso: {selectedIncident.date}<br />
                                             Fecha del corte: {selectedIncident.date_cut}<br />

@@ -119,7 +119,7 @@ export default function contentInventory() {
                     });
 
 
-                
+
                 setIncidentes(filteredData);
                 setLoadingOrderDetails(false);
 
