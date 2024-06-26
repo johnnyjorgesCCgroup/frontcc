@@ -17,6 +17,7 @@ export default function ContentSubirImagenMoto() {
     const [buttonAlfredoDeliveryFilter, setButtonAlfredoDeliveryFilter] = useState(false)
     const [buttonBryanDeliveryFilter, setButtonBryanDeliveryFilter] = useState(false)
     const [buttonWilliamDeliveryFilter, setButtonWilliamDeliveryFilter] = useState(false)
+    const [buttonMarioDeliveryFilter, setButtonMarioDeliveryFilter] = useState(false)
     const todayMarkets = new Date();
 
     const handleOpenUploadModal = (incident) => {
@@ -42,6 +43,10 @@ export default function ContentSubirImagenMoto() {
 
     const handleButtonWilliamDelivery = () => {
         setButtonWilliamDeliveryFilter(true);
+    }
+
+    const handleButtonMarioDelivery = () => {
+        setButtonMarioDeliveryFilter(true);
     }
 
     const handleSubmit = async (e) => {
@@ -102,7 +107,9 @@ export default function ContentSubirImagenMoto() {
                     incidentesFiltrados = incidentesFiltrados.filter(incidente => incidente.motorizado === 'LUIS ALFREDO ORMEÑO PINO');
                 } else if (buttonBryanDeliveryFilter) {
                     incidentesFiltrados = incidentesFiltrados.filter(incidente => incidente.motorizado === 'Bryan Andre Casanova Rios');
-                }
+                } else if (buttonMarioDeliveryFilter) {
+                    incidentesFiltrados = incidentesFiltrados.filter(incidente => incidente.motorizado === 'MARIO');
+                };
 
                 // Filtrar para obtener incidentes con OC únicos
                 const uniqueOcSet = new Set();
@@ -167,7 +174,7 @@ export default function ContentSubirImagenMoto() {
 
     useEffect(() => {
         obtenerIncidentes();
-    }, [buttonHomeDeliveryFilter, buttonAlfredoDeliveryFilter, buttonBryanDeliveryFilter, buttonWilliamDeliveryFilter]);
+    }, [buttonHomeDeliveryFilter, buttonAlfredoDeliveryFilter, buttonBryanDeliveryFilter, buttonWilliamDeliveryFilter, buttonMarioDeliveryFilter]);
 
     return (
         <div className='content-wrapper'>
@@ -177,6 +184,7 @@ export default function ContentSubirImagenMoto() {
                         <Button onClick={handleButtonAlfredoDelivery} style={{ display: username1 === "soporte@ccgroupperu.com" || username1 === "alfredo.ccgroup@gmail.com" ? "" : "none" }}>Alfredo</Button>
                         <Button onClick={handleButtonBryanDelivery} style={{ display: username1 === "soporte@ccgroupperu.com" || username1 === "bryanandrecasanova2009@hotmail.com" ? "" : "none" }}>Bryan</Button>
                         <Button onClick={handleButtonHomeDelivery} style={{ display: username1 === "soporte@ccgroupperu.com" || username1 === "william.ccgroup@gmail.com" ? "" : "none" }}>William</Button>
+                        <Button onClick={handleButtonMarioDelivery} style={{ display: username1 === "soporte@ccgroupperu.com" || username1 === "mario.ccgroup@gmail.com" ? "" : "none" }}>Mario</Button>
                     </div>
                     <h2>Mis Pedidos</h2>
                     <p>{formattedDateTime} - Semanal</p>

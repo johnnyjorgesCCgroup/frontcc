@@ -163,7 +163,7 @@ export default function contentInventory() {
         document.execCommand('copy');
         document.body.removeChild(textarea);
     };
-    const handleAnullCut = async (id) => {
+    const handleSuccessCut = async (id) => {
         const confirmed = await confirmDelivery();
         if (confirmed) {
             try {
@@ -179,9 +179,72 @@ export default function contentInventory() {
             }
         }
     };
+
+    const handleAnullCut = async (id) => {
+        const confirmed = confirm('Desea Anular el Corte?\nLos campos pueden estar asociados a OC');
+        if (confirmed) {
+            obtenerIncidentes();
+            try {
+                const response = await fetch(`https://api.cvimport.com/api/anullCut/${id}`, {
+                    method: 'GET',
+                });
+
+                const responseData = await response.json();
+
+                if (responseData.statusCode === 200) {
+                    console.log("200", responseData.statusCode);
+                    alert('Corte Anulado!');
+                } else {
+                    console.log("Estoy en 404", responseData.statusCode);
+                    alert('El estado no permite la anulación');
+                }
+            } catch (error) {
+                console.error('Error deleting Corte:', error);
+                alert('El estado del corte no permite la anulación!');
+            }
+        }
+    };
+
+    const chagestatusforanull = async (id, worker) => {
+
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('motorizado', worker);
+        console.log(formData);
+        const response = await fetch('https://api.cvimport.com/api/autoruta', {
+            method: 'POST',
+            body: formData,
+        });
+        console.log(response);
+    }
+
+    const chagestatus = async (id, worker) => {
+
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('motorizado', worker);
+        console.log(formData);
+        const response = await fetch('https://api.cvimport.com/api/autoruta', {
+            method: 'POST',
+            body: formData,
+        });
+        alert("Se cambio a Ruta, refresh para actualizar la lista")
+        console.log(response);
+    }
+
+    const handleButtonClick = async (id, worker_id) => {
+        await chagestatusforanull(id, worker_id);
+        await handleAnullCut(id);
+    };
+
     const confirmDelivery = async () => {
         return confirm('Desea Confirmar la entrega?\nLos campos pueden estar asociados a OC');
     };
+
+    const confirmAnull = async () => {
+        return confirm('Desea Confirmar la anulación?\nEl stock sera reintegrado');
+    };
+
     const showAlert = (message, type) => {
         alert(message);
     };
@@ -557,7 +620,7 @@ export default function contentInventory() {
 
                                         </Typography>
                                         <Typography>
-                                        <br />
+                                            <br />
                                             Venta y corte subido por: {selectedIncident.user_id === 5 ? "Julio Soporte" : selectedIncident.user_id === 7 ? "Inteligencia Comercial" : selectedIncident.user_id === 8 ? "Rodolfo Gerencia" : selectedIncident.user_id === 10 ? "Christian Casanova" : selectedIncident.user_id === 11 ? "Francis" : selectedIncident.user_id === 18 ? "Johnny Soporte" : selectedIncident.user_id === 20 ? "Sheyla Ramirez" : selectedIncident.user_id === 21 ? "Rodrigo" : selectedIncident.user_id === 22 ? "Contabilidad" : selectedIncident.user_id === 23 ? "Mariana" : "N/A"} <br />
                                             Plataforma: {selectedIncident.origin} <br />
                                             Fecha de ingreso: {selectedIncident.date}<br />
@@ -568,41 +631,48 @@ export default function contentInventory() {
                                             Direccion: {selectedIncident.address}, {selectedIncident.distrito}<br />
                                             Producto: {selectedIncident.code} - {selectedIncident.product}<br />
                                             Cantidad y Precio: {selectedIncident.quantity} - {selectedIncident.price}<br />
-                                            {selectedIncident.photo !== null ? (
-                                                <React.Fragment>
-                                                    Imagen: {selectedIncident.photo}
-                                                    <Button onClick={() => handleOpenImageModal(selectedIncident.photo)}>Ver</Button>
-                                                </React.Fragment>
-                                            ) : (
-                                                <React.Fragment>
-                                                    No hay imagen:
-                                                    <Button onClick={handleOpenUploadModal}>Subir</Button>
-                                                </React.Fragment>
-                                            )}
-                                            <br />
                                             ID de Movimiento: {selectedIncident.idMove ? selectedIncident.idMove : "No se registró Movimiento"}<br />
                                             ID de Incidente: {selectedIncident.idIncident ? selectedIncident.idIncident : "No se registró Incidente"}<br />
                                             <br />
-                                            {selectedIncident.isdeliveryccg === 1 && selectedIncident.status === 2 && (
-                                                <div>
-                                                    <Button
-                                                        variant="contained"
-                                                        style={{ backgroundColor: switchOn ? "#9C27B0" : "#9C27B0", color: switchOn ? "white" : "white" }}
-                                                        size="small"
-                                                        onClick={() => handleAnullCut(selectedIncident.id)}
-                                                    >
-                                                        Confirmar Entrega Motorizado
-                                                    </Button>
-                                                </div>
-                                            )}<br />
-                                            <div>
+                                            <div style={{ display: "flex", width: "100%" }}>
+                                                {selectedIncident.photo !== null && selectedIncident.status != 1 ? (
+                                                    <React.Fragment>
+                                                        <Button variant="contained"
+                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "25%", margin: "2px" }}
+                                                            size="small"
+                                                            onClick={() => handleOpenImageModal(selectedIncident.photo)}>Ver</Button>
+                                                    </React.Fragment>
+                                                ) : (
+                                                    <React.Fragment>
+                                                        <Button variant="contained"
+                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "25%", margin: "2px" }}
+                                                            size="small"
+                                                            onClick={handleOpenUploadModal}>Subir</Button>
+                                                    </React.Fragment>
+                                                )}
                                                 <Button
                                                     variant="contained"
-                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black" }}
+                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "25%", margin: "2px", display: selectedIncident.status === 3 || selectedIncident.status === 1 ? "none" : "" }}
                                                     size="small"
-                                                    onClick={handleOpenHistoryModal}
+                                                    onClick={() => handleSuccessCut(selectedIncident.id)}
                                                 >
-                                                    Historial
+                                                    Confirmar Entrega
+                                                </Button>
+                                                <Button
+                                                    variant="contained"
+                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "yellow", color: switchOn ? "white" : "black", width: "25%", margin: "2px", display: selectedIncident.status === 3 || selectedIncident.status === 2 || selectedIncident.status === 4 || selectedIncident.status === 1 ? "none" : "" }}
+                                                    size="small"
+                                                    onClick={() => chagestatus(selectedIncident.id, selectedIncident.worker_id)}
+                                                >
+                                                    Pasar a En Ruta
+                                                </Button>
+                                                <Button
+                                                    variant="contained"
+                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "red", color: switchOn ? "white" : "white", width: "25%", margin: "2px", display: selectedIncident.status === 4 || selectedIncident.status === 1 ? "none" : "" }}
+                                                    size="small"
+                                                    onClick={() => handleButtonClick(selectedIncident.id, selectedIncident.worker_id)}
+                                                >
+                                                    Anular
                                                 </Button>
                                             </div>
                                         </Typography>

@@ -159,7 +159,7 @@ export default function contentInventory() {
         document.execCommand('copy');
         document.body.removeChild(textarea);
     };
-    const handleAnullCut = async (id) => {
+    const handleSuccessCut = async (id) => {
         const confirmed = await confirmDelivery();
         if (confirmed) {
             try {
@@ -168,15 +168,77 @@ export default function contentInventory() {
                 });
 
                 showAlert('Producto Entregado!', 'success');
-                obtenerIncidentes(); // Llamar a la función para obtener los incidentes
+                obtenerIncidentes();
             } catch (error) {
                 console.error('Error deleting provedor:', error);
                 showAlert('An error occurred while deleting!', 'error');
             }
         }
     };
+
+    const handleAnullCut = async (id) => {
+        const confirmed = confirm('Desea Anular el Corte?\nLos campos pueden estar asociados a OC');
+        if (confirmed) {
+            obtenerIncidentes();
+            try {
+                const response = await fetch(`https://api.cvimport.com/api/anullCut/${id}`, {
+                    method: 'GET',
+                });
+
+                const responseData = await response.json();
+
+                if (responseData.statusCode === 200) {
+                    console.log("200", responseData.statusCode);
+                    alert('Corte Anulado!');
+                } else {
+                    console.log("Estoy en 404", responseData.statusCode);
+                    alert('El estado no permite la anulación');
+                }
+            } catch (error) {
+                console.error('Error deleting Corte:', error);
+                alert('El estado del corte no permite la anulación!');
+            }
+        }
+    };
+
+    const chagestatusforanull = async (id, worker) => {
+
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('motorizado', worker);
+        console.log(formData);
+        const response = await fetch('https://api.cvimport.com/api/autoruta', {
+            method: 'POST',
+            body: formData,
+        });
+        console.log(response);
+    }
+
+    const chagestatus = async (id, worker) => {
+
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('motorizado', worker);
+        console.log(formData);
+        const response = await fetch('https://api.cvimport.com/api/autoruta', {
+            method: 'POST',
+            body: formData,
+        });
+        alert("Se cambio a Ruta, refresh para actualizar la lista")
+        console.log(response);
+    }
+
+    const handleButtonClick = async (id, worker_id) => {
+        await chagestatusforanull(id, worker_id);
+        await handleAnullCut(id);
+    };
+
     const confirmDelivery = async () => {
         return confirm('Desea Confirmar la entrega?\nLos campos pueden estar asociados a OC');
+    };
+
+    const confirmAnull = async () => {
+        return confirm('Desea Confirmar la anulación?\nEl stock sera reintegrado');
     };
     const showAlert = (message, type) => {
         alert(message);
@@ -513,28 +575,44 @@ export default function contentInventory() {
                                             ID de Incidente: {selectedIncident.idIncident ? selectedIncident.idIncident : "No se registró Incidente"}<br />
                                             <br />
                                             <div style={{ display: "flex", width: "100%" }}>
-                                                {selectedIncident.photo !== null ? (
+                                                {selectedIncident.photo !== null && selectedIncident.status != 1 ? (
                                                     <React.Fragment>
                                                         <Button variant="contained"
-                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin: "2px" }}
+                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "25%", margin: "2px" }}
                                                             size="small"
                                                             onClick={() => handleOpenImageModal(selectedIncident.photo)}>Ver</Button>
                                                     </React.Fragment>
                                                 ) : (
                                                     <React.Fragment>
                                                         <Button variant="contained"
-                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin: "2px" }}
+                                                            style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "25%", margin: "2px" }}
                                                             size="small"
                                                             onClick={handleOpenUploadModal}>Subir</Button>
                                                     </React.Fragment>
                                                 )}
                                                 <Button
                                                     variant="contained"
-                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "50%", margin: "2px", display: selectedIncident.status === 3 ? "none" : "" }}
+                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "#22FF94", color: switchOn ? "white" : "black", width: "25%", margin: "2px", display: selectedIncident.status === 3 || selectedIncident.status === 1 ? "none" : "" }}
                                                     size="small"
-                                                    onClick={() => handleAnullCut(selectedIncident.id)}
+                                                    onClick={() => handleSuccessCut(selectedIncident.id)}
                                                 >
                                                     Confirmar Entrega
+                                                </Button>
+                                                <Button
+                                                    variant="contained"
+                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "yellow", color: switchOn ? "white" : "black", width: "25%", margin: "2px", display: selectedIncident.status === 3 || selectedIncident.status === 2 || selectedIncident.status === 4 || selectedIncident.status === 1 ? "none" : "" }}
+                                                    size="small"
+                                                    onClick={() => chagestatus(selectedIncident.id, selectedIncident.worker_id)}
+                                                >
+                                                    Pasar a En Ruta
+                                                </Button>
+                                                <Button
+                                                    variant="contained"
+                                                    style={{ backgroundColor: switchOn ? "#9C27B0" : "red", color: switchOn ? "white" : "white", width: "25%", margin: "2px", display: selectedIncident.status === 4 || selectedIncident.status === 1 ? "none" : "" }}
+                                                    size="small"
+                                                    onClick={() => handleButtonClick(selectedIncident.id, selectedIncident.worker_id)}
+                                                >
+                                                    Anular
                                                 </Button>
                                             </div>
                                         </Typography>
