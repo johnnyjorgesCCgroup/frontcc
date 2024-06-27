@@ -44,6 +44,31 @@
     width: 100%
 }
 
+.dashMotorizados{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-top: -30px;
+}
+
+#uniqueMotorizado{
+    display: flex;
+    padding: 10px;
+    align-items: center;
+}
+
+#uniqueMotorizado > div {
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-Right: 15px;
+}
+
+#countMotorizado{
+    background-color: #1A5276;
+    color: white;
+}
+
 .dashPrincipal2{
     display: flex;
     margin: 20px
@@ -159,5 +184,8 @@
     #cardMensualGeneral{
         width: 100%;
         margin-left: 0
+    }
+    .dashMotorizados{
+        display: none;
     }
 }

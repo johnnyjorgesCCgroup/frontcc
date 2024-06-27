@@ -7,6 +7,11 @@ export default function contentInventory() {
     const label = { inputProps: { 'aria-label': 'Size switch demo' } };
 
     const [data, setData] = useState([]);
+    const [allMotorizadoAlfredo, SetAllMotorizadoAlfredo] = useState(0);
+    const [allMotorizadoBryan, SetAllMotorizadoBryan] = useState(0);
+    const [allMotorizadoWilliam, SetAllMotorizadoWilliam] = useState(0);
+    const [allMotorizadoMario, SetAllMotorizadoMario] = useState(0);
+    const [allMotorizadoHome, SetAllMotorizadoHome] = useState(0);
     const [allEtiqueta, SetAllEtiqueta] = useState(0);
     const [allEtiquetaVtex, SetAllEtiquetaVtex] = useState(0);
     const [allEtiquetaFalabella, SetAllEtiquetaFalabella] = useState(0);
@@ -107,19 +112,19 @@ export default function contentInventory() {
 
     const formatDateTime = (date, timeZone) => {
         const options = {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false,
-          timeZone: timeZone,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+            timeZone: timeZone,
         };
         return new Intl.DateTimeFormat('en-GB', options).format(date);
-      };
-      const formattedDateTime = formatDateTime(todayMarkets, 'America/Lima');
-      
+    };
+    const formattedDateTime = formatDateTime(todayMarkets, 'America/Lima');
+
 
     const handleSwitchChange = () => {
         setSwitchOn(!switchOn);
@@ -152,6 +157,63 @@ export default function contentInventory() {
         fetchDataFromAPI();
     }
 
+    const fetchDataFromMotorizado = async () => {
+        try {
+            const response = await fetch("https://api.cvimport.com/api/indexMotorizado");
+            if (response.ok) {
+                const data = await response.json();
+                
+                //allMotorizado
+                const allMotorizadoAlfredo = data.data.reduce((count, item) => {
+                    if (item.status === 7 && item.worker_id === 63 || item.status === 2 && item.worker_id === 63) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllMotorizadoAlfredo(allMotorizadoAlfredo);
+                const allMotorizadoBryan = data.data.reduce((count, item) => {
+                    if (item.status === 7 && item.worker_id === 62 || item.status === 2 && item.worker_id === 62) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllMotorizadoBryan(allMotorizadoBryan);
+                const allMotorizadoWilliam = data.data.reduce((count, item) => {
+                    if (item.status === 7 && item.worker_id === 69 || item.status === 2 && item.worker_id === 69) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllMotorizadoWilliam(allMotorizadoWilliam);
+                const allMotorizadoMario = data.data.reduce((count, item) => {
+                    if (item.status === 7 && item.worker_id === 68 || item.status === 2 && item.worker_id === 68) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllMotorizadoMario(allMotorizadoMario);
+                const allMotorizadoHome = data.data.reduce((count, item) => {
+                    if (item.status === 7 && item.worker_id === 64 || item.status === 2 && item.worker_id === 64) {
+                        return count + 1;
+                    } else {
+                        return count;
+                    }
+                }, 0);
+                SetAllMotorizadoHome(allMotorizadoHome);
+
+
+            } else {
+                console.error("Error de fetch", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error de bd", error);
+        }
+    }
+
     const fetchDataFromAPI = () => {
         fetch('https://api.cvimport.com/api/cut')
             .then(response => response.json())
@@ -171,6 +233,7 @@ export default function contentInventory() {
                             date: item.date,
                             origin: item.origin,
                             client: item.client,
+                            worker_id: item.worker_id,
                         });
                     }
                 });
@@ -1013,6 +1076,7 @@ export default function contentInventory() {
     //Fetch
     useEffect(() => {
         fetchDataFromAPI();
+        fetchDataFromMotorizado();
     }, []);
 
 
@@ -1368,6 +1432,14 @@ export default function contentInventory() {
                                             <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allRegularizar : orderCountTodayRegularizar}</span>
                                         </div>
                                     </div>
+                                </div>
+                                <div className="dashMotorizados">
+                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>Alfredo</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoAlfredo}</b></p></div></div>
+                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>Bryan</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoBryan}</b></p></div></div>
+                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>William</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoWilliam}</b></p></div></div>
+                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>Mario</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoMario}</b></p></div></div>
+                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>Home Delivery</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoHome}</b></p></div></div>
+                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>Saavar</p></div><div className='card card-outline' id='countMotorizado'><p><b>0</b></p></div></div>
                                 </div>
                             </div>
                         </div>
@@ -1814,70 +1886,70 @@ export default function contentInventory() {
                         <b>{switchOn ? "Todas las etiquetas" : "Etiquetas de hoy: " + formattedDateTime}</b>
                     </h3>
                     <br />
-                        <div className="dashPrincipal2">
-                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
-                                <span className='info-box-icon'>
-                                    <i onClick={handleOpenEtiquetaModal} className='fas fa-square' style={{ color: "#FF00D4" }} />
-                                </span>
-                                <div className='info-box-content'>
-                                    <a onClick={handleOpenEtiquetaModal} style={{ color: 'inherit', textDecoration: 'none' }} className='info-box-text'>Vtex</a>
-                                    <a onClick={handleOpenEtiquetaModal} className='info-box-number' style={{ fontSize: "20px", color: 'inherit', textDecoration: 'none' }}>{switchOn ? allEtiquetaVtex : orderCountTodayEtiquetaVtex}</a>
-                                </div>
+                    <div className="dashPrincipal2">
+                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                            <span className='info-box-icon'>
+                                <i onClick={handleOpenEtiquetaModal} className='fas fa-square' style={{ color: "#FF00D4" }} />
+                            </span>
+                            <div className='info-box-content'>
+                                <a onClick={handleOpenEtiquetaModal} style={{ color: 'inherit', textDecoration: 'none' }} className='info-box-text'>Vtex</a>
+                                <a onClick={handleOpenEtiquetaModal} className='info-box-number' style={{ fontSize: "20px", color: 'inherit', textDecoration: 'none' }}>{switchOn ? allEtiquetaVtex : orderCountTodayEtiquetaVtex}</a>
                             </div>
-                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
-                                <span className='info-box-icon'>
-                                    <i className='fas fa-square' style={{ color: "#ADD608" }} />
-                                </span>
-                                <div className='info-box-content'>
-                                    <span className='info-box-text'>Falabella</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaFalabella : orderCountTodayEtiquetaFalabella}</span>
-                                </div>
+                        </div>
+                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                            <span className='info-box-icon'>
+                                <i className='fas fa-square' style={{ color: "#ADD608" }} />
+                            </span>
+                            <div className='info-box-content'>
+                                <span className='info-box-text'>Falabella</span>
+                                <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaFalabella : orderCountTodayEtiquetaFalabella}</span>
                             </div>
-                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
-                                <span className='info-box-icon'>
-                                    <i className='fas fa-square' style={{ color: "#6620BB" }} />
-                                </span>
-                                <div className='info-box-content'>
-                                    <span className='info-box-text'>Ripley</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaRipley : orderCountTodayEtiquetaRipley}</span>
-                                </div>
+                        </div>
+                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                            <span className='info-box-icon'>
+                                <i className='fas fa-square' style={{ color: "#6620BB" }} />
+                            </span>
+                            <div className='info-box-content'>
+                                <span className='info-box-text'>Ripley</span>
+                                <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaRipley : orderCountTodayEtiquetaRipley}</span>
                             </div>
-                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
-                                <span className='info-box-icon'>
-                                    <i className='fas fa-square' style={{ color: "#5ACAFA" }} />
-                                </span>
-                                <div className='info-box-content'>
-                                    <span className='info-box-text'>Intercorp</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaIntercorp : orderCountTodayEtiquetaIntercorp}</span>
-                                </div>
+                        </div>
+                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                            <span className='info-box-icon'>
+                                <i className='fas fa-square' style={{ color: "#5ACAFA" }} />
+                            </span>
+                            <div className='info-box-content'>
+                                <span className='info-box-text'>Intercorp</span>
+                                <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaIntercorp : orderCountTodayEtiquetaIntercorp}</span>
                             </div>
-                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
-                                <span className='info-box-icon'>
-                                    <i className='fas fa-square' style={{ color: "#1A5276" }} />
-                                </span>
-                                <div className='info-box-content'>
-                                    <span className='info-box-text'>Ventas RRSS</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaVentas : orderCountTodayEtiquetaVentas}</span>
-                                </div>
+                        </div>
+                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                            <span className='info-box-icon'>
+                                <i className='fas fa-square' style={{ color: "#1A5276" }} />
+                            </span>
+                            <div className='info-box-content'>
+                                <span className='info-box-text'>Ventas RRSS</span>
+                                <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaVentas : orderCountTodayEtiquetaVentas}</span>
                             </div>
-                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
-                                <span className='info-box-icon'>
-                                    <i className='fas fa-square' style={{ color: "yellow" }} />
-                                </span>
-                                <div className='info-box-content'>
-                                    <span className='info-box-text'>Mercado Libre</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaMercadolibre : orderCountTodayEtiquetaMercadolibre}</span>
-                                </div>
+                        </div>
+                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                            <span className='info-box-icon'>
+                                <i className='fas fa-square' style={{ color: "yellow" }} />
+                            </span>
+                            <div className='info-box-content'>
+                                <span className='info-box-text'>Mercado Libre</span>
+                                <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaMercadolibre : orderCountTodayEtiquetaMercadolibre}</span>
                             </div>
-                            <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
-                                <span className='info-box-icon'>
-                                    <i className='fas fa-square' style={{ color: "#1A5276" }} />
-                                </span>
-                                <div className='info-box-content'>
-                                    <span className='info-box-text'>Incidencias</span>
-                                    <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaIncidencias : orderCountTodayEtiquetaIncidencias}</span>
-                                </div>
+                        </div>
+                        <div className='info-box mb-3 bg-default' style={{ height: "10%", marginLeft: "5px", marginRight: "5px", marginTop: "5px" }}>
+                            <span className='info-box-icon'>
+                                <i className='fas fa-square' style={{ color: "#1A5276" }} />
+                            </span>
+                            <div className='info-box-content'>
+                                <span className='info-box-text'>Incidencias</span>
+                                <span className='info-box-number' style={{ fontSize: "20px" }}>{switchOn ? allEtiquetaIncidencias : orderCountTodayEtiquetaIncidencias}</span>
                             </div>
+                        </div>
                     </div>
                 </div>
             </Modal>
