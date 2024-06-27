@@ -829,7 +829,16 @@ export default function contentInventory() {
             ),
         },
         { field: 'total', headerName: 'Precio', flex: 0 },
-        { field: 'status_text', headerName: 'Estado', flex: 0 },
+        {
+            field: 'status_text',
+            headerName: 'Estado',
+            flex: 0,
+            renderCell: (params) => (
+                <span style={{ color: params.row.status_text === 'ANULADO' ? 'red' : 'black' }}>
+                    {params.row.status_text}
+                </span>
+            )
+        },
         { field: 'client', headerName: 'Cliente', flex: 1 },
         {
             field: 'product_id', headerName: 'Producto', flex: 1, renderCell: (params) => (
@@ -1029,7 +1038,8 @@ export default function contentInventory() {
                                             Celular: {selectedIncident.phone ? selectedIncident.phone : "No hay numero registrado"}<br />
                                             Direccion: {selectedIncident.address}, {selectedIncident.reference}<br />
                                             Departament, Provincia y distrito: {selectedIncident.departament}, {selectedIncident.province}, {selectedIncident.district}<br />
-                                            Observación: {selectedIncident.obs ? selectedIncident.obs : "No hay observación"}
+                                            Observación: {selectedIncident.obs ? selectedIncident.obs : "No hay observación"}<br />
+                                            Status del Corte Almacen: <Button>Ver</Button>
                                             <br />
                                             <br />
                                             <table style={{ width: "100%" }}>

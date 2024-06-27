@@ -134,10 +134,6 @@ const ContentSocial = () => {
       label: 'No especificado',
       key: 6
     },
-    {
-      label: 'Entrega Almacen',
-      key: 6
-    },
   ]);
 
   const [selEntrega, setSelEntrega] = useState([]);
@@ -985,13 +981,14 @@ const ContentSocial = () => {
           <Grid item xs={12} md={12}>
           <div style={{display:"flex"}}><p style={{color:"red", fontSize:"25px", marginRight:"10px", marginBottom:"-40px"}}>*</p><p>Campo Obligatorio</p></div>
             <TextField
-              label="*Nombre"
+              label="Nombre"
               variant="outlined"
               fullWidth
               margin="normal"
               name="name"
               value={newPerson.name}
               onChange={handleInputChangePerson}
+              required
             />
           </Grid>
         </Grid>
@@ -1007,8 +1004,9 @@ const ContentSocial = () => {
               fullWidth
               sx={{ color: 'black' }}
               value={newPerson.document_type}
-              label="*Tipo de Documento"
+              label="Tipo de Documento"
               onChange={handleInputChangePerson}
+              required
             >
               <MenuItem value={"RUC"}>RUC</MenuItem>
               <MenuItem value={"DNI"}>DNI</MenuItem>
@@ -1021,13 +1019,14 @@ const ContentSocial = () => {
           <Grid item xs={12} md={matches ? 3 : 8}>
             <TextField
               style={{ marginTop: matches ? "0px" : "-10px" }}
-              label="* Numero de Documento"
+              label="Numero de Documento"
               variant="outlined"
               fullWidth
               margin="normal"
               name="document_number"
               value={newPerson.document_number}
               onChange={handleInputChangePerson}
+              required
             />
           </Grid>
 
@@ -1052,26 +1051,28 @@ const ContentSocial = () => {
           <Grid item xs={12} md={matches ? 3 : 6}>
             <TextField
               style={{ marginTop: matches ? "0px" : "-20px" }}
-              label="* Email"
+              label="Email"
               variant="outlined"
               fullWidth
               margin="normal"
               name="email"
               value={newPerson.email}
               onChange={handleInputChangePerson}
+              required
             />
           </Grid>
 
           <Grid item xs={12} md={matches ? 3 : 6}>
             <TextField
               style={{ marginTop: matches ? "0px" : "-20px" }}
-              label="* Telefono (9 digitos)"
+              label="Telefono (9 digitos)"
               variant="outlined"
               fullWidth
               margin="normal"
               name="phone_number"
               value={newPerson.phone_number}
               onChange={handleInputChangePerson}
+              required
             />
           </Grid>
 
@@ -1096,13 +1097,14 @@ const ContentSocial = () => {
         <Grid container rowSpacing={2} spacing={2} alignItems="center">
           <Grid item xs={12} md={6}>
             <TextField
-              label="* Direccion"
+              label="Direccion"
               variant="outlined"
               fullWidth
               margin="normal"
               name="address"
               value={newPerson.address}
               onChange={handleInputChangePerson}
+              required
             />
           </Grid>
 
@@ -1110,13 +1112,14 @@ const ContentSocial = () => {
 
           <Grid item xs={12} md={6}>
             <TextField
-              label="* Referencia"
+              label="Referencia"
               variant="outlined"
               fullWidth
               margin="normal"
               name="reference"
               value={newPerson.reference}
               onChange={handleInputChangePerson}
+              required
             />
           </Grid>
 
@@ -1136,6 +1139,7 @@ const ContentSocial = () => {
               onChange={handleProvince}
               label="Departamento"
               sx={{ color: 'black' }}
+              required
             >
               {Array.isArray(select) && select.length > 0 ? (
                 select.map((item) => (
@@ -1165,6 +1169,7 @@ const ContentSocial = () => {
               label="Tipo de Proveedor"
               sx={{ color: 'black' }}
               onChange={handleDistrict}
+              required
             >
               {Array.isArray(selectProvince) && selectProvince.length > 0 ? (
                 selectProvince.map((item) => (
@@ -1492,6 +1497,7 @@ const ContentSocial = () => {
             options={clientList || []}
             renderInput={(params) => <TextField {...params} label="Cliente" />}
             onChange={handleInputChangeClient}
+            required
           />
         </Grid>
 
@@ -1544,6 +1550,7 @@ const ContentSocial = () => {
             renderInput={(params) => <TextField {...params} label="Canal" />}
             onChange={handleInputChangeChanel}
             style={{ width: "140px" }}
+            required
           />
         </Grid>
 
@@ -1556,6 +1563,7 @@ const ContentSocial = () => {
             sx={{ width: 180 }}
             renderInput={(params) => <TextField {...params} label="Plataforma" />}
             onChange={handleInputChangePlataforma}
+            required
           />
         </Grid>
 
@@ -1568,6 +1576,7 @@ const ContentSocial = () => {
             sx={{ width: 180 }}
             renderInput={(params) => <TextField {...params} label="Entrega" />}
             onChange={handleInputChangeEntrada}
+            required
 
           />
         </Grid>
@@ -1581,6 +1590,7 @@ const ContentSocial = () => {
             sx={{ width: 180 }}
             renderInput={(params) => <TextField {...params} label="Pago" />}
             onChange={handleInputChangePago}
+            required
           />
         </Grid>
 
@@ -1591,7 +1601,8 @@ const ContentSocial = () => {
               sx={{ width: 360 }}
               defaultValue={dayjs(new Date())}
               onChange={handleInputDate}
-              format="DD/MM/YYYY" />
+              format="DD/MM/YYYY" 
+              required/>
           </LocalizationProvider>
         </Grid>
 
@@ -1604,6 +1615,7 @@ const ContentSocial = () => {
             value={obs || ''}
             onChange={handleInputChangeObs}
             margin="normal"
+            required
           />
         </Grid>
 
