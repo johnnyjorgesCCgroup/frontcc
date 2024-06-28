@@ -12,12 +12,16 @@ import './contentDashVentasIncidencias.css';
 
 export default function contentInventory() {
     const [incidentes, setIncidentes] = useState([]);
+    const [dataOrden, setDataOrden] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedIncident, setSelectedIncident] = useState(null);
     const [switchOn, setSwitchOn] = useState(false);
     const [productMap, setProductMap] = useState({});
     const [productMapSku, setProductMapSku] = useState({});
     const [modalHistoryOpen, setModalHistoryOpen] = useState(false);
+    const [modalHistoryOrdenOpen, setModalHistoryOrdenOpen] = useState(false);
     const matches = useMediaQuery('(min-width:1300px)');
     const [orderCountMonthVendedor1, SetorderCountMonthVendedor1] = useState(0);
     const [orderCountMonthVendedor2, SetorderCountMonthVendedor2] = useState(0);
@@ -771,6 +775,30 @@ export default function contentInventory() {
         setProductMapSku(mapSku);
     }, []);
 
+    useEffect(() => {
+        if (modalHistoryOrdenOpen && selectedIncident) {
+            const fetchData = async () => {
+                setLoading(true);
+                setError(false);
+                try {
+                    const response = await fetch(`http://cc.cvimport.com:3000/procesarDatos/${selectedIncident.serie}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const result = await response.json();
+                    setDataOrden(result);
+                } catch (error) {
+                    console.error("Error fetching data: ", error);
+                    setError(true);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchData();
+        }
+    }, [modalHistoryOrdenOpen, selectedIncident]);
+
     const handelCloseAlert = async (id) => {
         // Mostrar el confirm para que el usuario acepte o cancele la acción
         const userConfirmed = confirm("*Asesor registrado*, ¿Está seguro que desea anular la venta?");
@@ -794,7 +822,6 @@ export default function contentInventory() {
         }
     };
 
-
     const handleRowClick = (id) => {
         const incident = incidentes.find(incidente => incidente.id === id);
         setSelectedIncident(incident);
@@ -815,6 +842,16 @@ export default function contentInventory() {
     const handleCloseHistoryModal = () => {
         setModalHistoryOpen(false);
         obtenerIncidentes();
+    }
+
+    const handleOpenHistoryOrdenModal = () => {
+        setModalHistoryOrdenOpen(true);
+    }
+    const handleCloseHistoryOrdenModal = () => {
+        setDataOrden([]);
+        setModalHistoryOrdenOpen(false);
+        setLoading(false);
+        setError(false);
     }
 
     const columns = [
@@ -1039,7 +1076,7 @@ export default function contentInventory() {
                                             Direccion: {selectedIncident.address}, {selectedIncident.reference}<br />
                                             Departament, Provincia y distrito: {selectedIncident.departament}, {selectedIncident.province}, {selectedIncident.district}<br />
                                             Observación: {selectedIncident.obs ? selectedIncident.obs : "No hay observación"}<br />
-                                            Status del Corte Almacen: <Button>Ver</Button>
+                                            Status del Corte Almacen: <Button onClick={handleOpenHistoryOrdenModal}>Ver</Button>
                                             <br />
                                             <br />
                                             <table style={{ width: "100%" }}>
@@ -1075,8 +1112,41 @@ export default function contentInventory() {
                         <ContentSocial />
                     </div>
                 </Modal>
+                <Modal open={modalHistoryOrdenOpen} onClose={handleCloseHistoryOrdenModal}>
+                    <div className="modalDetalle" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', overflow: 'auto', maxHeight: '80vh' }}>
+                        <h3 className="card-title">
+                            <b>Detalles de Almacen por la orden:</b>
+                        </h3>
+                        <br />
+                        {selectedIncident && (
+                            <>
 
+                                <Typography>
+                                    {loading ? (
+                                        'Cargando...'
+                                    ) : error ? (
+                                        'Error al cargar los datos'
+                                    ) : dataOrden ? (
+                                        <>
+                                            Orden: <b>{dataOrden.oc || 'Sin registros'}</b><br />
+                                            Status: {dataOrden.status === 0 ? "Pendiente" : dataOrden.status === 1 ? "Etiqueta" : dataOrden.status === 2 ? "En Ruta" : dataOrden.status === 3 ? "Entregado" : dataOrden.status === 4 ? "Anulado" : dataOrden.status === 5 ? "Devolución" : dataOrden.status === 7 ? "Empaquetado" : "Status no especificado" || 'Sin registros'}<br />
+                                            Motorizado: {dataOrden.worker_id === 63 ? "LUIS ALFREDO ORMEÑO PINO" : dataOrden.worker_id === 62 ? "Bryan Andre Casanova Rios" : dataOrden.worker_id === 69 ? "WILLIAM" : "Motorizado no registrado" || 'Sin registros'}<br />
+                                            ID Movimiento: {dataOrden.idMove || 'Sin registros'}<br />
+                                            ID Incidencia: {dataOrden.idIncident || 'Sin registros'}<br />
+                                            Imagen: {dataOrden.photo ? <a href={`https://api.cvimport.com/storage/${dataOrden.photo}`} target="_blank" rel="noopener noreferrer">Ver</a> : 'Sin registros'}<br />
+                                </>
+                                ) : (
+                                'Sin registros'
+                                    )}
+                                <br />
+
+                            </Typography>
+                    </>
+                        )}
+                    <br />
             </div>
-        </div>
+        </Modal>
+            </div >
+        </div >
     );
 }

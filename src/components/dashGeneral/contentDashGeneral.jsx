@@ -1450,8 +1450,9 @@ export default function contentInventory() {
                                 <div id="uniqueMotorizado"><div className='card card-outline'><p>Bryan</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoBryan}</b></p></div></div>
                                 <div id="uniqueMotorizado"><div className='card card-outline'><p>William</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoWilliam}</b></p></div></div>
                                 <div id="uniqueMotorizado"><div className='card card-outline'><p>Mario</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoMario}</b></p></div></div>
-                                <div id="uniqueMotorizado"><div className='card card-outline'><p>Saavar</p></div><div className='card card-outline' id='countMotorizado'><p><b>0</b></p></div></div>
-                                <div id="uniqueMotorizado"><div className='card card-outline'><p>OPL</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoHome}</b></p></div></div>
+                                <div id="uniqueMotorizado"><div className='card card-outline'><p>Savar</p></div><div className='card card-outline' id='countMotorizado'><p><b>0</b></p></div></div>
+                                <div id="uniqueMotorizado"><div className='card card-outline'><p>Olva</p></div><div className='card card-outline' id='countMotorizado'><p><b>0</b></p></div></div>
+                                <div id="uniqueMotorizado"><div className='card card-outline'><p>Shalom</p></div><div className='card card-outline' id='countMotorizado'><p><b>0</b></p></div></div>
                             </div>
                         </div>
                         <br />
