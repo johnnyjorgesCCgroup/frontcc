@@ -162,7 +162,7 @@ export default function contentInventory() {
             const response = await fetch("https://api.cvimport.com/api/indexMotorizado");
             if (response.ok) {
                 const data = await response.json();
-                
+
                 //allMotorizado
                 const allMotorizadoAlfredo = data.data.reduce((count, item) => {
                     if (item.status === 7 && item.worker_id === 63 || item.status === 2 && item.worker_id === 63) {
@@ -1433,16 +1433,28 @@ export default function contentInventory() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="dashMotorizados">
-                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>Alfredo</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoAlfredo}</b></p></div></div>
-                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>Bryan</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoBryan}</b></p></div></div>
-                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>William</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoWilliam}</b></p></div></div>
-                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>Mario</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoMario}</b></p></div></div>
-                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>Home Delivery</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoHome}</b></p></div></div>
-                                    <div id="uniqueMotorizado"><div className='card card-outline'><p>Saavar</p></div><div className='card card-outline' id='countMotorizado'><p><b>0</b></p></div></div>
-                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div className="card card-outline" style={{ borderRadius: "10px", width: "100%", height: "110px" }}>
+                    <div className="card-header border-0">
+                        <div style={{ display: "flex", width: "100%" }}>
+                            <div style={{ paddingLeft: "20px", paddingTop: "20px", width: "15%" }}>
+                                <h3 className="card-title" style={{ color: "black" }}>
+                                    <b>Pedidos Motorizados</b>
+                                </h3>
+                            </div>
+                            <div className="dashMotorizados">
+                                <div id="uniqueMotorizado"><div className='card card-outline'><p>Alfredo</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoAlfredo}</b></p></div></div>
+                                <div id="uniqueMotorizado"><div className='card card-outline'><p>Bryan</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoBryan}</b></p></div></div>
+                                <div id="uniqueMotorizado"><div className='card card-outline'><p>William</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoWilliam}</b></p></div></div>
+                                <div id="uniqueMotorizado"><div className='card card-outline'><p>Mario</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoMario}</b></p></div></div>
+                                <div id="uniqueMotorizado"><div className='card card-outline'><p>Saavar</p></div><div className='card card-outline' id='countMotorizado'><p><b>0</b></p></div></div>
+                                <div id="uniqueMotorizado"><div className='card card-outline'><p>OPL</p></div><div className='card card-outline' id='countMotorizado'><p><b>{allMotorizadoHome}</b></p></div></div>
+                            </div>
+                        </div>
+                        <br />
                     </div>
                 </div>
                 <div className="cardAyerSemanalAnualGeneral">
